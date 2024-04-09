@@ -25,3 +25,6 @@ app.get('/',(request,response)=>{
     response.sendFile(__dirname + '/index.html')
 })
 
+app.get('/daily-record.html', (req, res) => {
+    res.sendFile(__dirname + '/daily-record.html');
+}); //매일 기록
