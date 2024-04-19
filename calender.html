@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Calendar</title>
+  <link rel="stylesheet" type="text/css" href="calenderstyle.css">
+</head>
+
+<body>
+
+  <h2>Calendar</h2>
+
+  <div id="calendarControls">
+    <span class="prev" onclick="prevMonth()">&#10094;</span>
+    <span id="currentMonth"></span>
+    <span class="next" onclick="nextMonth()">&#10095;</span>
+  </div>
+
+  <table id="calendar">
+    <thead>
+      <tr>
+        <th>Sun</th>
+        <th>Mon</th>
+        <th>Tue</th>
+        <th>Wed</th>
+        <th>Thu</th>
+        <th>Fri</th>
+        <th>Sat</th>
+      </tr>
+    </thead>
+    <tbody>
+
+    </tbody>
+  </table>
+
+  <script src="calender.js"></script>
+</body>
+
+</html>
