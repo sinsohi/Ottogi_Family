@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>성별 및 몸무게 입력</title>
+</head>
+<body>
+    <h2>성별 선택</h2>
+    <form action="/submit-form" method="POST"> <!-- 폼 추가 -->
+        <input type="radio" id="male" name="gender" value="male">
+        <label for="male">남자</label><br>
+        <input type="radio" id="female" name="gender" value="female">
+        <label for="female">여자</label><br>
+
+        <h2>몸무게 입력</h2>
+        <input type="number" id="weight" name="weight" placeholder="몸무게를 입력하세요 (kg)" required><br>
+
+        <button type="submit">확인</button>
+    </form> <!-- 폼 추가 종료 -->
+</body>
+</html>

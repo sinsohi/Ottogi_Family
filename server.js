@@ -17,6 +17,7 @@ new MongoClient(url).connect().then((client)=>{
 })
 
 
+
 app.listen(process.env.PORT, ()=>{
     console.log('http://localhost:'+`${process.env.PORT}` +' 에서 서버 실행중')
 })
@@ -28,3 +29,15 @@ app.get('/',(request,response)=>{
 app.get('/daily-record.html', (req, res) => {
     res.sendFile(__dirname + '/daily-record.html');
 }); //매일 기록
+
+app.get('/setting.html', (req, res) => {
+  res.sendFile(__dirname + '/setting.html');
+});
+
+app.post('/submit-form', (req, res) => {
+  // 받은 폼 데이터 추출
+  const gender = req.body.gender;
+  const weight = req.body.weight;
+
+  res.send('데이터 제출됨.');
+});
