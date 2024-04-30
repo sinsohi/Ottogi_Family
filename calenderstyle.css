@@ -1,0 +1,34 @@
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+th,
+td {
+  border: 1px solid #ddd;
+  padding: 8px;
+  text-align: center;
+}
+
+th {
+  background-color: #f2f2f2;
+}
+
+td {
+  cursor: pointer;
+}
+
+td:hover {
+  background-color: #f2f2f2;
+}
+
+#calendarControls {
+  text-align: center;
+}
+
+.prev,
+.next {
+  cursor: pointer;
+  padding: 8px;
+  background-color: #f2f2f2;
+}
