@@ -7,7 +7,7 @@ table {
 /* 셀 스타일 */
 th,
 td {
-  border: 1px solid #ddd;
+  border: 1px solid #d7dbd0;
   padding: 8px;
   text-align: center;
 }
@@ -23,7 +23,7 @@ td {
 }
 
 td:hover {
-  background-color: #f2f2f2;
+  background-color: #a2ab91;
 }
 
 /*달력위치*/
@@ -31,11 +31,9 @@ td:hover {
   text-align: center;
 }
 
-.prev,
-.next {
+.prev, .next {
   cursor: pointer;
-  padding: 8px;
-  background-color: #f2f2f2;
+  background-color: #fefbec;
 }
 
 /*전체 사이트 배경*/

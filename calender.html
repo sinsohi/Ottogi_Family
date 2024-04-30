@@ -5,21 +5,25 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Calendar</title>
+  <!-- 달력 스타일을 위한 css파일-->
   <link rel="stylesheet" type="text/css" href="calenderstyle.css">
 </head>
 
 <body>
 
-  <h2>Calendar</h2>
+  <h2>우리들의 캘린더</h2>
 
+  <!-- 이전/다음달로 이동하는 버튼을 제공하는 컨트롤 영역-->
   <div id="calendarControls">
     <span class="prev" onclick="prevMonth()">&#10094;</span>
     <span id="currentMonth"></span>
     <span class="next" onclick="nextMonth()">&#10095;</span>
   </div>
 
+  <!-- 달력 표시하는 테이블 -->
   <table id="calendar">
     <thead>
+      <tr></tr>
       <tr>
         <th>Sun</th>
         <th>Mon</th>
@@ -30,12 +34,16 @@
         <th>Sat</th>
       </tr>
     </thead>
+    <!-- 날짜 표시하는 행-->
     <tbody>
 
     </tbody>
   </table>
 
+  <!-- 달력을 제어하는 js 파일 -->
   <script src="calender.js"></script>
+
+  <img src ="배경화면.png", width="1000px" >
 </body>
 
 </html>
