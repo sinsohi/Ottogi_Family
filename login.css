@@ -1,7 +1,9 @@
+/* 전역 폰트 설정 */
 body {
   font-family: Arial, sans-serif;
 }
 
+/* 로그인 박스 설정 */
 .login-container {
   width: 300px;
   padding: 20px;
@@ -10,11 +12,23 @@ body {
   border-radius: 5px;
 }
 
+/* 입력 그룹 설정(라벨과 입력칸 사이 간격) */
 .input-group {
   margin-bottom: 15px;
 }
 
+/* 라벨 스타일 설정 */
 .input-group label {
   display: block;
   margin-bottom: 5px;
 }
+
+/* 텍스트 입력 스타일 설정 */
+.input-group input[type="text"],
+.input-group input[type="password"] {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
