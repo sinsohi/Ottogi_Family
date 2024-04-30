@@ -1,8 +1,10 @@
+/*캘린더 표 스타일*/
 table {
   width: 100%;
   border-collapse: collapse;
 }
 
+/* 셀 스타일 */
 th,
 td {
   border: 1px solid #ddd;
@@ -10,10 +12,12 @@ td {
   text-align: center;
 }
 
+/*캘린더 헤더스타일*/
 th {
-  background-color: #f2f2f2;
+  background-color: #a2ab91;
 }
 
+/*마우스 hover인식*/
 td {
   cursor: pointer;
 }
@@ -22,6 +26,7 @@ td:hover {
   background-color: #f2f2f2;
 }
 
+/*달력위치*/
 #calendarControls {
   text-align: center;
 }
@@ -31,4 +36,9 @@ td:hover {
   cursor: pointer;
   padding: 8px;
   background-color: #f2f2f2;
+}
+
+/*전체 사이트 배경*/
+body{
+  background-color: #fefbec ;
 }
