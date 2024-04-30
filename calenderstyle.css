@@ -37,6 +37,11 @@ td:hover {
 }
 
 /*전체 사이트 배경*/
-body{
-  background-color: #fefbec ;
+body {
+  background-image: url('Calender_배경화면.png');
+  /* 배경 이미지 경로 */
+  background-size: cover;
+  /* 화면에 꽉 차게 배경 이미지 크기 조절 */
+  background-position: center;
+  /* 배경 이미지 중앙 정렬 */
 }
