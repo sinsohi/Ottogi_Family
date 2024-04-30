@@ -9,3 +9,12 @@ body {
   border: 1px solid #ccc;
   border-radius: 5px;
 }
+
+.input-group {
+  margin-bottom: 15px;
+}
+
+.input-group label {
+  display: block;
+  margin-bottom: 5px;
+}
