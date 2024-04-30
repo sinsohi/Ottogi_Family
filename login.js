@@ -5,3 +5,4 @@ document.getElementById('loginForm').addEventListener('submit', function (event)
   var password = document.getElementById('password').value; 
 
   console.log('로그인 시도:', username, password); 
+});

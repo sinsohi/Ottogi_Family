@@ -1,57 +1,62 @@
-/* 전역 폰트 설정 */
-body {
-  font-family: Arial, sans-serif;
+/*기본적으로 걸린 모든 속성 reset*/
+.login-title {
+  text-align: left; 
+  margin-top: 0px;
+  margin-left: 0px;
+  text-decoration: underline;
+  text-decoration-thickness: 5px;
+  text-decoration-color:#a2ab91;
 }
 
-/* 로그인 박스 설정 */
-.login-container {
-  width: 300px;
+*{
+  box-sizing: border-box;
+  font-family: 'Noto Sans KR', sans_serif;
+}
+
+.login-form{
+  width:300px;
+  border:0;
+  border-radius:5px;
+  background-color: #fbf6f1;
   padding: 20px;
-  margin: 100px auto;
-  border: 1px solid #ccc;
-  border-radius: 5px;
+  margin: 0 auto;
 }
 
-/* 입력 그룹 설정(라벨과 입력칸 사이 간격) */
-.input-group {
-  margin-bottom: 15px;
-}
-
-/* 라벨 스타일 설정 */
-.input-group label {
-  display: block;
-  margin-bottom: 5px;
-}
-
-/* 텍스트 입력 스타일 설정 */
-.input-group input[type="text"],
-.input-group input[type="password"] {
-  width: 100%;
-  padding: 8px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-}
-
-/* 버튼 스타일 설정 */
-button {
-  width: 100%;
-  padding: 10px;
+.text-field {
+  font-size: 14px;
+  margin-bottom: 10px;
   border: none;
-  border-radius: 4px;
-  background-color: #007bff;
-  color: white;
-  font-size: 15px;
-  cursor: pointer;
+  border-radius: 5px;
+  padding: 10px;
+  width: 100%;
 }
 
-/* 버튼의 hover 효과 설정 */
-button:hover {
-  background-color: #0056b3;
-  /* 마우스 포인터가 버튼 위에 있을 때의 배경색 */
+.submit-btn {
+  color: #000000;
+  font-size: 14px;
+  background-color: #fbf6f1;
+  margin-bottom: 30px;
+  padding: 10px;
+  border: 2px solid;
+  border-radius: 5px;
+  width: 100%;
 }
+
+.links {
+  text-align: center;
+}
+
+.links a{
+  font-size: 12px;
+  color:;
+}
+
+
+
 
 /*전체 사이트 배경*/
 body {
+  margin:0;
   width: 100%;
   height: 95vh;
   background-image: url('Login_배경화면.png');
