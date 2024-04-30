@@ -50,3 +50,14 @@ button:hover {
   /* 마우스 포인터가 버튼 위에 있을 때의 배경색 */
 }
 
+/*전체 사이트 배경*/
+body {
+  width: 100%;
+  height: 95vh;
+  background-image: url('Login_배경화면.png');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+}
+
