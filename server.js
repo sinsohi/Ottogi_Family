@@ -43,16 +43,13 @@ app.listen(process.env.PORT, ()=>{
 // })
 
 
-app.get('/register',(request,response)=>{
-  response.sendFile(__dirname + '/register.html')
-})
 
 app.get('/login',(request,response)=>{
   response.sendFile(__dirname + '/login.html')
 })
 
 app.get('/register',(request,response)=>{
-  response.render('register.ejs')})
+  response.render('register.ejs');})
 
 
 app.get('/calender',(request,response)=>{
