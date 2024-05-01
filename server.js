@@ -1,5 +1,6 @@
 const express = require('express') // express 라이브러리
 const app = express()
+const bcrypt = require('bcrypt') // bcrypt 셋팅
 require("dotenv").config(); // .env 파일에 환경변수 보관
 
 app.use(express.static(__dirname + '/public'))
@@ -51,11 +52,12 @@ app.get('/register',(request,response)=>{
   response.render('register.ejs');})
 
 app.post('/register', async (request,response)=>{
-  console.log(request.body);
+  let hash = await bcrypt.hash(request.body.password,10) // password hashing (암호화)
+
   await db.collection('user_info').insertOne({
     userNickname : request.body.userNickname,
     username : request.body.username,
-    password : request.body.password
+    password : hash
   })
   response.sendFile(__dirname + '/InitialScreen.html')
 })
