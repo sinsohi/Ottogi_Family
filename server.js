@@ -34,6 +34,10 @@ app.get('/login',(request,response)=>{
   response.sendFile(__dirname + '/login.html')
 })
 
+app.get('/calender',(request,response)=>{
+  response.sendFile(__dirname + '/calender.html')
+})
+
 
 app.get('/',(request,response)=>{
   response.sendFile(__dirname + '/InitialScreen.html')

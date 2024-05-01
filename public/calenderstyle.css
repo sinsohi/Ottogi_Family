@@ -1,0 +1,95 @@
+/*캘린더 표 스타일*/
+table {
+  width: 70%;
+  border-collapse: collapse;
+  margin: 0 auto;
+  text-align:center;
+  border: 2px solid #000000; 
+}
+
+/* 월별 캘린더 글자 */
+.calender-title {
+  text-align: left;
+  margin-left: 0px; 
+  margin-bottom: 20px; 
+  /* 밑줄과 글자가 겹치지 않게 */
+  text-underline-position: under;
+  /* 밑줄 */
+  text-decoration: underline;
+  text-decoration-color: #a2ab91;
+}
+
+/* 셀 스타일 */
+th,td {
+  border: 1px solid #ffffff;
+  padding: 8px;
+  text-align: center; 
+  border-bottom: 1px solid #000000; 
+}
+
+/*캘린더 헤더스타일*/
+th {
+  background-color: #a2ab91;
+  text-align: center;
+}
+
+/*마우스 hover인식*/
+td {
+  cursor: pointer;
+}
+
+td:hover {
+  background-color: #a2ab91;
+}
+
+/*달력위치*/
+#calendarControls {
+  text-align: center;
+}
+
+/* 왼쪽화살표 */
+.prev {
+  cursor: pointer;
+  
+  font-size: 24px;
+  padding: 10px;
+}
+/* 오른쪽 화살표 */
+.next {
+  cursor: pointer;
+  font-size: 24px;
+  padding: 10px;
+}
+
+/*전체 사이트 배경*/
+body {
+  width: 100%;
+  height: 100%;
+  background-image: url('./Calender_배경화면.png');
+  /* 배경 이미지 경로 */
+  background-size: cover;
+  /* 화면에 꽉 차게 배경 이미지 크기 조절 */
+  background-position: center;
+  /* 배경 이미지 중앙 정렬 */
+  background-repeat: no-repeat;
+  /* 이미지 반복 없음 */
+  background-attachment: fixed;
+  /* 스크롤 시에도 이미지 고정 */
+}
+
+/* 현재 연도와 월 표시 스타일 */
+#currentMonth {
+  font-size: 25px; /* 원하는 크기로 조절 */
+  font-weight:lighter; /* 굵게 표현하고 싶은 경우 */
+  /* 추가적인 스타일링이 필요하면 여기에 코드 추가 */
+}
+
+#calendarControls {
+  width: 1075px; /* 표의 너비와 일치하게 설정 */
+  margin: 0 auto; /* 가운데 정렬 */
+  background-color: #a2ab91; /* 원하는 배경색 설정 */
+  /* 추가적 스타일링 */
+  padding: 5px 0; /* 상하 패딩 설정 */
+  text-align: center; /* 내부 텍스트 가운데 정렬 */
+  border: 1px solid #000000;
+}
