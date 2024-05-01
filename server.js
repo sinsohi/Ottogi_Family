@@ -26,9 +26,14 @@ app.listen(process.env.PORT, ()=>{
 // })
 
 
+app.get('/register',(request,response)=>{
+  response.sendFile(__dirname + '/register.html')
+})
+
 app.get('/login',(request,response)=>{
   response.sendFile(__dirname + '/login.html')
 })
+
 
 app.get('/',(request,response)=>{
   response.sendFile(__dirname + '/InitialScreen.html')
