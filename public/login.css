@@ -55,7 +55,7 @@ body {
   margin:0;
   width: 100%;
   height: 95vh;
-  background-image: url('Login_배경화면.png');
+  background-image: url('./img/Login_배경화면.png');
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;

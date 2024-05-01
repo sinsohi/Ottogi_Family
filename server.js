@@ -39,9 +39,6 @@ app.get('/',(request,response)=>{
   response.sendFile(__dirname + '/InitialScreen.html')
 })
 
-
-
-
 app.get('/calendardetail',(request,response)=>{
   response.sendFile(__dirname + '/calendardetail.html')
 })
