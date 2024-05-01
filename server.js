@@ -4,6 +4,20 @@ require("dotenv").config(); // .env 파일에 환경변수 보관
 
 app.use(express.static(__dirname + '/public'))
 
+// passport 라이브러리 셋팅
+const session = require('express-session')
+const passport = require('passport')
+const LocalStrategy = require('passport-local')
+
+app.use(passport.initialize())
+app.use(session({
+  secret: '암호화에 쓸 비번',
+  resave : false, // 유저가 서버로 요청할 때마다 세션 갱신할건지 여부
+  saveUninitialized : false // 로그인 안해도 세션 만들 것인지 여부
+}))
+
+app.use(passport.session())
+
 // 템플릿엔진 ejs 셋팅
 app.set('view engine','ejs')
 
