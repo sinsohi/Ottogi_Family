@@ -25,4 +25,8 @@ app.get('/',(request,response)=>{
     response.sendFile(__dirname + '/index.html')
 })
 
+app.get('/calender',(request,response)=>{
+  response.sendFile(__dirname + '/calender.html')
+})
+
 
