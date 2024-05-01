@@ -1,8 +1,15 @@
-
+/* html과 css의 기본 마진과 패딩 제거 */
+html, body {
+  margin: 0;
+  padding:0;
+  overflow: hidden;
+}
 body {
   height: 100vh;
   width: 100vw;
-  background-image: url('.\Calendardetail.png');
-  background-repeat : no-repeat;
-  background-size : cover;
+  margin:0;
+  padding:0;
+  background-image: url('Calendardetail.png');
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
 }
