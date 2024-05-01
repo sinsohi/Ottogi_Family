@@ -4,6 +4,13 @@ require("dotenv").config(); // .env 파일에 환경변수 보관
 
 app.use(express.static(__dirname + '/public'))
 
+// 템플릿엔진 ejs 셋팅
+app.set('view engine','ejs')
+
+// request.body 쓰기 위한 코드
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
 // passport 라이브러리 셋팅
 const session = require('express-session')
 const passport = require('passport')
@@ -18,8 +25,6 @@ app.use(session({
 
 app.use(passport.session())
 
-// 템플릿엔진 ejs 셋팅
-app.set('view engine','ejs')
 
 // mongoDB 연결
 const { MongoClient } = require('mongodb');
@@ -42,15 +47,22 @@ app.listen(process.env.PORT, ()=>{
 //     response.sendFile(__dirname + '/index.html')
 // })
 
+app.get('/register',(request,response)=>{
+  response.render('register.ejs');})
 
+app.post('/register', async (request,response)=>{
+  console.log(request.body);
+  await db.collection('user_info').insertOne({
+    userNickname : request.body.userNickname,
+    username : request.body.username,
+    password : request.body.password
+  })
+  response.sendFile(__dirname + '/InitialScreen.html')
+})
 
 app.get('/login',(request,response)=>{
   response.sendFile(__dirname + '/login.html')
 })
-
-app.get('/register',(request,response)=>{
-  response.render('register.ejs');})
-
 
 app.get('/calender',(request,response)=>{
   response.sendFile(__dirname + '/calender.html')
