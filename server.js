@@ -21,11 +21,17 @@ app.listen(process.env.PORT, ()=>{
     console.log('http://localhost:'+`${process.env.PORT}` +' 에서 서버 실행중')
 })
 
-app.get('/',(request,response)=>{
-    response.sendFile(__dirname + '/index.html')
-})
+// app.get('/',(request,response)=>{
+//     response.sendFile(__dirname + '/index.html')
+// })
 
 
 app.get('/login',(request,response)=>{
   response.sendFile(__dirname + '/login.html')
 })
+
+app.get('/',(request,response)=>{
+  response.sendFile(__dirname + '/InitialScreen.html')
+})
+
+
