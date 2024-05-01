@@ -4,6 +4,9 @@ require("dotenv").config(); // .env 파일에 환경변수 보관
 
 app.use(express.static(__dirname + '/public'))
 
+// 템플릿엔진 ejs 셋팅
+app.set('view engine','ejs')
+
 // mongoDB 연결
 const { MongoClient } = require('mongodb');
 
@@ -35,7 +38,7 @@ app.get('/login',(request,response)=>{
 })
 
 app.get('/register',(request,response)=>{
-  response.sendFile(__dirname + '/register.html')})
+  response.render('register.ejs')})
 
 
 app.get('/calender',(request,response)=>{
@@ -51,3 +54,4 @@ app.get('/',(request,response)=>{
 app.get('/calendardetail',(request,response)=>{
   response.sendFile(__dirname + '/calendardetail.html')
 })
+
