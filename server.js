@@ -21,7 +21,31 @@ app.listen(process.env.PORT, ()=>{
     console.log('http://localhost:'+`${process.env.PORT}` +' 에서 서버 실행중')
 })
 
-app.get('/',(request,response)=>{
-    response.sendFile(__dirname + '/index.html')
+// app.get('/',(request,response)=>{
+//     response.sendFile(__dirname + '/index.html')
+// })
+
+
+app.get('/register',(request,response)=>{
+  response.sendFile(__dirname + '/register.html')
 })
 
+app.get('/login',(request,response)=>{
+  response.sendFile(__dirname + '/login.html')
+})
+
+app.get('/calender',(request,response)=>{
+  response.sendFile(__dirname + '/calender.html')
+})
+
+
+app.get('/',(request,response)=>{
+  response.sendFile(__dirname + '/InitialScreen.html')
+})
+
+
+
+
+app.get('/calendardetail',(request,response)=>{
+  response.sendFile(__dirname + '/calendardetail.html')
+})
