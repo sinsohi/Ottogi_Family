@@ -40,3 +40,8 @@ app.get('/',(request,response)=>{
 })
 
 
+
+
+app.get('/calendardetail',(request,response)=>{
+  response.sendFile(__dirname + '/calendardetail.html')
+})
