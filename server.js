@@ -29,3 +29,7 @@ app.get('/',(request,response)=>{
 app.get('/login',(request,response)=>{
   response.sendFile(__dirname + '/login.html')
 })
+
+app.get('/register',(request,response)=>{
+  response.sendFile(__dirname + '/register.html')
+})
