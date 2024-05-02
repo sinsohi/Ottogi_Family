@@ -1,7 +1,12 @@
 const express = require('express') // express 라이브러리
 const app = express()
+const bodyParser = require('body-parser'); //npm install body-parser
 const bcrypt = require('bcrypt') // bcrypt 셋팅
 require("dotenv").config(); // .env 파일에 환경변수 보관
+
+// body-parser 미들웨어 사용 설정
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json());
 
 app.use(express.static(__dirname + '/public'))
 
@@ -38,6 +43,7 @@ new MongoClient(url).connect().then((client)=>{
 }).catch((err)=>{
   console.log(err)
 })
+
 
 
 app.listen(process.env.PORT, ()=>{
@@ -79,4 +85,3 @@ app.get('/',(request,response)=>{
 app.get('/calendardetail',(request,response)=>{
   response.sendFile(__dirname + '/calendardetail.html')
 })
-
