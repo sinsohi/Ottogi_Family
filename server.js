@@ -55,33 +55,33 @@ app.get('/',(request,response)=>{
 app.get('/calendardetail',(request,response)=>{
   response.sendFile(__dirname + '/calendardetail.html')
 });
-app.get('/daily-record.html', (req, res) => {
+app.get('/daily-record', (req, res) => {
     res.sendFile(__dirname + '/daily-record.html');
 }); //매일 기록
 
-app.get('/setting.html', (req, res) => {
+app.get('/setting', (req, res) => {
   res.sendFile(__dirname + '/setting.html');
 });
 
-app.post('/submit-form', (req, res) => {
-  // 받은 폼 데이터 추출
-  const gender = req.body.gender;
-  const weight = req.body.weight;
-
-  res.send('데이터 제출됨.');
-});
 
 app.post('/submit-form', (req, res) => {
   // 클라이언트로부터 받은 폼 데이터 추출
   const gender = req.body.gender;
-  const height = req.body.height; // 키 정보 추가
+  const height = req.body.height;
   const weight = req.body.weight;
+  const age = req.body.age;
+  const sleeptime = req.body.sleeptime;
+  const activity = req.body.activity;
+  
 
   // 데이터베이스에 삽입할 데이터 객체 생성
   const data = {
       gender: gender,
       height: height,
-      weight: weight
+      weight: weight,
+      age: age,
+      sleeptime: sleeptime,
+      activity: activity
   };
 
   // 'user_info' 컬렉션에 데이터 삽입
