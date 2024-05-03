@@ -74,7 +74,7 @@ app.listen(process.env.PORT, ()=>{
 })
 
 app.get('/homePage',(request,response)=>{
-  response.sendFile(__dirname + '/public/homePage.html')
+  response.render('homePage.ejs');
 })
 
 

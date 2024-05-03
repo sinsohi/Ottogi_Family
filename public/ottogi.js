@@ -2,6 +2,7 @@ import * as THREE from 'three'
 import { GLTFLoader } from './jsm/loaders/GLTFLoader.js'
 import { OrbitControls } from'./jsm/controls/OrbitControls.js'
 
+
 export default function ottogi_module(){
 
 // html에 캔버스 가져와서 사용하기
@@ -9,7 +10,7 @@ const canvas = document.querySelector('canvas.HealthOttogi');
 const renderer = new THREE.WebGLRenderer({
     canvas : canvas,
  });
-renderer.setSize(window.innerWidth, window.innerHeight);
+renderer.setSize(window.innerWidth/2, window.innerHeight/2);
 renderer.setPixelRatio(window.devicePixelRatio > 1 ? 2: 1); // 이미지 고해상도로 
 
 
@@ -35,9 +36,9 @@ const ambientLight = new THREE.AmbientLight('white',0.5); // 전체적으로 은
 scene.add(ambientLight);
 
 // 카메라 위치 조정
-camera.position.x = 1;
-camera.position.y = 3;
-camera.position.z = 8; 
+camera.position.x = 2;
+camera.position.y = 2;
+camera.position.z = 2; 
 scene.add(camera);
 
 
