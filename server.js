@@ -73,9 +73,8 @@ app.post('/register', async (request,response)=>{
 // passport 라이브러리 사용법
 // 아이디/비번이 DB와 일치하는지 검증하는 로직 짜는 공간 (앞으로 유저가 제출한 아이디 비번이 DB랑 맞는지 검증하고 싶을때 이것만 실행하면 됨)
 passport.use(new LocalStrategy(async (입력한아이디, 입력한비번, cb) => {
-  try {
   // username 찾기
-  let result = await db.collection('user').findOne({ username : 입력한아이디})
+  let result = await db.collection('user_info').findOne({ username : 입력한아이디})
   if (!result) {
     return cb(null, false, { message: '아이디 DB에 없음' })
   }
@@ -85,10 +84,21 @@ passport.use(new LocalStrategy(async (입력한아이디, 입력한비번, cb) =
   } else {
     return cb(null, false, { message: '비번불일치' });
   }
-} catch(error) {
-  // 예외 발생시 처리
-}
 }))
+
+passport.serializeUser((user, done) => {
+  console.log(user)
+  process.nextTick(() => {
+    done(null, { id: user._id, username: user.username })
+  })
+})
+
+// 쿠키(세션아이디가 담긴)를 분석하는 역활 
+passport.deserializeUser((user, done) => {
+  process.nextTick(() => {
+    return done(null, user)
+  })
+})
 
 app.get('/login',(request,response)=>{
   response.render('login.ejs')
