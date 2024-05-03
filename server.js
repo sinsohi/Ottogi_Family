@@ -32,6 +32,19 @@ app.use(session({
 
 app.use(passport.session())
 
+// passport 라이브러리 사용법
+// 아이디/비번이 DB와 일치하는지 검증하는 로직 짜는 공간 (앞으로 유저가 제출한 아이디 비번이 DB랑 맞는지 검증하고 싶을때 이것만 실행하면 됨)
+passport.use(new LocalStrategy(async (입력한아이디, 입력한비번, cb) => {
+  let result = await db.collection('user').findOne({ username : 입력한아이디})
+  if (!result) {
+    return cb(null, false, { message: '아이디 DB에 없음' })
+  }
+  if (result.password == 입력한비번) {
+    return cb(null, result)
+  } else {
+    return cb(null, false, { message: '비번불일치' });
+  }
+}))
 
 // mongoDB 연결
 const { MongoClient } = require('mongodb');
@@ -73,6 +86,8 @@ app.post('/register', async (request,response)=>{
 app.get('/login',(request,response)=>{
   response.render('login.ejs')
 })
+
+app.post
 
 app.get('/calender',(request,response)=>{
   response.sendFile(__dirname + '/calender.html')
