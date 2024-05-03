@@ -158,7 +158,7 @@ app.post('/login', async (요청, 응답, next) => {
     요청.logIn(user, (err) => {
       //로그인 완료시 실행할 코드
       if (err) return next(err);
-      응답.sendFile(__dirname + '/InitialScreen.html');
+      응답.render('homePage.ejs')
     });
   })(요청, 응답, next);
 }) 
