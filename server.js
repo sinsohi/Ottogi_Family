@@ -1,15 +1,37 @@
 const express = require('express') // express 라이브러리
 const app = express()
+const path = require('path') // 추가
 const bodyParser = require('body-parser'); //npm install body-parser
 const bcrypt = require('bcrypt') // bcrypt 셋팅
 
 require("dotenv").config(); // .env 파일에 환경변수 보관
 
+app.use(express.static(__dirname + '/public'))
+// app.use(express.static('public')); 
+
+
+//추가
+
+app.use(
+  '/build/',
+  express.static(path.join(
+    __dirname,
+    'node_modules/three/build'
+  ))
+)
+
+app.use(
+  '/jsm/',
+  express.static(path.join(
+    __dirname,
+    'node_modules/three/examples/jsm'
+  ))
+)
+
 // body-parser 미들웨어 사용 설정
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
-app.use(express.static(__dirname + '/public'))
 
 // 템플릿엔진 ejs 셋팅
 app.set('view engine','ejs')
@@ -51,8 +73,13 @@ app.listen(process.env.PORT, ()=>{
     console.log('http://localhost:'+`${process.env.PORT}` +' 에서 서버 실행중')
 })
 
-// app.get('/',(request,response)=>{
-//     response.sendFile(__dirname + '/index.html')
+app.get('/homePage',(request,response)=>{
+  response.sendFile(__dirname + '/public/homePage.html')
+})
+
+
+// app.get('/homePage',(request,response)=>{
+//   response.sendFile(__dirname + '/index.html')
 // })
 
 
@@ -82,9 +109,6 @@ app.get('/calender',(request,response)=>{
 app.get('/',(request,response)=>{
   response.sendFile(__dirname + '/InitialScreen.html')
 })
-
-
-
 
 app.get('/calendardetail',(request,response)=>{
   response.sendFile(__dirname + '/calendardetail.html')
@@ -128,3 +152,4 @@ app.post('/submit-form', (req, res) => {
       res.status(200).send('폼 데이터가 성공적으로 제출되었습니다.');
   });
 });
+

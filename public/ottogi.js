@@ -1,6 +1,6 @@
 import * as THREE from 'three'
-import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js'
-import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
+import { GLTFLoader } from './jsm/loaders/GLTFLoader.js'
+import { OrbitControls } from'./jsm/controls/OrbitControls.js'
 
 export default function ottogi_module(){
 
@@ -50,7 +50,7 @@ const gltfLoader = new GLTFLoader();
 let mixer;
 
 gltfLoader.load(
-    'test4.glb',
+    'ottogi.glb',
     gltf => {
         console.log(gltf.scene.children[0]);
 

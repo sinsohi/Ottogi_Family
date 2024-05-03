@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>HomePage</title>
+    <meta name="viewport"
+      content="width=device-width,initial-scale=1.0,
+      minimum-scale=1.0,maximum-scale=1.0" />
+    <script type="importmap">
+      {
+        "imports": {
+          "three": "./build/three.module.js"
+        }
+      }
+    </script>
+  </head>
+  <body style="margin:0;padding:0;overflow:hidden">
+    <!-- <script src="mainPage.js" type="module"></script> -->
+
+    <script type="module" src="./mainPage.js"></script>
+    <!-- <script src="/mainPage.js"></script> -->
+    <canvas class="HealthOttogi" width="800" height="800"></canvas>
+
+    <h4>홈페이지</h4>
+    <button onclick="location.href='/setting.html';" type="button" class="btn btn-primary">Setting</button>
+    <button onclick="location.href='/daily-record.html';" type="button" class="btn btn-primary">Daily Record</button>
+    
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+
+
+
+    <!-- <script type="module" src="client.js"></script> -->
+  </body>
+</html> 
