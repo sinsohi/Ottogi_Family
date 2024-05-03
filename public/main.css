@@ -1,10 +1,58 @@
-body{
+body {
     margin :0;
+    padding: 0;
+    overflow: hidden;
+    height: 100vh;
+    width: 100vw;
+    background-image: url('./img/HomePage.png');
+    background-repeat: no-repeat;
+    background-size: cover;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .HealthOttogi{
     position: absolute;
     left:0;
-    top:0;
+    top:300px;
 }
+
+.button-container {
+    /* width: 800px;
+    height: auto;
+    display: flex;
+    flex-direction: column; */
+    /* align-items: center; */
+    /* margin-top: 520px;  */
+    display : flex;
+  justify-content : center;  /* 좌우정렬 */
+  align-items : center;  /* 상하정렬 */
+  flex-direction : column; /* 세로정렬 */
+  flex-wrap : wrap;  /* 폭이 넘치는 요소 wrap 처리 */
+
+}
+
+.daily-record, .setting, .calender, .addUser {
+    display : flex;
+    justify-content : center;  /* 좌우정렬 */
+    align-items : center;  /* 상하정렬 */
+    flex-direction : column; /* 세로정렬 */
+    flex-wrap : wrap;  /* 폭이 넘치는 요소 wrap 처리 */
+  }
+
+.image-button {
+    display: flex;
+    border: none;
+    background: none;
+    padding: 0;
+    cursor: pointer;
+
+}
+
+.image-button img {
+    width: 300px; 
+    height: auto; 
+}
+
 
