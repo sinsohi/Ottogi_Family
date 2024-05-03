@@ -71,7 +71,7 @@ app.post('/register', async (request,response)=>{
 })
 
 app.get('/login',(request,response)=>{
-  response.sendFile(__dirname + '/login.html')
+  response.render('login.ejs')
 })
 
 app.get('/calender',(request,response)=>{
