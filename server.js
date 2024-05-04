@@ -2,6 +2,7 @@ const express = require('express') // express 라이브러리
 const app = express()
 const bodyParser = require('body-parser'); //npm install body-parser
 const bcrypt = require('bcrypt') // bcrypt 셋팅
+const path = require('path');
 
 require("dotenv").config(); // .env 파일에 환경변수 보관
 
@@ -85,14 +86,19 @@ app.get('/',(request,response)=>{
 app.get('/calendardetail',(request,response)=>{
   response.sendFile(__dirname + '/calendardetail.html')
 });
-app.get('/daily-record', (req, res) => {
-    res.sendFile(__dirname + '/daily-record.html');
-}); //매일 기록
 
-app.get('/setting', (req, res) => {
-  res.sendFile(__dirname + '/setting.html');
+app.get('/daily-record', (req, res) => {
+  res.sendFile(__dirname + '/daily-record.html');
+}); // 매일 기록
+
+app.post('/submit-form', (req, res) => {
+  const meal = req.body.meal;
+  res.send(`<script>window.location.href = "/dailyrecordmeal?meal=${meal}";</script>`);
 });
 
+app.get('/dailyrecordmeal', (req, res) => {
+  res.sendFile(path.join(__dirname, 'dailyrecordmeal.html'));
+});
 
 app.post('/submit-form', (req, res) => {
   // 클라이언트로부터 받은 폼 데이터 추출
@@ -103,8 +109,6 @@ app.post('/submit-form', (req, res) => {
   const sleeptime = req.body.sleeptime;
   const activity = req.body.activity;
   
-
-  // 데이터베이스에 삽입할 데이터 객체 생성
   const data = {
       gender: gender,
       height: height,
@@ -114,8 +118,7 @@ app.post('/submit-form', (req, res) => {
       activity: activity
   };
 
-  // 'user_info' 컬렉션에 데이터 삽입
-  db.collection('user_info').insertOne(data, (err, result) => {
+  db.collection('user_settinginfo').insertOne(data, (err, result) => {
       if (err) {
           console.log('데이터베이스에 데이터를 삽입하는 중 오류가 발생했습니다:', err);
           return res.status(500).send('데이터베이스 오류가 발생했습니다.');

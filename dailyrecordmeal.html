@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Daily Record Meal</title>
+</head>
+<body>
+    <div class="container">
+        <h2>매일 기록 - 식단</h2>
+        <div id="mealContent">
+            
+        </div>
+    </div>
+
+    <script>
+        window.onload = function () {
+            const urlParams = new URLSearchParams(window.location.search);
+            const meal = urlParams.get('meal');
+            
+            let mealContent = '';
+            if (meal === 'breakfast') {
+                mealContent = '<h3>아침 식단</h3><p>아침 메뉴 내용</p>';
+            } else if (meal === 'lunch') {
+                mealContent = '<h3>점심 식단</h3><p>점심 메뉴 내용</p>';
+            } else if (meal === 'dinner') {
+                mealContent = '<h3>저녁 식단</h3><p>저녁 메뉴 내용</p>';
+            } 
+            const mealContentElement = document.getElementById('mealContent');
+            mealContentElement.innerHTML = mealContent;
+        };
+    </script>
+</body>
+</html>
