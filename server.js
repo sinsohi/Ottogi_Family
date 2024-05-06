@@ -51,8 +51,9 @@ app.listen(process.env.PORT, ()=>{
     console.log('http://localhost:'+`${process.env.PORT}` +' 에서 서버 실행중')
 })
 
-app.get('/homePage',(request,response)=>{
-  response.render('index.ejs');})
+// app.get('/',(request,response)=>{
+//     response.sendFile(__dirname + '/index.html')
+// })
 
 
 app.get('/register',(request,response)=>{
@@ -81,6 +82,9 @@ app.get('/calender',(request,response)=>{
 app.get('/',(request,response)=>{
   response.sendFile(__dirname + '/InitialScreen.html')
 })
+
+
+
 
 app.get('/calendardetail',(request,response)=>{
   response.sendFile(__dirname + '/calendardetail.html')
