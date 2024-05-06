@@ -42,21 +42,43 @@
         };
         
         function addMenu() {
-    const menuName = document.getElementById('menuName').value;
-    const calories = document.getElementById('calories').value;
+            const menuName = document.getElementById('menuName').value;
+            const calories = document.getElementById('calories').value;
 
-    const newMenuItem = document.createElement('div');
-    newMenuItem.classList.add('menu-item');
+            const newMenuItem = document.createElement('div');
+            newMenuItem.classList.add('menu-item');
 
-    newMenuItem.innerHTML = `<p><strong>${menuName}</strong>: ${calories} 칼로리</p>`;
-    
-    const mealContentElement = document.getElementById('mealContent');
-    mealContentElement.appendChild(newMenuItem);
-    
-    // 입력 필드 초기화
-    document.getElementById('menuName').value = '';
-    document.getElementById('calories').value = '';
-}
+            newMenuItem.innerHTML = `<p><strong>${menuName}</strong>: ${calories} 칼로리</p>`;
+            
+            const mealContentElement = document.getElementById('mealContent');
+            mealContentElement.appendChild(newMenuItem);
+
+            // 입력 필드 초기화
+            document.getElementById('menuName').value = '';
+            document.getElementById('calories').value = '';
+
+            const meal = 'breakfast';
+            const data = {
+                meal: meal,
+                menuName: menuName,
+                calories: calories
+            };
+
+            fetch('/submit-form', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(data),
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log('Success:', data);
+            })
+            .catch((error) => {
+                console.error('Error:', error);
+            });
+        }
     </script>
 </body>
 </html>

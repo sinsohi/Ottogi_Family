@@ -189,8 +189,36 @@ app.get('/dailyrecordmeal', (req, res) => {
   res.sendFile(path.join(__dirname, 'dailyrecordmeal.html'));
 });
 
-app.post('/submit-form', (req, res) => {
-  // 클라이언트로부터 받은 폼 데이터 추출
+app.post('/dailyrecordmeal', (req, res) => {
+  const meal = req.body.meal;
+  const menuName = req.body.menuName;
+  const calories = req.body.calories;
+
+  let collectionName;
+  if (meal === 'breakfast') {
+      collectionName = 'breakfast';
+  } else if (meal === 'lunch') {
+      collectionName = 'lunch';
+  } else if (meal === 'dinner') {
+      collectionName = 'dinner';
+  }
+
+  const data = {
+      menuName: menuName,
+      calories: calories
+  };
+
+  db.collection(collectionName).insertOne(data, (err, result) => {
+    if (err) {
+      console.log('데이터베이스 오류:', err);
+      return res.status(500).send('데이터베이스 오류');
+    }  
+    console.log('데이터를 성공적으로 삽입');
+    res.status(200).send('성공적으로 제출');
+  });
+});
+
+app.post('/setting', (req, res) => {
   const gender = req.body.gender;
   const height = req.body.height;
   const weight = req.body.weight;
@@ -209,11 +237,10 @@ app.post('/submit-form', (req, res) => {
 
   db.collection('user_settinginfo').insertOne(data, (err, result) => {
       if (err) {
-          console.log('데이터베이스에 데이터를 삽입하는 중 오류가 발생했습니다:', err);
-          return res.status(500).send('데이터베이스 오류가 발생했습니다.');
+          console.log('데이터베이스 오류:', err);
+          return res.status(500).send('데이터베이스 오류');
       }
-      console.log('데이터베이스에 데이터를 성공적으로 삽입했습니다.');
-      res.status(200).send('폼 데이터가 성공적으로 제출되었습니다.');
+      console.log('데이터를 성공적으로 삽입');
+      res.status(200).send('제출 완료');
   });
 });
-
