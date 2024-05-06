@@ -53,11 +53,8 @@
             const mealContentElement = document.getElementById('mealContent');
             mealContentElement.appendChild(newMenuItem);
 
-            // 입력 필드 초기화
-            document.getElementById('menuName').value = '';
-            document.getElementById('calories').value = '';
-
-            const meal = 'breakfast';
+            const urlParams = new URLSearchParams(window.location.search);
+            const meal = urlParams.get('meal');
             const data = {
                 meal: meal,
                 menuName: menuName,
