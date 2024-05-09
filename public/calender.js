@@ -29,19 +29,29 @@ function createCalendar(year, month) {
   for (let i = 0; i < 6; i++) {
     const row = document.createElement("tr"); //행을 생성
     for (let j = 0; j < 7; j++) {
-      if (i === 0 && j < firstDayOfMonth) { // 첫 주의 시작일 이전은 빈셀로 채움
+      // 첫 주의 시작일 이전은 빈셀로 채움
+      if (i === 0 && j < firstDayOfMonth) { 
         const cell = document.createElement("td");
         row.appendChild(cell);
       } 
-      else if (date > daysInMonth) { // 해당 달의 일수를 초과하면 종료
+      // 해당 달의 일수를 초과하면 종료
+      else if (date > daysInMonth) {
         break;
       } 
+      // 셀에 해당하는 날짜를 채운다
       else { 
         const cell = document.createElement("td");
-        cell.textContent = date; // 셀에 해당하는 날짜를 채운다
+        cell.textContent = date; 
         if (year === todayYear && month === todayMonth && date === todayDate) {
           cell.classList.add("today");  
         }
+        // 즉시 실행 함수를 사용하여 클릭 이벤트 리스너에 date 값을 "캡처"
+        (function(currentDate) {
+          cell.addEventListener('click', function() {
+            const formattedDate = `${year}-${String(month + 1).padStart(2, '0')}-${String(currentDate).padStart(2, '0')}`;
+            window.location.href = `/calendardetail?date=${formattedDate}`;
+          });
+        })(date);
         row.appendChild(cell);
         date++;
       }
@@ -69,6 +79,8 @@ function nextMonth() {
   }
   createCalendar(currentYear, currentMonth); // 새로운 달력을 생성
 }
+
+
 
 // 초기 달력을 생성
 createCalendar(currentYear, currentMonth);
