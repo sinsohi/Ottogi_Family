@@ -40,6 +40,7 @@ td {
 
 td:hover {
   background-color: #a2ab91;
+  font-weight: bold;
 }
 
 /*달력위치*/
@@ -63,18 +64,13 @@ td:hover {
 
 /*전체 사이트 배경*/
 body {
-  width: 100%;
-  height: 100%;
+  height: 100vh;
+  width: 100vw;
+  margin:0;
+  padding:0;
   background-image: url('./Calender_배경화면.png');
-  /* 배경 이미지 경로 */
-  background-size: cover;
-  /* 화면에 꽉 차게 배경 이미지 크기 조절 */
-  background-position: center;
-  /* 배경 이미지 중앙 정렬 */
   background-repeat: no-repeat;
-  /* 이미지 반복 없음 */
-  background-attachment: fixed;
-  /* 스크롤 시에도 이미지 고정 */
+  background-size: 100% 100%;
 }
 
 /* 현재 연도와 월 표시 스타일 */
@@ -85,11 +81,16 @@ body {
 }
 
 #calendarControls {
-  width: 1075px; /* 표의 너비와 일치하게 설정 */
+  width: 1077px; /* 표의 너비와 일치하게 설정 */
   margin: 0 auto; /* 가운데 정렬 */
   background-color: #a2ab91; /* 원하는 배경색 설정 */
   /* 추가적 스타일링 */
   padding: 5px 0; /* 상하 패딩 설정 */
   text-align: center; /* 내부 텍스트 가운데 정렬 */
   border: 1px solid #000000;
+}
+
+.today {
+  background-color: #a2ab91;
+  font-weight: bold;
 }

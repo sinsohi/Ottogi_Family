@@ -1,15 +1,38 @@
 const express = require('express') // express 라이브러리
 const app = express()
+const path = require('path') // 추가
 const bodyParser = require('body-parser'); //npm install body-parser
 const bcrypt = require('bcrypt') // bcrypt 셋팅
+const MongoStore = require("connect-mongo"); // connect-mongo 셋팅
 
 require("dotenv").config(); // .env 파일에 환경변수 보관
+
+app.use(express.static(__dirname + '/public'))
+// app.use(express.static('public')); 
+
+
+//추가
+
+app.use(
+  '/build/',
+  express.static(path.join(
+    __dirname,
+    'node_modules/three/build'
+  ))
+)
+
+app.use(
+  '/jsm/',
+  express.static(path.join(
+    __dirname,
+    'node_modules/three/examples/jsm'
+  ))
+)
 
 // body-parser 미들웨어 사용 설정
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
-app.use(express.static(__dirname + '/public'))
 
 // 템플릿엔진 ejs 셋팅
 app.set('view engine','ejs')
@@ -27,14 +50,19 @@ app.use(passport.initialize())
 app.use(session({
   secret: '암호화에 쓸 비번',
   resave : false, // 유저가 서버로 요청할 때마다 세션 갱신할건지 여부
-  saveUninitialized : false // 로그인 안해도 세션 만들 것인지 여부
+  saveUninitialized : false, // 로그인 안해도 세션 만들 것인지 여부
+  cookie: { maxAge : 60 * 60 * 1000},
+  store : MongoStore.create({
+    mongoUrl: process.env.DBurl,
+    dbName:"Ottogi_Family"
+  })
 }))
 
 app.use(passport.session())
 
 
 // mongoDB 연결
-const { MongoClient } = require('mongodb');
+const { MongoClient, ObjectId } = require('mongodb');
 
 let db;
 const url = process.env.DBurl;
@@ -51,8 +79,13 @@ app.listen(process.env.PORT, ()=>{
     console.log('http://localhost:'+`${process.env.PORT}` +' 에서 서버 실행중')
 })
 
-// app.get('/',(request,response)=>{
-//     response.sendFile(__dirname + '/index.html')
+app.get('/homePage',(request,response)=>{
+  response.render('homePage.ejs');
+})
+
+
+// app.get('/homePage',(request,response)=>{
+//   response.sendFile(__dirname + '/index.html')
 // })
 
 
@@ -70,9 +103,65 @@ app.post('/register', async (request,response)=>{
   response.sendFile(__dirname + '/InitialScreen.html')
 })
 
+
+// 아이디/비번이 DB와 일치하는지 검증하는 로직 짜는 공간 (앞으로 유저가 제출한 아이디 비번이 DB랑 맞는지 검증하고 싶을때 이것만 실행하면 됨)
+passport.use(
+  new LocalStrategy(async (입력한아이디, 입력한비번, cb) => {
+  // username 찾기
+  let result = await db.collection('user_info').findOne({ username : 입력한아이디})
+  if (!result) {
+    return cb(null, false, { message: '아이디 DB에 없음' })
+  }
+
+  // password 비교
+  if (await bcrypt.compare(입력한비번, result.password)) {
+    return cb(null, result)
+  } else {
+    return cb(null, false, { message: '비번불일치' });
+  }
+}))
+
+
+
+
+// 로그인시 세션 만들기 (요청.logIn() 쓰면 자동 실행됨)
+passport.serializeUser((user, done) => {
+  // console.log(user);
+  process.nextTick(() => {
+    // 내부 코드를 비동기적으로 처리해줌
+    done(null, { id: user._id, username: user.username });
+  });
+});
+
+// 유저가 보낸 쿠키 분석 (세션 정보 적힌 쿠키 가지고 있는 유저가 요청 날릴 때마다 실행됨)
+passport.deserializeUser(async (user, done) => {
+  let result = await db
+    .collection("user_info")
+    .findOne({ _id: new ObjectId(user.id) });
+  delete result.password;
+  process.nextTick(() => {
+    done(null, result); // result : 요청.user에 들어감
+  });
+});
+
 app.get('/login',(request,response)=>{
-  response.sendFile(__dirname + '/login.html')
+  response.render('login.ejs')
 })
+
+// 아이디/비번이 DB와 일치하는지 검증하는 코드 
+app.post('/login', async (요청, 응답, next) => {
+
+  passport.authenticate('local', (error, user, info) => {
+    if (error) return 응답.status(500).json(error)
+      if (!user) return 응답.status(401).json(info.message)
+      //일치할 경우 
+    요청.logIn(user, (err) => {
+      //로그인 완료시 실행할 코드
+      if (err) return next(err);
+      응답.render('homePage.ejs')
+    });
+  })(요청, 응답, next);
+}) 
 
 app.get('/calender',(request,response)=>{
   response.sendFile(__dirname + '/calender.html')
@@ -125,3 +214,4 @@ app.post('/submit-form', (req, res) => {
       res.status(200).send('폼 데이터가 성공적으로 제출되었습니다.');
   });
 });
+
