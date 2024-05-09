@@ -17,6 +17,13 @@ function createCalendar(year, month) {
   //달력 상단에 현재 연도와 월 표시
   document.getElementById("currentMonth").textContent = `${year}/${month + 1}`;
 
+  // 오늘 날짜 확인 
+  const today = new Date();
+  const todayYear = today.getFullYear();
+  const todayMonth = today.getMonth();
+  const todayDate = today.getDate();
+
+
   let date = 1;
   //6주차에 걸친 달력 생성 
   for (let i = 0; i < 6; i++) {
@@ -25,11 +32,16 @@ function createCalendar(year, month) {
       if (i === 0 && j < firstDayOfMonth) { // 첫 주의 시작일 이전은 빈셀로 채움
         const cell = document.createElement("td");
         row.appendChild(cell);
-      } else if (date > daysInMonth) { // 해당 달의 일수를 초과하면 종료
+      } 
+      else if (date > daysInMonth) { // 해당 달의 일수를 초과하면 종료
         break;
-      } else { 
+      } 
+      else { 
         const cell = document.createElement("td");
         cell.textContent = date; // 셀에 해당하는 날짜를 채운다
+        if (year === todayYear && month === todayMonth && date === todayDate) {
+          cell.classList.add("today");  
+        }
         row.appendChild(cell);
         date++;
       }
