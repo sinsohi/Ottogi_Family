@@ -176,6 +176,10 @@ app.get('/calendardetail',(request,response)=>{
   response.sendFile(__dirname + '/calendardetail.html')
 });
 
+app.get('/setting', (req, res) => {
+  res.sendFile(__dirname + '/setting.html');
+}); // 세팅
+
 app.get('/daily-record', (req, res) => {
   res.sendFile(__dirname + '/daily-record.html');
 }); // 매일 기록
