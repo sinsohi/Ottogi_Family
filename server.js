@@ -193,23 +193,25 @@ app.get('/dailyrecordmeal', (req, res) => {
   res.sendFile(path.join(__dirname, 'dailyrecordmeal.html'));
 });
 
-app.post('/dailyrecordmeal', (req, res) => {
+app.post('/dailyrecordmeal', async (req, res) => {
   const meal = req.body.meal;
   const menuName = req.body.menuName;
   const calories = req.body.calories;
+  const userNickname = req.user.userNickname; // 유저의 userNickname
 
   let collectionName;
   if (meal === 'breakfast') {
-      collectionName = 'breakfast';
+    collectionName = 'breakfast';
   } else if (meal === 'lunch') {
-      collectionName = 'lunch';
+    collectionName = 'lunch';
   } else if (meal === 'dinner') {
-      collectionName = 'dinner';
+    collectionName = 'dinner';
   }
 
   const data = {
-      menuName: menuName,
-      calories: calories
+    userNickname: userNickname,
+    menuName: menuName,
+    calories: calories
   };
 
   db.collection(collectionName).insertOne(data, (err, result) => {
