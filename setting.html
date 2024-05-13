@@ -7,7 +7,7 @@
 </head>
 <body>
     <h2>성별 선택</h2>
-    <form action="/submit-form" method="POST">
+    <form action="/setting" method="POST">
         <input type="radio" id="male" name="gender" value="male">
         <label for="male">남자</label><br>
         <input type="radio" id="female" name="gender" value="female">
@@ -41,7 +41,21 @@
             <label for="very_active">매우 활동적</label>
         </div>
 
-        <button type="submit">저장</button>
+        <input type="hidden" id="bmi" name="bmi">
+
+        <button type="submit" onclick="calculateBMI()">저장</button>
     </form>
+
+    <script>
+        function calculateBMI() {
+            var height = parseFloat(document.getElementById('height').value);
+            var weight = parseFloat(document.getElementById('weight').value);
+
+            var heightInMeter = height / 100; //미터 변환
+            var bmi = weight / (heightInMeter * heightInMeter);
+            document.getElementById('bmi').value = bmi;
+            document.getElementById('settingForm').submit();
+        }
+    </script>
 </body>
 </html>

@@ -232,6 +232,7 @@ app.post('/setting', (req, res) => {
   const age = req.body.age;
   const sleeptime = req.body.sleeptime;
   const activity = req.body.activity;
+  const bmi = req.body.bmi;
   
   const data = {
       userNickname: userNickname,
@@ -240,7 +241,8 @@ app.post('/setting', (req, res) => {
       weight: weight,
       age: age,
       sleeptime: sleeptime,
-      activity: activity
+      activity: activity,
+      bmi: bmi
   };
 
   db.collection('user_info').insertOne(data, (err, result) => {
