@@ -149,18 +149,18 @@ app.get('/login',(request,response)=>{
 })
 
 // 아이디/비번이 DB와 일치하는지 검증하는 코드 
-app.post('/login', async (요청, 응답, next) => {
+app.post('/login', async (request, response, next) => {
 
   passport.authenticate('local', (error, user, info) => {
-    if (error) return 응답.status(500).json(error)
-      if (!user) return 응답.status(401).json(info.message)
+    if (error) return response.status(500).json(error)
+      if (!user) return response.status(401).json(info.message)
       //일치할 경우 
-    요청.logIn(user, (err) => {
+    request.logIn(user, (err) => {
       //로그인 완료시 실행할 코드
       if (err) return next(err);
-      응답.render('homePage.ejs')
+      response.render('homePage.ejs')
     });
-  })(요청, 응답, next);
+  })(request, response, next);
 }) 
 
 app.get('/calender',(request,response)=>{
@@ -172,9 +172,12 @@ app.get('/',(request,response)=>{
   response.sendFile(__dirname + '/InitialScreen.html')
 })
 
-app.get('/calendardetail',(request,response)=>{
-  response.sendFile(__dirname + '/calendardetail.html')
+app.get('/calendardetail', async (request,response)=>{
+  const users = await db.collection('user_info').find({_id : new ObjectId('6641d065b6d0cedf4e2c5b74')}).toArray();
+  console.log(users[0].weight);
+  response.render('calendardetail.ejs', {users : users});
 });
+
 app.get('/daily-record', (req, res) => {
     res.sendFile(__dirname + '/daily-record.html');
 }); //매일 기록
