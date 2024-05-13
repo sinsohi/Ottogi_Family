@@ -225,6 +225,7 @@ app.post('/dailyrecordmeal', async (req, res) => {
 });
 
 app.post('/setting', (req, res) => {
+  const userNickname = req.user.userNickname;
   const gender = req.body.gender;
   const height = req.body.height;
   const weight = req.body.weight;
@@ -233,6 +234,7 @@ app.post('/setting', (req, res) => {
   const activity = req.body.activity;
   
   const data = {
+      userNickname: userNickname,
       gender: gender,
       height: height,
       weight: weight,
@@ -241,7 +243,7 @@ app.post('/setting', (req, res) => {
       activity: activity
   };
 
-  db.collection('user_settinginfo').insertOne(data, (err, result) => {
+  db.collection('user_info').insertOne(data, (err, result) => {
       if (err) {
           console.log('데이터베이스 오류:', err);
           return res.status(500).send('데이터베이스 오류');
