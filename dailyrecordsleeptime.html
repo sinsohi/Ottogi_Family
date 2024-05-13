@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>수면 기록</title>
+</head>
+<body>
+    <div class="container">
+        <h2>수면 기록</h2>
+        <form id="sleepForm" action="/dailyrecordsleeptime" method="POST">
+            <div class="mb-3">
+                <label for="sleepHour" class="form-label">HOUR</label>
+                <input type="number" name="sleepHour" class="form-control" id="sleepHour" placeholder="시" min="0" max="23" required>
+            </div>
+            <div class="mb-3">
+                <label for="sleepMinute" class="form-label">MINUTE</label>
+                <input type="number" name="sleepMinute" class="form-control" id="sleepMinute" placeholder="분" min="0" max="59" required>
+            </div>
+            <button type="submit" class="btn btn-primary">기록하기</button>
+        </form>
+    </div>
+</body>
+</html>

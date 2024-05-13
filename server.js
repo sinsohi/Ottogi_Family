@@ -185,7 +185,7 @@ app.post('/dailyrecordexercise', async(req, res) => {
     exerciseName: exerciseName
   };
 
-  db.collection('dailyrecordexercise').insertOne(data, (err, result) => {
+  db.collection('DRexercise').insertOne(data, (err, result) => {
     if (err) {
       console.log('데이터베이스 오류:', err);
       return res.status(500).send('데이터베이스 오류');
@@ -222,6 +222,30 @@ app.post('/dailyrecordmeal', async (req, res) => {
     res.status(200).send('성공적으로 제출');
   });
 });
+
+
+app.post('/dailyrecordsleeptime', async (req, res) => {
+  const sleepHour = req.body.sleepHour;
+  const sleepMinute = req.body.sleepMinute;
+  const userNickname = req.user.userNickname;
+
+  const data = {
+    userNickname: userNickname,
+    sleepHour: sleepHour,
+    sleepMinute: sleepMinute
+  };
+
+ await db.collection('DRsleeptime').insertOne(data, (err, result) => {
+    if (err) {
+      console.log('데이터베이스 오류:', err);
+      return res.status(500).send('데이터베이스 오류');
+    }
+    console.log('데이터를 성공적으로 삽입');
+    res.status(200).send('성공적으로 제출');
+  });
+});
+
+
 
 app.post('/setting', async (req, res) => {
   const userNickname = req.user.userNickname;
