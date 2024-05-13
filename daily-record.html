@@ -10,17 +10,15 @@
                 <button type="submit" name="meal" value="dinner" class="btn btn-primary">저녁</button>
             </div>
         </form>        
-        </form>  
+        <form action="/dailyrecordexercise" method="GET"> <!-- 수정: method="GET" 추가 -->
             <div class="mb-3">
                 <label for="exampleFormControlTextarea1" class="form-label">운동량</label>
-                <textarea class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
             </div>
             <button type="submit" class="btn btn-primary">기록하기</button>
         </form>
-        <form>
+        <form action="/dailyrecordsleeptime" method="GET"> <!-- 수정: method="GET" 추가 -->
             <div class="mb-3">
                 <label for="exampleFormControlTextarea1" class="form-label">수면시간</label>
-                <textarea class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
             </div>
             <button type="submit" class="btn btn-primary">기록하기</button>
         </form>

@@ -166,6 +166,35 @@ app.get('/dailyrecordmeal', (req, res) => {
   res.sendFile(path.join(__dirname, 'dailyrecordmeal.html'));
 });
 
+app.get('/dailyrecordexercise', (req, res) => {
+  res.sendFile(path.join(__dirname, 'dailyrecordexercise.html'));
+}); //*
+
+app.get('/dailyrecordsleeptime', (req, res) => {
+  res.sendFile(path.join(__dirname, 'dailyrecordsleeptime.html'));
+}); //*
+
+app.post('/dailyrecordexercise', async(req, res) => {
+  const exerciseName = req.body.exerciseName;
+  const caloriesBurned = req.body.caloriesBurned;
+  const userNickname = req.user.userNickname;
+
+  const data = {
+    userNickname: userNickname,
+    caloriesBurned: caloriesBurned,
+    exerciseName: exerciseName
+  };
+
+  db.collection('dailyrecordexercise').insertOne(data, (err, result) => {
+    if (err) {
+      console.log('데이터베이스 오류:', err);
+      return res.status(500).send('데이터베이스 오류');
+    }
+    console.log('데이터를 성공적으로 삽입');
+    res.status(200).send('성공적으로 제출');
+  });
+});
+
 app.post('/dailyrecordmeal', async (req, res) => {
   const meal = req.body.meal;
   const menuName = req.body.menuName;
@@ -194,7 +223,7 @@ app.post('/dailyrecordmeal', async (req, res) => {
   });
 });
 
-app.post('/setting', (req, res) => {
+app.post('/setting', async (req, res) => {
   const userNickname = req.user.userNickname;
   const gender = req.body.gender;
   const height = req.body.height;
