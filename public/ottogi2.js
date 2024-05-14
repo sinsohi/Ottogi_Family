@@ -88,6 +88,27 @@ export default function ottogi_module2(){
             this.head.position.y = 2
         }
 
+		// 눈 생성
+        createEyes() {
+            const eyes = new THREE.Group()
+            const geometry = new THREE.SphereGeometry(0.08, 12, 8)
+            const material = new THREE.MeshLambertMaterial({ color: 0x44445c })
+            
+            for(let i = 0; i < 2; i++) {
+                const eye = new THREE.Mesh(geometry, material)
+                const m = i % 2 === 0 ? 1 : -1
+                
+                eyes.add(eye)
+                eye.position.x = 0.36 * m
+            }
+            
+            this.head.add(eyes)
+            
+            eyes.position.y = -0.1
+            eyes.position.z = 0.7
+        }
+
+
 
 		// 초기화
 		init(){
