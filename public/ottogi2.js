@@ -39,4 +39,18 @@ export default function ottogi_module2(){
         camera.aspect = sizes.width / sizes.height
         camera.updateProjectionMatrix()
     })
+
+	 // Material
+	 const material = new THREE.MeshLambertMaterial({ color: 0xffffff })
+
+	 // Lighting
+	 const lightAmbient = new THREE.AmbientLight(0x9eaeff, 0.5)
+	 scene.add(lightAmbient)
+ 
+	 const lightDirectional = new THREE.DirectionalLight(0xffffff, 0.8)
+	 scene.add(lightDirectional)
+ 
+	 lightDirectional.position.set(5, 5, 5)
+
+	
 }
