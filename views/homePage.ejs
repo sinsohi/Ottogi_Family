@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>HomePage</title>
+    <meta name="viewport"
+      content="width=device-width,initial-scale=1.0,
+      minimum-scale=1.0,maximum-scale=1.0" />
+    <script type="importmap">
+      {
+        "imports": {
+          "three": "./build/three.module.js"
+        }
+      }
+    </script>
+    <link rel="stylesheet" href="main.css">
+  </head>
+  <body>
+
+    <script type="module" src="./mainPage.js"></script>
+    <!-- <canvas class="HealthOttogi" width="500" height="500"></canvas> -->
+
+    <h4>홈페이지</h4>
+       <!-- 기록 하러 가기 버튼을 누르면 server에 get 요청 보내기 -->
+       <form action="/daily-record" method="get">
+        <button type="submit" class="image-button daily-record">
+            <img src="./img/daily-record-button.png" alt="daily-record">
+        </button>
+      </form>
+    
+     <!-- 정보 수정 버튼을 누르면 server에 get 요청 보내기 -->
+     <form action="/setting" method="get">
+      <button type="submit" class="image-button setting">
+          <img src="./img/setting-button.png" alt="setting">
+      </button>
+    </form>
+
+    <!-- 월별 기록 보러 가기 버튼을 누르면 server에 get 요청 보내기 -->
+    <form action="/calendar" method="get">
+      <button type="submit" class="image-button calendar">
+          <img src="./img/calendar-button.png" alt="calendar">
+      </button>
+
+       <!-- 가족 추가 버튼을 누르면 server에 get 요청 보내기 -->
+    <form action="/addUser" method="get">
+      <button type="submit" class="image-button addUser">
+          <img src="./img/addUser-button.png" alt="addUser">
+      </button>
+    </form>
+
+  
+
+    <!-- bootstrap 라이브러리 -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+  </body>
+</html> 
