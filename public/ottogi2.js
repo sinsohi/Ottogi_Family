@@ -10,7 +10,7 @@ export default function ottogi_module2(){
         scene.background = texture;
     });
 
-	// 화면 크기 설정
+   // 화면 크기 설정
     const sizes = {
         width: window.innerWidth,
         height: window.innerHeight
@@ -30,7 +30,7 @@ export default function ottogi_module2(){
     camera.position.z = 8
     scene.add(camera)
 
-	// 창 크기가 바뀔 때마다 카메라 비율 재조정
+   // 창 크기가 바뀔 때마다 카메라 비율 재조정
     window.addEventListener('resize', () =>
     {
         sizes.width = window.innerWidth
@@ -40,19 +40,19 @@ export default function ottogi_module2(){
         camera.updateProjectionMatrix()
     })
 
-	 // Material
-	 const material = new THREE.MeshLambertMaterial({ color: 0xffffff })
+    // Material
+    const material = new THREE.MeshLambertMaterial({ color: 0xffffff })
 
-	 // Lighting
-	 const lightAmbient = new THREE.AmbientLight(0x9eaeff, 0.5)
-	 scene.add(lightAmbient)
+    // Lighting
+    const lightAmbient = new THREE.AmbientLight(0x9eaeff, 0.5)
+    scene.add(lightAmbient)
  
-	 const lightDirectional = new THREE.DirectionalLight(0xffffff, 0.8)
-	 scene.add(lightDirectional)
+    const lightDirectional = new THREE.DirectionalLight(0xffffff, 0.8)
+    scene.add(lightDirectional)
  
-	 lightDirectional.position.set(5, 5, 5)
+    lightDirectional.position.set(5, 5, 5)
 
-	// 헬뚝이 class 정의
+   // 헬뚝이 class 정의
     class Figure {
         constructor(params) {
             this.params = {
@@ -60,34 +60,42 @@ export default function ottogi_module2(){
                 y: -2,
                 z: 0,
                 rz: 0,
-				ry:0,
+            ry:0,
                 ...params
             }
 
-		// 그룹 생성 후 scene에 추가 
+      // 그룹 생성 후 scene에 추가 
         this.group = new THREE.Group()
         scene.add(this.group)
 
-		 // 위치 설정
-		 this.group.position.x = this.params.x
-		 this.group.position.y = this.params.y
-		 this.group.position.z = this.params.z
-		 
-		 // 재질 설정
-		 this.headMaterial = new THREE.MeshLambertMaterial({ color: 0xF8E0E6})
-		 this.bodyMaterial = new THREE.MeshLambertMaterial({ color: 0xF8E0E6 })
-		 
-	 }
+       // 위치 설정
+       this.group.position.x = this.params.x
+       this.group.position.y = this.params.y
+       this.group.position.z = this.params.z
+       
+       // 재질 설정
+       this.headMaterial = new THREE.MeshLambertMaterial({ color: 0xF8E0E6})
+       this.bodyMaterial = new THREE.MeshLambertMaterial({ color: 0xF8E0E6 })
+       
+    }
 
-		// 몸통 생성
-		createBody(){
-			const geometry = new THREE.SphereGeometry(1.3, 32, 16)
-            const material = new THREE.MeshLambertMaterial({ color: 0xF8E0E6 })
-			this.group.add(this.body)
-		}
+      // 몸통 생성
+	  createBody(waistSize) {
+		this.body = new THREE.Group()
+		const geometry = new THREE.SphereGeometry(1.3, 32, 16)
+		const material = new THREE.MeshLambertMaterial({ color: 0xF8E0E6 })
+		const bodyMain = new THREE.Mesh(geometry, material)
+	
+		// 타원형으로 만들기 위해 스케일 조정
+		const scaleXZ = waistSize;
+		bodyMain.scale.set(scaleXZ, 1, scaleXZ);
+	
+		this.body.add(bodyMain)
+		this.group.add(this.body)
+	}
 
-		// 머리 생성
-		createHead() {
+      // 머리 생성
+      createHead() {
             this.head = new THREE.Group()
             const geometry = new THREE.SphereGeometry(0.8, 32, 16)
             const headMain = new THREE.Mesh(geometry, this.headMaterial)
@@ -97,11 +105,11 @@ export default function ottogi_module2(){
             
             this.head.position.y = 2
 
-			// 눈 생성 함수 호출
-			this.createEyes()
+         // 눈 생성 함수 호출
+         this.createEyes()
         }
 
-		// 눈 생성
+      // 눈 생성
         createEyes() {
             const eyes = new THREE.Group()
             const geometry = new THREE.SphereGeometry(0.08, 12, 8)
@@ -121,15 +129,14 @@ export default function ottogi_module2(){
             eyes.position.z = 0.7
         }
 
-
-
-		// 초기화
-		init(){
-			this.createBody()
-			this.createHead()
-		}
+      // 초기화
+      init(){
+         this.createBody(1)
+         this.createHead()
+      }
 }
-	const figure = new Figure()
-	figure.init()
-}
+   const figure = new Figure({})
+   figure.init()
 
+   render();
+}
