@@ -76,8 +76,26 @@ export default function ottogi_module2(){
 			this.group.add(this.body)
 		}
 
+		// 머리 생성
+		createHead() {
+            this.head = new THREE.Group()
+            const geometry = new THREE.SphereGeometry(0.8, 32, 16)
+            const headMain = new THREE.Mesh(geometry, this.headMaterial)
+            this.head.add(headMain)
+            
+            this.group.add(this.head)
+            
+            this.head.position.y = 2
+        }
+
+
 		// 초기화
 		init(){
 			this.createBody()
+			this.createHead()
 		}
-}}
+}
+	const figure = new Figure()
+	figure.init()
+}
+
