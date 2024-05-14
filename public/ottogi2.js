@@ -64,10 +64,20 @@ export default function ottogi_module2(){
                 ...params
             }
 
-			// 그룹 생성 후 scene에 추가 
-            this.group = new THREE.Group()
-            scene.add(this.group)
-		}
+		// 그룹 생성 후 scene에 추가 
+        this.group = new THREE.Group()
+        scene.add(this.group)
+
+		 // 위치 설정
+		 this.group.position.x = this.params.x
+		 this.group.position.y = this.params.y
+		 this.group.position.z = this.params.z
+		 
+		 // 재질 설정
+		 this.headMaterial = new THREE.MeshLambertMaterial({ color: 0xF8E0E6})
+		 this.bodyMaterial = new THREE.MeshLambertMaterial({ color: 0xF8E0E6 })
+		 
+	 }
 
 		// 몸통 생성
 		createBody(){
@@ -86,6 +96,9 @@ export default function ottogi_module2(){
             this.group.add(this.head)
             
             this.head.position.y = 2
+
+			// 눈 생성 함수 호출
+			this.createEyes()
         }
 
 		// 눈 생성
