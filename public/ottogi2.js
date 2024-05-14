@@ -52,5 +52,21 @@ export default function ottogi_module2(){
  
 	 lightDirectional.position.set(5, 5, 5)
 
-	
-}
+	// 헬뚝이 class 정의
+    class Figure {
+        constructor(params) {
+            this.params = {
+                x: 0,
+                y: -2,
+                z: 0,
+                rz: 0,
+				ry:0,
+                ...params
+            }
+
+			// 그룹 생성 후 scene에 추가 
+            this.group = new THREE.Group()
+            scene.add(this.group)
+
+		}
+}}
