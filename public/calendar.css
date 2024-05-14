@@ -8,7 +8,7 @@ table {
 }
 
 /* 월별 캘린더 글자 */
-.calender-title {
+.calendar-title {
   text-align: left;
   margin-left: 0px; 
   margin-bottom: 20px; 
@@ -68,7 +68,7 @@ body {
   width: 100vw;
   margin:0;
   padding:0;
-  background-image: url('./Calender_배경화면.png');
+  background-image: url('./Calendar_배경화면.png');
   background-repeat: no-repeat;
   background-size: 100% 100%;
 }

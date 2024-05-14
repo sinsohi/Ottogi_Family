@@ -30,15 +30,17 @@ body {
 
 .DetailElement {
   position: relative;
-  /* 기본 설정입니다. 각 요소의 id를 통해 위치를 조정합니다. */
-  display: inline-block; /* 이미지와 텍스트를 같은 줄에 배치하기 위해 */
+  width: 100%;
+  margin: 10px auto;
 }
 
-
-
+.detail-text {
+  position:absolute;
+  
+}
 /* 요소 크기 설정 */
-.DetailElement img{
-  width: 20%;
+.image{
+  width: 100%;
   vertical-align: middle;
 }
 
@@ -49,28 +51,4 @@ body {
   left:50%
 }
 
-/* 아이디로 묶음 */
-/*
-#detail1 , .weight{
-  bottom: 200px;
-  left: 10px;
-}
-#detail2 {
-  bottom: 20px;
-  left: 10px;
-}
-#detail3 {
-  bottom: 200px;
-  left: 500px;
-}
-#detail4 {
-  bottom: 20px;
-  left: 500px;
-}
-#detail5 {
-  bottom: 100px;
-  left: 1000px;
-}
-
-*/ 
 

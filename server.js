@@ -163,8 +163,9 @@ app.post('/login', async (request, response, next) => {
   })(request, response, next);
 }) 
 
-app.get('/calender',(request,response)=>{
-  response.sendFile(__dirname + '/calender.html')
+app.get('/calendar', async (request,response)=>{
+  let users = await db.collection('user_info').find().toArray();
+  response.render('calendar.ejs', {users : users});
 })
 
 
@@ -172,10 +173,12 @@ app.get('/',(request,response)=>{
   response.sendFile(__dirname + '/InitialScreen.html')
 })
 
-app.get('/calendardetail', async (request,response)=>{
-  const users = await db.collection('user_info').find({_id : new ObjectId('6641d065b6d0cedf4e2c5b74')}).toArray();
-  console.log(users[0].weight);
-  response.render('calendardetail.ejs', {users : users});
+app.get('/calendardetail/:Nickname', async (request,response)=>{
+  let Nickname = request.params.Nickname;
+  let users = await db.collection('user_info').find({ userNickname : request.params.Nickname}).toArray();
+  console.log(users[0])
+  // console.log(users[0].weight);
+  response.render('calendardetail.ejs', {users : users[0]})
 });
 
 app.get('/daily-record', (req, res) => {

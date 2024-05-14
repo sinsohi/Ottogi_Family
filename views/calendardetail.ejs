@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <title>Calendar</title>
   <!-- 스타일 시트 연결 -->
-  <link rel="stylesheet" href="calendardetail.css">
+  <link rel="stylesheet" href="calendardetail.css" type=" text/css">
 </head>
 <body>
   <h4>calendar</h4>
@@ -25,13 +25,14 @@
     </div>
   </div>
 
+<!--유저의 정보 출력-->
 <div>
-  <%= users[0].userNickname %>
-  <%= users[0].weight %>
-  <%= users[0].sleeptime %>
-  <%= users[0].intake %>
-  <%= users[0].consumed %>
-  <%= users[0].intake - users[0].consumed %>  
+  <%= users.userNickname %>
+  <%= users.weight %>
+  <%= users.sleeptime %>
+  <%= users.intake %>
+  <%= users.consumed %>
+  <%= users.intake - users.consumed %>  
 </div>
 
 

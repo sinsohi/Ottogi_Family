@@ -46,12 +46,12 @@ function createCalendar(year, month) {
           cell.classList.add("today");  
         }
         // 즉시 실행 함수를 사용하여 클릭 이벤트 리스너에 date 값을 "캡처"
-        (function(currentDate) {
-          cell.addEventListener('click', function() {
-            const formattedDate = `${year}-${String(month + 1).padStart(2, '0')}-${String(currentDate).padStart(2, '0')}`;
-            window.location.href = `/calendardetail?date=${formattedDate}`;
-          });
-        })(date);
+        // (function(currentDate) {
+        //   cell.addEventListener('click', function() {
+        //     const formattedDate = `${year}-${String(month + 1).padStart(2, '0')}-${String(currentDate).padStart(2, '0')}`;
+        //     window.location.href = `/calendar/date=${formattedDate}`;
+        //   });
+        // })(date);
         row.appendChild(cell);
         date++;
       }
