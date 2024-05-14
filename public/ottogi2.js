@@ -23,8 +23,13 @@ const sizes = {
   height: window.innerHeight
 }
 
+  // 객체 중심을 잡아줌
+  const center = (group) => {
+	new THREE.Box3().setFromObject(group).getCenter( group.position ).multiplyScalar(-1)
+	scene.add(group)
+}
+
  // Renderer
- 
 const renderer = new THREE.WebGLRenderer({ canvas })
 
 const render = () => {
@@ -151,31 +156,38 @@ lightDirectional.position.set(5, 5, 5)
 }
 
 // 오뚝이 객체 생성 및 초기화
-const figure = new Figure()
-figure.init()
+const figure1 = new Figure({ x: -4 , ry: degreesToRadians(30) }) // 왼쪽에 위치, y축 기준 30도 회전
+   figure1.init()
 
+    const figure2 = new Figure({}) // 중앙에 위치
+    figure2.init()
 
-// GSAP Timeline을 생성
-let tl = gsap.timeline({repeat: -1, yoyo: true});
+   const figure3 = new Figure({ x: 4, ry: degreesToRadians(-30) }) // 오른쪽에 위치, y축 기준 -30도 회전
+    figure3.init()
 
-// 오뚝이가 오른쪽으로 10도 흔들리게 설정
-tl.to(figure.params, {
-    rz: degreesToRadians(20), // 오른쪽으로 흔들기
-    duration: 1,
-    ease: "sine.inOut"
-});
+    // GSAP Timeline을 생성
+    let tl = gsap.timeline({repeat: -1, yoyo: true});
 
-// 바로 이어서 왼쪽으로 10도 흔들리게 설정
-tl.to(figure.params, {
-    rz: degreesToRadians(-20), // 왼쪽으로 흔들기
-    duration: 1,
-    ease: "sine.inOut"
-});
+    // 오뚝이들이 오른쪽으로 10도 흔들리게 설정
+    tl.to([figure1.params, figure2.params, figure3.params], {
+        rz: degreesToRadians(20), // 오른쪽으로 흔들기
+        duration: 1,
+        ease: "sine.inOut"
+    });
 
-// GSAP Ticker를 사용하여 애니메이션 업데이트와 렌더링 실행
-gsap.ticker.add(() => {
-    figure.bounce();
-    render();
-});
+    // 바로 이어서 왼쪽으로 10도 흔들리게 설정
+    tl.to([figure1.params, figure2.params, figure3.params], {
+        rz: degreesToRadians(-20), // 왼쪽으로 흔들기
+        duration: 1,
+        ease: "sine.inOut"
+    });
 
+    // GSAP Ticker를 사용하여 애니메이션 업데이트와 렌더링 실행
+    gsap.ticker.add(() => {
+        figure1.bounce();
+        figure2.bounce();
+        figure3.bounce();
+
+        render();
+    });
 }
