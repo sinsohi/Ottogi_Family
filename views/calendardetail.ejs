@@ -5,34 +5,49 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <title>Calendar</title>
   <!-- 스타일 시트 연결 -->
-  <link rel="stylesheet" href="calendardetail.css" type=" text/css">
+  <link rel="stylesheet" href="/calendardetail.css">
 </head>
 <body>
   <h4>calendar</h4>
   <!--닉네임 요소-->
-  <div class="name">
-    <img src="./img/닉네임.png" alt="nickname">
+  <div class="name-container">
+    <img src="\img\닉네임.png" alt="nickname">
+    <div class = "text"><%= users.userNickname %></div>
   </div>
 
-  <!-- 디테일 요소 -->
-  <!--몸무게 요소-->
-  <div class="DetailElement" id="detail1" >
-    <div class="image">
-    <img src="\img\캘린더디테일요소.png">
+  <!--몸무게-->
+  <div class="weight-container">
+    <img src="\img\캘린더디테일요소.png" alt="weight image">
+    <div class = "text">몸무게</div>
+    <%= users.weight %>
   </div>
-    <div class="detail-text">
-      <p>몸무게</p>
-    </div>
+  <!--수면시간-->
+  <div class="sleep-container">
+    <img src="\img\캘린더디테일요소.png" alt="sleep image">
+    <div class = "text">수면시간</div>
+    <%= users.sleeptime %>
+  </div>
+  <!--섭취칼로리-->
+  <div class="intake-calorie-container">
+    <img src="\img\캘린더디테일요소.png" alt="intake calorie image">
+    <div class = "text">섭취칼로리</div>
+    <%= users.intake %>
+  </div>
+  <!--소모칼로리-->
+  <div class="burn-calorie-container">
+    <img src="\img\캘린더디테일요소.png" alt="burn calorie image">
+    <div class = "text">소모칼로리</div>
+    <%= users.consumed %>
+  </div>
+  <!--총기록-->
+  <div class="total-record-container">
+    <img src="\img\캘린더디테일요소.png" alt="total record image">
+    <div class = "text">총기록</div>
+    <%= users.intake - users.consumed %>  
   </div>
 
 <!--유저의 정보 출력-->
 <div>
-  <%= users.userNickname %>
-  <%= users.weight %>
-  <%= users.sleeptime %>
-  <%= users.intake %>
-  <%= users.consumed %>
-  <%= users.intake - users.consumed %>  
 </div>
 
 
