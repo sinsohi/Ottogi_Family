@@ -67,6 +67,17 @@ export default function ottogi_module2(){
 			// 그룹 생성 후 scene에 추가 
             this.group = new THREE.Group()
             scene.add(this.group)
+		}
 
+		// 몸통 생성
+		createBody(){
+			const geometry = new THREE.SphereGeometry(1.3, 32, 16)
+            const material = new THREE.MeshLambertMaterial({ color: 0xF8E0E6 })
+			this.group.add(this.body)
+		}
+
+		// 초기화
+		init(){
+			this.createBody()
 		}
 }}
