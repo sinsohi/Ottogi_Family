@@ -93,7 +93,9 @@ export default function ottogi_module2(){
         }
         
 		// 몸통
-        createBody(waistSize, gender) {
+        createBody(bmi, gender) {
+            const waistSize = bmi;
+            
             let bodyMain;
             this.body = new THREE.Group()
             const geometry = new THREE.SphereGeometry(1.3, 32, 16)
@@ -169,11 +171,26 @@ export default function ottogi_module2(){
 
     // 오뚝이 캐릭터 생성
     for (let i = 0; i < member; i++) {
+        let waistSize; // 허리둘레
+
+        // 임시로 gender, bmi 생성
+        let gender = ['female','male','female']; 
+        let bmi = ['1단계비만','정상','비만전단계'];
+
         const figure = new Figure({
             x: (i - Math.floor(member / 2)) * 4, // 오뚝이 캐릭터들을 중앙을 기준으로 균등하게 배치
             ry: degreesToRadians((i - Math.floor(member / 2)) * -30)
         });
-        figure.init(1,2,'female');
+
+        // bmi 단계에 따라 waistSize 변경
+        if (bmi[i] === '저체중') waistSize = 0.8;
+        else if (bmi[i] === '정상') waistSize = 1;
+        else if (bmi[i] === '비만전단계') waistSize = 1.3;
+        else if (bmi[i] === '1단계비만') waistSize = 1.5;
+        else if (bmi[i] === '2단계비만') waistSize = 1.7;
+        else if (bmi[i] === '3단계비만') waistSize = 1.9;
+
+        figure.init(waistSize,2,gender[i]);
         figures.push(figure);
     }
 
