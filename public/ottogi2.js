@@ -4,6 +4,7 @@ export default function ottogi_module2(){
     const canvas = document.querySelector('canvas.webgl');
     const scene = new THREE.Scene()
 
+
     // 배경 이미지
     const loader = new THREE.TextureLoader();
     loader.load('./img/HomePage.png', function(texture){
@@ -56,10 +57,10 @@ export default function ottogi_module2(){
     const material = new THREE.MeshLambertMaterial({ color: 0xffffff })
 
     // Lighting
-    const lightAmbient = new THREE.AmbientLight(0x9eaeff, 0.5)
+    const lightAmbient = new THREE.AmbientLight(0xffffff, 1)
     scene.add(lightAmbient)
 
-    const lightDirectional = new THREE.DirectionalLight(0xffffff, 0.8)
+    const lightDirectional = new THREE.DirectionalLight(0xffffff, 1)
     scene.add(lightDirectional)
 
     lightDirectional.position.set(5, 5, 5)
@@ -86,17 +87,23 @@ export default function ottogi_module2(){
             this.group.position.z = this.params.z
             
             // 재질 설정
-            this.headMaterial = new THREE.MeshLambertMaterial({ color: 0xF8E0E6})
-            this.bodyMaterial = new THREE.MeshLambertMaterial({ color: 0xF8E0E6 })
-            
+            this.headMaterial = new THREE.MeshLambertMaterial({ color: 0xfdf5e6})
+            this.maleBodyMaterial = new THREE.MeshLambertMaterial({ color: 0xB0E0E6 })
+            this.femaleBodyMaterial = new THREE.MeshLambertMaterial({color : 0xF8E0E6 })
         }
         
 		// 몸통
-        createBody(waistSize) {
+        createBody(waistSize, gender) {
+            let bodyMain;
             this.body = new THREE.Group()
             const geometry = new THREE.SphereGeometry(1.3, 32, 16)
-            const material = new THREE.MeshLambertMaterial({ color: 0xF8E0E6 })
-            const bodyMain = new THREE.Mesh(geometry, material)
+            
+            if(gender === 'male'){
+                bodyMain = new THREE.Mesh(geometry, this.maleBodyMaterial)
+            } 
+            else if(gender === 'female'){
+                bodyMain = new THREE.Mesh(geometry, this.femaleBodyMaterial)
+            }
         
             // 타원형으로 만들기 위해 스케일 조정
             const scaleXZ = waistSize;
@@ -148,14 +155,12 @@ export default function ottogi_module2(){
         }
         
 		// 초기화
-        init(waistSize, headPosition) {
-            this.createBody(waistSize)
+        init(waistSize, headPosition, gender) {
+            this.createBody(waistSize, gender)
             this.createHead(headPosition)
 			this.group.rotation.y = this.params.ry // 모든 헬뚝이가 정면 바라보도록 수정
         }
     }
-
-
 
     let member = 3; // 가족 수(헬뚝이 개수) 저장
 
@@ -168,7 +173,7 @@ export default function ottogi_module2(){
             x: (i - Math.floor(member / 2)) * 4, // 오뚝이 캐릭터들을 중앙을 기준으로 균등하게 배치
             ry: degreesToRadians((i - Math.floor(member / 2)) * -30)
         });
-        figure.init(1,2);
+        figure.init(1,2,'female');
         figures.push(figure);
     }
 
