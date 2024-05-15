@@ -18,18 +18,19 @@
   <body>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.4/gsap.min.js"></script>
 
-
-    <!-- <script type="module" src="./mainPage.js"></script> -->
     <script type="module" src="./mainPage2.js"></script>
-    <div class="world" id="world"></div>
-    <canvas class="webgl">
-      <h4>ssssss</h4>
-    </canvas>
-    <!-- <canvas class="HealthOttogi" width="500" height="500"></canvas> -->
+    
+    <div class="canvas-container">
+      <canvas class="webgl"></canvas> 
+      <h1 class="nickName">닉네임</h1>
+    </div>
+ 
+
+
 
        <!-- 기록 하러 가기 버튼을 누르면 server에 get 요청 보내기 -->
        <form action="/daily-record" method="get">
-        <button type="submit" class="image-button daily-record">
+        <button type="submit" class="image-button daily-recoard">
             <img src="./img/daily-record-button.png" alt="daily-record">
         </button>
       </form>
