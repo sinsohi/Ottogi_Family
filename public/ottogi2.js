@@ -1,10 +1,23 @@
 import * as THREE from 'three'
 
-export default function ottogi_module2(){
+let userInfoArray = [];
+
+export default async function ottogi_module2 (){
     const canvas = document.querySelector('canvas.webgl');
     const scene = new THREE.Scene()
 
+    try {
+        // 서버의 '/homePage' 엔드포인트로 HTTP GET 요청 보내기 (클라이언트 측에서 서버의 데이터 가져오기 위함)
+        const response = await fetch('/homePage');
+        const userinfo = await response.json();
 
+        userInfoArray.push(userinfo);
+        console.log(userInfoArray);
+
+      } catch (error) {
+        console.log('Error:', error);
+      }
+    
     // 배경 이미지
     const loader = new THREE.TextureLoader();
     loader.load('./img/HomePage.png', function(texture){
@@ -248,3 +261,5 @@ export default function ottogi_module2(){
         render();
     });
 }
+
+// module.exports = ottogi_module2;

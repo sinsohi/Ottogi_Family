@@ -7,8 +7,8 @@ const MongoStore = require("connect-mongo"); // connect-mongo 셋팅
 
 require("dotenv").config(); // .env 파일에 환경변수 보관
 
+
 app.use(express.static(__dirname + '/public'))
-// app.use(express.static('public')); 
 
 
 //추가
@@ -73,20 +73,24 @@ new MongoClient(url).connect().then((client)=>{
   console.log(err)
 })
 
-
-
-app.listen(process.env.PORT, ()=>{
+app.listen(process.env.PORT || 3000, ()=>{
     console.log('http://localhost:'+`${process.env.PORT}` +' 에서 서버 실행중')
 })
 
-app.get('/homePage',(request,response)=>{
-  response.render('homePage.ejs');
-})
+app.get('/homePage', async (req, res) => {
+  try {
+    const client = await MongoClient.connect(url);
+    const db = client.db('Ottogi_Family');
+    const result = await db.collection('user_info').findOne({ _id: new ObjectId('6646a5234bddf2273b5904bd') });
+    console.log(result)
+    client.close();
+    res.render('homePage.ejs');
 
-
-// app.get('/homePage',(request,response)=>{
-//   response.sendFile(__dirname + '/index.html')
-// })
+  } catch (error) {
+    console.log('Error:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
 
 
 app.get('/register',(request,response)=>{
