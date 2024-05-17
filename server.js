@@ -293,11 +293,11 @@ app.post('/setting', async (req, res) => {
   } else if (bmi >= 23 && bmi < 25) {
     healthStatus = '비만전단계';
   } else if (bmi >= 25 && bmi < 30) {
-    healthStatus = '1단계 비만';
+    healthStatus = '1단계비만';
   } else if (bmi >= 30 && bmi < 35) {
-    healthStatus = '2단계 비만';
+    healthStatus = '2단계비만';
   } else {
-    healthStatus = '3단계 비만';
+    healthStatus = '3단계비만';
   }
 
   const data = {
