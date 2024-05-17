@@ -165,6 +165,21 @@ export default function ottogi_module2(){
             this.group.userData.nicknameElement = nicknameElement;
             document.body.appendChild(nicknameElement);
         }
+
+         // 닉네임 위치 설정
+         updateNicknamePosition() {
+            if (this.group.userData.nicknameElement) {
+                const worldPosition = new THREE.Vector3();
+                this.group.getWorldPosition(worldPosition);
+                const screenPosition = worldPosition.clone().project(camera);
+        
+                const x = (screenPosition.x + 1) / 2 * window.innerWidth;
+                const y = -(screenPosition.y - 1) / 2 * window.innerHeight;
+        
+                this.group.userData.nicknameElement.style.left = `${x}px`;
+                this.group.userData.nicknameElement.style.top = `${y}px`;
+            }
+        }
         
 		// 초기화
         init(waistSize, headPosition, gender) {
