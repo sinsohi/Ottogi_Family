@@ -174,15 +174,21 @@ app.get('/dailyrecordsleeptime', (req, res) => {
   res.sendFile(path.join(__dirname, 'dailyrecordsleeptime.html'));
 }); //*
 
-app.post('/dailyrecordexercise', async(req, res) => {
+app.post('/dailyrecordexercise', async (req, res) => {
   const exerciseName = req.body.exerciseName;
   const caloriesBurned = req.body.caloriesBurned;
   const userNickname = req.user.userNickname;
 
+  const currentDate = new Date();
+
+  const koreanTimeOffset = 9 * 60; // 한국 시간은 UTC+9
+  const koreanTime = new Date(currentDate.getTime() + koreanTimeOffset * 60000);
+
   const data = {
     userNickname: userNickname,
     caloriesBurned: caloriesBurned,
-    exerciseName: exerciseName
+    exerciseName: exerciseName,
+    timestamp: koreanTime
   };
 
   db.collection('DRexercise').insertOne(data, (err, result) => {
@@ -195,11 +201,18 @@ app.post('/dailyrecordexercise', async(req, res) => {
   });
 });
 
+
 app.post('/dailyrecordmeal', async (req, res) => {
   const meal = req.body.meal;
   const menuName = req.body.menuName;
   const calories = req.body.calories;
   const userNickname = req.user.userNickname; // 유저의 userNickname
+
+  const currentDate = new Date();
+
+  const koreanTimeOffset = 9 * 60; // 한국 시간은 UTC+9
+  const koreanTime = new Date(currentDate.getTime() + koreanTimeOffset * 60000);
+
   let collectionName;
   if (meal === 'breakfast') {
     collectionName = 'breakfast';
@@ -211,7 +224,8 @@ app.post('/dailyrecordmeal', async (req, res) => {
   const data = {
     userNickname: userNickname,
     menuName: menuName,
-    calories: calories
+    calories: calories,
+    timestamp: koreanTime
   };
   db.collection(collectionName).insertOne(data, (err, result) => {
     if (err) {
@@ -229,10 +243,17 @@ app.post('/dailyrecordsleeptime', async (req, res) => {
   const sleepMinute = req.body.sleepMinute;
   const userNickname = req.user.userNickname;
 
+  const currentDate = new Date();
+
+  const koreanTimeOffset = 9 * 60; // 한국 시간은 UTC+9
+  const koreanTime = new Date(currentDate.getTime() + koreanTimeOffset * 60000);
+
+
   const data = {
     userNickname: userNickname,
     sleepHour: sleepHour,
-    sleepMinute: sleepMinute
+    sleepMinute: sleepMinute,
+    timestamp: koreanTime
   };
 
  await db.collection('DRsleeptime').insertOne(data, (err, result) => {
@@ -257,6 +278,11 @@ app.post('/setting', async (req, res) => {
   const activity = req.body.activity;
   const bmi = req.body.bmi;
 
+  const currentDate = new Date();
+
+  const koreanTimeOffset = 9 * 60; // 한국 시간은 UTC+9
+  const koreanTime = new Date(currentDate.getTime() + koreanTimeOffset * 60000);
+
   const data = {
     userNickname: userNickname,
     gender: gender,
@@ -265,7 +291,8 @@ app.post('/setting', async (req, res) => {
     age: age,
     sleeptime: sleeptime,
     activity: activity,
-    bmi: bmi
+    bmi: bmi,
+    timestamp: koreanTime
   };
 
   db.collection('user_info').insertOne(data, (err, result) => {
