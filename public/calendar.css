@@ -81,7 +81,7 @@ body {
 }
 
 #calendarControls {
-  width: 1077px; /* 표의 너비와 일치하게 설정 */
+  width: 70%; /* 표의 너비와 일치하게 설정 */
   margin: 0 auto; /* 가운데 정렬 */
   background-color: #a2ab91; /* 원하는 배경색 설정 */
   /* 추가적 스타일링 */

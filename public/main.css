@@ -33,7 +33,7 @@ body {
 
 }
 
-.daily-record, .setting, .calender, .addUser {
+.daily-record, .setting, .calendar, .addUser {
     display : flex;
     justify-content : center;  /* 좌우정렬 */
     align-items : center;  /* 상하정렬 */
