@@ -88,9 +88,10 @@ export default function ottogi_module2(){
             
             // 재질 설정
             this.headMaterial = new THREE.MeshLambertMaterial({ color: 0xfdf5e6})
-            this.maleBodyMaterial = new THREE.MeshLambertMaterial({ color: 0xB0E0E6 })
-            this.femaleBodyMaterial = new THREE.MeshLambertMaterial({color : 0xF8E0E6 })
+            this.maleBodyMaterial = new THREE.MeshLambertMaterial({ color: 0x00FFFF })
+            this.femaleBodyMaterial = new THREE.MeshLambertMaterial({color : 0xFF69B4 })
         }
+        
         
 		// 몸통
         createBody(bmi, gender) {
@@ -155,6 +156,15 @@ export default function ottogi_module2(){
         bounce() {
             this.group.rotation.z = this.params.rz
         }
+
+        // 닉네임 생성
+        createNickname(nickname){
+            const nicknameElement = document.createElement('h1');
+            nicknameElement.textContent = nickname;
+
+            this.group.userData.nicknameElement = nicknameElement;
+            document.body.appendChild(nicknameElement);
+        }
         
 		// 초기화
         init(waistSize, headPosition, gender) {
@@ -173,9 +183,10 @@ export default function ottogi_module2(){
     for (let i = 0; i < member; i++) {
         let waistSize; // 허리둘레
 
-        // 임시로 gender, bmi 생성
+        // 임시로 gender, bmi, nickName 배열 생성
         let gender = ['female','male','female']; 
         let bmi = ['1단계비만','정상','비만전단계'];
+        let nickName = ['엄마','아빠','딸']
 
         const figure = new Figure({
             x: (i - Math.floor(member / 2)) * 4, // 오뚝이 캐릭터들을 중앙을 기준으로 균등하게 배치
@@ -191,6 +202,7 @@ export default function ottogi_module2(){
         else if (bmi[i] === '3단계비만') waistSize = 1.9;
 
         figure.init(waistSize,2,gender[i]);
+        figure.createNickname(nickName[i]); // 닉네임 생성
         figures.push(figure);
     }
 
@@ -213,7 +225,10 @@ export default function ottogi_module2(){
 
     // GSAP Ticker를 사용하여 애니메이션 업데이트와 렌더링 실행
     gsap.ticker.add(() => {
-        figures.forEach(figure => figure.bounce());
+        figures.forEach(figure => {
+            figure.bounce();
+            figure.updateNicknamePosition(); // 닉네임 위치 업데이트
+        });
 
         render();
     });
