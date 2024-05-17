@@ -278,10 +278,27 @@ app.post('/setting', async (req, res) => {
   const activity = req.body.activity;
   const bmi = req.body.bmi;
 
+  // 현재 날짜와 시간 가져오기 (UTC)
   const currentDate = new Date();
 
+  // UTC 시간을 한국 시간으로 변환
   const koreanTimeOffset = 9 * 60; // 한국 시간은 UTC+9
   const koreanTime = new Date(currentDate.getTime() + koreanTimeOffset * 60000);
+
+  let healthStatus = '';
+  if (bmi < 18.5) {
+    healthStatus = '저체중';
+  } else if (bmi >= 18.5 && bmi < 23) {
+    healthStatus = '정상';
+  } else if (bmi >= 23 && bmi < 25) {
+    healthStatus = '비만전단계';
+  } else if (bmi >= 25 && bmi < 30) {
+    healthStatus = '1단계 비만';
+  } else if (bmi >= 30 && bmi < 35) {
+    healthStatus = '2단계 비만';
+  } else {
+    healthStatus = '3단계 비만';
+  }
 
   const data = {
     userNickname: userNickname,
@@ -291,7 +308,8 @@ app.post('/setting', async (req, res) => {
     age: age,
     sleeptime: sleeptime,
     activity: activity,
-    bmi: bmi,
+    bmi: bmi, //bmi 값
+    healthStatus: healthStatus, // bmi 결과
     timestamp: koreanTime
   };
 
