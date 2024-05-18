@@ -256,14 +256,20 @@ app.post('/dailyrecordsleeptime', async (req, res) => {
     timestamp: koreanTime
   };
 
- await db.collection('DRsleeptime').insertOne(data, (err, result) => {
-    if (err) {
-      console.log('데이터베이스 오류:', err);
-      return res.status(500).send('데이터베이스 오류');
-    }
-    console.log('데이터를 성공적으로 삽입');
-    res.status(200).send('성공적으로 제출');
-  });
+ await db.collection('DRsleeptime').insertOne(data);
+
+ const startOfDay = new Date(currentDate.setHours(0, 0, 0, 0));
+ const endOfDay = new Date(currentDate.setHours(23, 59, 59, 999));
+
+ const userst = await db.collection('DRsleeptime').findOne({
+   userNickname: userNickname,
+   timestamp: { $gte: startOfDay, $lt: endOfDay }
+ }, {
+   sort: { timestamp: -1 }
+ });
+
+ console.log('이거확인좀:', userst);
+ res.render('dailyrecordsleeptime.ejs', { userst: userst });
 });
 
 
