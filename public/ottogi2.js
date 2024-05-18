@@ -1,18 +1,28 @@
 import * as THREE from 'three'
 
-let userInfoArray = [];
-
 export default async function ottogi_module2 (){
     const canvas = document.querySelector('canvas.webgl');
     const scene = new THREE.Scene()
 
     try {
-        // 서버의 '/homePage' 엔드포인트로 HTTP GET 요청 보내기 (클라이언트 측에서 서버의 데이터 가져오기 위함)
-        const response = await fetch('/homePage');
-        const userinfo = await response.json();
+        // 서버의 '/getMember' 엔드포인트로 HTTP GET 요청 보내기 (클라이언트 측에서 서버의 데이터 가져오기 위함)
+        const response = await fetch('/getMember');
+        const familyInfo = await response.json();
 
-        userInfoArray.push(userinfo);
-        console.log(userInfoArray);
+        // console.log(familyInfo.length);
+
+
+      } catch (error) {
+        console.log('Error:', error);
+      }
+
+      try {
+        // 서버의 '/getBMI' 엔드포인트로 HTTP GET 요청 보내기 (클라이언트 측에서 서버의 데이터 가져오기 위함)
+        const response = await fetch('/getBMI');
+        const bmiInfo = await response.json();
+
+        console.log(bmiInfo);
+
 
       } catch (error) {
         console.log('Error:', error);

@@ -11,8 +11,6 @@ require("dotenv").config(); // .env 파일에 환경변수 보관
 app.use(express.static(__dirname + '/public'))
 
 
-//추가
-
 app.use(
   '/build/',
   express.static(path.join(
@@ -63,6 +61,7 @@ app.use(passport.session())
 
 // mongoDB 연결
 const { MongoClient, ObjectId } = require('mongodb');
+const { BADFAMILY } = require('dns');
 
 let db;
 const url = process.env.DBurl;
@@ -77,14 +76,24 @@ app.listen(process.env.PORT || 3000, ()=>{
     console.log('http://localhost:'+`${process.env.PORT}` +' 에서 서버 실행중')
 })
 
-app.get('/homePage', async (req, res) => {
+app.get('/homePage',(req,res)=>{
+  res.render('homePage.ejs')
+})
+
+// member 전달
+app.get('/getMember', async (req, res) => {
   try {
     const client = await MongoClient.connect(url);
     const db = client.db('Ottogi_Family');
-    const result = await db.collection('user_info').findOne({ _id: new ObjectId('6646a5234bddf2273b5904bd') });
-    console.log(result)
+
+    let familyInfo = await db.collection('FamilyRoom').findOne({
+      member : req.user.userNickname
+    })
+
+    // console.log(familyInfo.member)
     client.close();
-    res.render('homePage.ejs');
+    
+    res.json(familyInfo.member); 
 
   } catch (error) {
     console.log('Error:', error);
@@ -92,6 +101,35 @@ app.get('/homePage', async (req, res) => {
   }
 });
 
+// BMI 전달
+app.get('/getBMI', async (req, res) => {
+  let bmi = [];
+  try {
+    const client = await MongoClient.connect(url);
+    const db = client.db('Ottogi_Family');
+
+    let userInfo = await db.collection('FamilyRoom').findOne({
+      member : req.user.userNickname
+    })
+
+    for(let i=0; i<userInfo.member.length; i++){
+      let result = await db.collection('user_info').findOne({
+        userNickname : userInfo.member[i]
+      })
+      // console.log(result.bmi)
+      bmi.push(result.bmi)
+      console.log(bmi)
+
+    }
+
+    client.close();
+    res.json(bmi); 
+
+  } catch (error) {
+    console.log('Error:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
 
 app.get('/register',(request,response)=>{
   response.render('register.ejs');})
@@ -162,7 +200,7 @@ app.post('/login', async (요청, 응답, next) => {
     요청.logIn(user, (err) => {
       //로그인 완료시 실행할 코드
       if (err) return next(err);
-      응답.render('homePage.ejs')
+      응답.redirect('/homePage');
     });
   })(요청, 응답, next);
 }) 
