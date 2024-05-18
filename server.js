@@ -117,8 +117,8 @@ app.get('/getBMI', async (req, res) => {
         userNickname : userInfo.member[i]
       })
       // console.log(result.bmi)
-      bmi.push(result.bmi)
-      console.log(bmi)
+      bmi.push(result.healthStatus)
+      // console.log(bmi)
 
     }
 

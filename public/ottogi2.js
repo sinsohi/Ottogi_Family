@@ -1,5 +1,9 @@
 import * as THREE from 'three'
 
+let familyInfo;
+let nickName = [];
+
+
 export default async function ottogi_module2 (){
     const canvas = document.querySelector('canvas.webgl');
     const scene = new THREE.Scene()
@@ -7,9 +11,10 @@ export default async function ottogi_module2 (){
     try {
         // 서버의 '/getMember' 엔드포인트로 HTTP GET 요청 보내기 (클라이언트 측에서 서버의 데이터 가져오기 위함)
         const response = await fetch('/getMember');
-        const familyInfo = await response.json();
+        familyInfo = await response.json();
 
-        // console.log(familyInfo.length);
+        console.log(familyInfo);
+        nickName = familyInfo; // DB에서 불러온 nickName 데이터를 nickName 배열에 삽입
 
 
       } catch (error) {
@@ -212,7 +217,7 @@ export default async function ottogi_module2 (){
         }
     }
 
-    let member = 3; // 가족 수(헬뚝이 개수) 저장
+    let member = familyInfo.length; // 가족 수(헬뚝이 개수) 저장
 
     // 오뚝이 캐릭터를 저장할 배열
     let figures = [];
@@ -222,9 +227,9 @@ export default async function ottogi_module2 (){
         let waistSize; // 허리둘레
 
         // 임시로 gender, bmi, nickName 배열 생성
-        let gender = ['female','male','female']; 
-        let bmi = ['1단계비만','정상','비만전단계'];
-        let nickName = ['엄마','아빠','딸']
+        let gender = ['female','male','female','male']; 
+        let bmi = ['1단계비만','정상','비만전단계','정상'];
+        // let nickName = ['엄마','아빠','딸','아들']
 
         const figure = new Figure({
             x: (i - Math.floor(member / 2)) * 4, // 오뚝이 캐릭터들을 중앙을 기준으로 균등하게 배치
