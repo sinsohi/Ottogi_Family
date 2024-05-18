@@ -131,6 +131,35 @@ app.get('/getBMI', async (req, res) => {
   }
 });
 
+// gender 전달
+app.get('/getGender', async (req, res) => {
+  let gender = [];
+  try {
+    const client = await MongoClient.connect(url);
+    const db = client.db('Ottogi_Family');
+
+    let userInfo = await db.collection('FamilyRoom').findOne({
+      member : req.user.userNickname
+    })
+
+    for(let i=0; i<userInfo.member.length; i++){
+      let result = await db.collection('user_info').findOne({
+        userNickname : userInfo.member[i]
+      })
+      gender.push(result.gender)
+    }
+
+    client.close();
+    res.json(gender); 
+
+  } catch (error) {
+    console.log('Error:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
+
+
 app.get('/register',(request,response)=>{
   response.render('register.ejs');})
 

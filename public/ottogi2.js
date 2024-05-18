@@ -2,6 +2,8 @@ import * as THREE from 'three'
 
 let familyInfo;
 let nickName = [];
+let bmi = [];
+let gender = [];
 
 
 export default async function ottogi_module2 (){
@@ -9,7 +11,7 @@ export default async function ottogi_module2 (){
     const scene = new THREE.Scene()
 
     try {
-        // 서버의 '/getMember' 엔드포인트로 HTTP GET 요청 보내기 (클라이언트 측에서 서버의 데이터 가져오기 위함)
+        // 서버의 '/getMember' 엔드포인트로 HTTP GET 요청 보내기 (가족 유저의 nickName 데이터 가져오기)
         const response = await fetch('/getMember');
         familyInfo = await response.json();
 
@@ -22,11 +24,25 @@ export default async function ottogi_module2 (){
       }
 
       try {
-        // 서버의 '/getBMI' 엔드포인트로 HTTP GET 요청 보내기 (클라이언트 측에서 서버의 데이터 가져오기 위함)
+        // BMI 데이터 가져오기
         const response = await fetch('/getBMI');
         const bmiInfo = await response.json();
 
         console.log(bmiInfo);
+        bmi = bmiInfo;
+
+
+      } catch (error) {
+        console.log('Error:', error);
+      }
+
+      try {
+        // gender 데이터 가져오기
+        const response = await fetch('/getGender');
+        const genderInfo = await response.json();
+
+        console.log(genderInfo);
+        gender = genderInfo;
 
 
       } catch (error) {
@@ -226,18 +242,13 @@ export default async function ottogi_module2 (){
     for (let i = 0; i < member; i++) {
         let waistSize; // 허리둘레
 
-        // 임시로 gender, bmi, nickName 배열 생성
-        let gender = ['female','male','female','male']; 
-        let bmi = ['1단계비만','정상','비만전단계','정상'];
-        // let nickName = ['엄마','아빠','딸','아들']
-
         const figure = new Figure({
             x: (i - Math.floor(member / 2)) * 4, // 오뚝이 캐릭터들을 중앙을 기준으로 균등하게 배치
             ry: degreesToRadians((i - Math.floor(member / 2)) * -30)
         });
 
         // bmi 단계에 따라 waistSize 변경
-        if (bmi[i] === '저체중') waistSize = 0.8;
+        if (bmi[i] === '저체중') waistSize = 0.6;
         else if (bmi[i] === '정상') waistSize = 1;
         else if (bmi[i] === '비만전단계') waistSize = 1.3;
         else if (bmi[i] === '1단계비만') waistSize = 1.5;
