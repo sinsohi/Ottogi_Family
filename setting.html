@@ -7,41 +7,51 @@
 </head>
 <body>
     <h2>성별 선택</h2>
-    <form action="/submit-form" method="POST">
+    <form action="/setting" method="POST">
         <input type="radio" id="male" name="gender" value="male">
         <label for="male">남자</label><br>
         <input type="radio" id="female" name="gender" value="female">
         <label for="female">여자</label><br>
-
         <h2>키&몸무게 입력</h2>
         <input type="text" id="height" name="height" placeholder="키를 입력하세요 (cm)" required><br>
         <input type="text" id="weight" name="weight" placeholder="몸무게를 입력하세요 (kg)" required><br>
-
         <h2>나이 입력</h2>
         <input type="text" id="age" name="age" placeholder="나이를 입력하세요 (세)" required><br>
-
         <h2>목표 수면시간</h2>
         <input type="text" id="sleeptime" name="sleeptime" placeholder="수면시간 입력 (시간)" required><br>
-
         <h2>평소 활동량</h2>
         <div class="activity-level">
-            <input type="radio" id="sedentary" name="activity" value="sedentary">
+            <input type="radio" id="sedentary" name="activity" value="비활동적">
             <label for="sedentary">비활동적</label>
         </div>
         <div class="activity-level">
-            <input type="radio" id="lightly_active" name="activity" value="lightly_active">
+            <input type="radio" id="lightly_active" name="activity" value="저활동적">
             <label for="lightly_active">저활동적</label>
         </div>
         <div class="activity-level">
-            <input type="radio" id="active" name="activity" value="active">
+            <input type="radio" id="active" name="activity" value="활동적">
             <label for="active">활동적</label>
         </div>
         <div class="activity-level">
-            <input type="radio" id="very_active" name="activity" value="very_active">
-            <label for="very_active">매우 활동적</label>
+            <input type="radio" id="very_active" name="activity" value="매우활동적">
+            <label for="very_active">매우활동적</label>
         </div>
 
-        <button type="submit">저장</button>
+        <input type="hidden" id="bmi" name="bmi">
+
+        <button type="submit" onclick="calculateBMI()">저장</button>
     </form>
+
+    <script>
+        function calculateBMI() {
+            var height = parseFloat(document.getElementById('height').value);
+            var weight = parseFloat(document.getElementById('weight').value);
+
+            var heightInMeter = height / 100; //미터 변환
+            var bmi = weight / (heightInMeter * heightInMeter);
+            document.getElementById('bmi').value = bmi;
+            document.getElementById('settingForm').submit();
+        }
+    </script>
 </body>
 </html>
