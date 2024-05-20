@@ -200,6 +200,10 @@ app.get('/calendardetail/:date/:Nickname', async (request,response)=>{
   response.render('calendardetail.ejs', {users : users[0]})
 });
 
+// 가족추가 페이지 
+app.get('/adduser', async (request,response)=>{
+
+})
 
 app.get('/daily-record', (req, res) => {
     response.sendFile(__dirname + '/daily-record.html');
@@ -241,3 +245,7 @@ app.post('/submit-form', (req, res) => {
   });
 });
 
+// 웹소켓 연결 확인   
+io.on('connection', (socket) => {
+  console.log('websocket 연결됨')
+})
