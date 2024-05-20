@@ -296,7 +296,7 @@ app.post('/setting', async (req, res) => {
     healthStatus = '1단계비만';
   } else if (bmi >= 30 && bmi < 35) {
     healthStatus = '2단계비만';
-  } else {
+  } else if (bmi >= 36) {
     healthStatus = '3단계비만';
   }
 
