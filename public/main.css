@@ -43,7 +43,7 @@ h1 {
 
 }
 
-.daily-record, .setting, .calender, .addUser {
+.daily-record, .setting, .calendar, .addUser {
     display : flex;
     justify-content : center; 
     align-items : center;  
