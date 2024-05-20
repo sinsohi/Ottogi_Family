@@ -326,6 +326,9 @@ app.post('/setting', async (req, res) => {
     BMR = (6.25 * height) + (10 * weight) - (5 * age) - 161; 
   }
 
+  let RDA; //하루권장섭취량 = Recommended Daily Allowance = RDA
+  RDA = BMR * activityindex;
+
   const data = {
     userNickname: userNickname,
     gender: gender,
@@ -338,7 +341,8 @@ app.post('/setting', async (req, res) => {
     healthStatus: healthStatus, // bmi 결과
     timestamp: koreanTime,
     activityindex: activityindex,
-    BMR: BMR
+    BMR: BMR,
+    RDA: RDA
   };
 
   db.collection('user_info').insertOne(data, (err, result) => {
