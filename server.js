@@ -164,18 +164,18 @@ app.post('/login', async (request, response, next) => {
 // 달력 페이지 
 app.get('/calendar', async (request,response)=>{
   let users = await db.collection('user_info').find().toArray();
-  console.log(users[0]);
+  // console.log(users[0]);
   response.render('calendar.ejs', {users:users});
 })
 
 // 달력에서 날짜 클릭시 보여주는 페이지 
 app.get('/calendar/:date', async (request,response)=>{
   let users = await db.collection('user_info').find({date:request.params.date}).toArray();
-  console.log(request.params);
+  // console.log(request.params);
   if (users.length > 0) {
     // 데이터가 있을 경우, EJS 템플릿에 데이터 전달
     response.render('calendar.ejs', { users: users[0]});
-    console.log(users[0]);
+    // console.log(users[0]);
   } 
   else {
     // 데이터가 없을 경우-데이터 전달 안함
@@ -189,10 +189,9 @@ app.get('/',(request,response)=>{
 
 // 캘린더 디테일 페이지 
 app.get('/calendardetail/:date/:Nickname', async (request,response)=>{
-  // let Nickname = request.params.Nickname;
+  let Nickname = request.params.Nickname;
   let users = await db.collection('user_info').find({ userNickname : request.params.Nickname}).toArray();
-  console.log(users[0])
-  // console.log(users[0].weight);
+  console.log(users[0]);
   response.render('calendardetail.ejs', {users : users[0]})
 });
 
