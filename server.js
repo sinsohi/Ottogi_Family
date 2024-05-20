@@ -80,7 +80,7 @@ new MongoClient(url).connect().then((client)=>{
 
 
 
-app.listen(process.env.PORT, ()=>{
+server.listen(process.env.PORT, ()=>{
     console.log('http://localhost:'+`${process.env.PORT}` +' 에서 서버 실행중')
 })
 
