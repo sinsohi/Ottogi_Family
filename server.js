@@ -6,16 +6,10 @@ const bcrypt = require('bcrypt'); // bcrypt 셋팅
 const MongoStore = require("connect-mongo"); // connect-mongo 셋팅
 require("dotenv").config(); // .env 파일에 환경변수 보관
 
-<<<<<<< HEAD
+
 app.use(express.static(__dirname + '/public'));
 
 // 추가
-=======
-
-app.use(express.static(__dirname + '/public'))
-
-
->>>>>>> da98f5c0e0b334456f263f90648c4c03554d0abd
 app.use(
   '/build/',
   express.static(path.join(
@@ -62,11 +56,7 @@ app.use(passport.session());
 
 // mongoDB 연결
 const { MongoClient, ObjectId } = require('mongodb');
-<<<<<<< HEAD
-=======
-const { BADFAMILY } = require('dns');
 
->>>>>>> da98f5c0e0b334456f263f90648c4c03554d0abd
 let db;
 const url = process.env.DBurl;
 new MongoClient(url).connect().then((client) => {
@@ -76,25 +66,10 @@ new MongoClient(url).connect().then((client) => {
   console.log(err);
 });
 
-<<<<<<< HEAD
 app.listen(process.env.PORT, () => {
   console.log('http://localhost:' + `${process.env.PORT}` + ' 에서 서버 실행중');
 });
 
-app.get('/homePage', (request, response) => {
-  response.render('homePage.ejs');
-});
-
-app.get('/register', (request, response) => {
-  response.render('register.ejs');
-});
-
-app.post('/register', async (request, response) => {
-  let hash = await bcrypt.hash(request.body.password, 10); // password hashing (암호화)
-=======
-app.listen(process.env.PORT || 3000, ()=>{
-    console.log('http://localhost:'+`${process.env.PORT}` +' 에서 서버 실행중')
-})
 
 app.get('/homePage',(req,res)=>{
   res.render('homePage.ejs')
@@ -180,13 +155,12 @@ app.get('/getGender', async (req, res) => {
 
 
 
-app.get('/register',(request,response)=>{
-  response.render('register.ejs');})
+app.get('/register', (request, response) => {
+  response.render('register.ejs');
+});
 
-app.post('/register', async (request,response)=>{
-  let hash = await bcrypt.hash(request.body.password,10) // password hashing (암호화)
-
->>>>>>> da98f5c0e0b334456f263f90648c4c03554d0abd
+app.post('/register', async (request, response) => {
+  let hash = await bcrypt.hash(request.body.password, 10); // password hashing (암호화)
   await db.collection('user_info').insertOne({
     userNickname: request.body.userNickname,
     username: request.body.username,
@@ -232,24 +206,45 @@ app.get('/login', (request, response) => {
   response.render('login.ejs');
 });
 
-// 아이디/비번이 DB와 일치하는지 검증하는 코드 
-<<<<<<< HEAD
-app.post('/login', async (요청, 응답, next) => {
+// 아이디/비번이 DB와 일치하는지 검증하는 코드  
+app.post('/login', async (request, response, next) => {
+
   passport.authenticate('local', (error, user, info) => {
-    if (error) return 응답.status(500).json(error);
-    if (!user) return 응답.status(401).json(info.message);
-    // 일치할 경우 
-    요청.logIn(user, (err) => {
-      // 로그인 완료시 실행할 코드
+    if (error) return response.status(500).json(error)
+      if (!user) return response.status(401).json(info.message)
+      //일치할 경우 
+    request.logIn(user, (err) => {
+      //로그인 완료시 실행할 코드
       if (err) return next(err);
-      응답.render('homePage.ejs');
+      response.render('homePage.ejs')
     });
-  })(요청, 응답, next);
-});
+  })(request, response, next);
+}) 
 
 app.get('/calender', (request, response) => {
   response.sendFile(__dirname + '/calender.html');
 });
+// 달력 페이지 
+app.get('/calendar', async (request,response)=>{
+  let users = await db.collection('user_info').find().toArray();
+  // console.log(users[0]);
+  response.render('calendar.ejs', {users:users});
+})
+
+// 달력에서 날짜 클릭시 보여주는 페이지 
+app.get('/calendar/:date', async (request,response)=>{
+  let users = await db.collection('user_info').find({date:request.params.date}).toArray();
+  // console.log(request.params);
+  if (users.length > 0) {
+    // 데이터가 있을 경우, EJS 템플릿에 데이터 전달
+    response.render('calendar.ejs', { users: users[0]});
+    // console.log(users[0]);
+  } 
+  else {
+    // 데이터가 없을 경우-데이터 전달 안함
+    response.render('calendar.ejs', { users: [] });
+  }
+})
 
 app.get('/', (request, response) => {
   response.sendFile(__dirname + '/InitialScreen.html');
@@ -258,14 +253,22 @@ app.get('/', (request, response) => {
 app.get('/calendardetail', (request, response) => {
   response.sendFile(__dirname + '/calendardetail.html');
 });
+// 캘린더 디테일 페이지 
+app.get('/calendardetail/:date/:Nickname', async (request,response)=>{
+  let Nickname = request.params.Nickname;
+  let users = await db.collection('user_info').find({ userNickname : request.params.Nickname}).toArray();
+  console.log(users[0]);
+  response.render('calendardetail.ejs', {users : users[0]})
+});
+
+
+app.get('/daily-record', (req, res) => {
+    res.sendFile(__dirname + '/daily-record.html');
+}); //매일 기록
 
 app.get('/setting', (req, res) => {
   res.sendFile(__dirname + '/setting.html');
 }); // 세팅
-
-app.get('/daily-record', (req, res) => {
-  res.sendFile(__dirname + '/daily-record.html');
-}); // 매일 기록
 
 app.post('/submit-form', (req, res) => {
   const meal = req.body.meal;
@@ -309,63 +312,6 @@ app.post('/dailyrecordexercise', async (req, res) => {
     console.log('데이터를 성공적으로 삽입');
     res.status(200).send('성공적으로 제출');
   });
-=======
-app.post('/login', async (request, response, next) => {
-
-  passport.authenticate('local', (error, user, info) => {
-    if (error) return response.status(500).json(error)
-      if (!user) return response.status(401).json(info.message)
-      //일치할 경우 
-    request.logIn(user, (err) => {
-      //로그인 완료시 실행할 코드
-      if (err) return next(err);
-      response.render('homePage.ejs')
-    });
-  })(request, response, next);
-}) 
-
-// 달력 페이지 
-app.get('/calendar', async (request,response)=>{
-  let users = await db.collection('user_info').find().toArray();
-  // console.log(users[0]);
-  response.render('calendar.ejs', {users:users});
-})
-
-// 달력에서 날짜 클릭시 보여주는 페이지 
-app.get('/calendar/:date', async (request,response)=>{
-  let users = await db.collection('user_info').find({date:request.params.date}).toArray();
-  // console.log(request.params);
-  if (users.length > 0) {
-    // 데이터가 있을 경우, EJS 템플릿에 데이터 전달
-    response.render('calendar.ejs', { users: users[0]});
-    // console.log(users[0]);
-  } 
-  else {
-    // 데이터가 없을 경우-데이터 전달 안함
-    response.render('calendar.ejs', { users: [] });
-  }
-})
-
-app.get('/',(request,response)=>{
-  response.sendFile(__dirname + '/InitialScreen.html')
-})
-
-// 캘린더 디테일 페이지 
-app.get('/calendardetail/:date/:Nickname', async (request,response)=>{
-  let Nickname = request.params.Nickname;
-  let users = await db.collection('user_info').find({ userNickname : request.params.Nickname}).toArray();
-  console.log(users[0]);
-  response.render('calendardetail.ejs', {users : users[0]})
-});
-
-
-app.get('/daily-record', (req, res) => {
-    response.sendFile(__dirname + '/daily-record.html');
-}); //매일 기록
-
-app.get('/setting', (req, res) => {
-  response.sendFile(__dirname + '/setting.html');
->>>>>>> da98f5c0e0b334456f263f90648c4c03554d0abd
 });
 
 
