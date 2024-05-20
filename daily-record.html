@@ -1,26 +1,33 @@
+<!DOCTYPE html>
 <body>
     <div class="container">
         <h2>매일 기록</h2>
-        <form>
+        <form action="/submit-form" method="POST">
+            <div class="mb-3">
+                <label for="exampleFormControlTextarea1" class="form-label">식단</label>
+                <button type="submit" name="meal" value="breakfast" class="btn btn-primary">아침</button>
+                <button type="submit" name="meal" value="lunch" class="btn btn-primary">점심</button>
+                <button type="submit" name="meal" value="dinner" class="btn btn-primary">저녁</button>
+            </div>
+        </form>        
+        <form action="/dailyrecordexercise" method="GET"> <!-- 수정: method="GET" 추가 -->
+            <div class="mb-3">
+                <label for="exampleFormControlTextarea1" class="form-label">운동량</label>
+            </div>
+            <button type="submit" class="btn btn-primary">기록하기</button>
+        </form>
+        <form action="/dailyrecordsleeptime" method="GET"> <!-- 수정: method="GET" 추가 -->
             <div class="mb-3">
                 <label for="exampleFormControlTextarea1" class="form-label">수면시간</label>
-                <textarea class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
-            </div>
-            <button type="submit" class="btn btn-primary">기록하기</button>
-        </form>
-        <form>
-            <div class="mb-3">
-                <label for="exampleFormControlTextarea1" class="form-label">활동지수</label>
-                <textarea class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
-            </div>
-            <button type="submit" class="btn btn-primary">기록하기</button>
-        </form>
-        <form>
-            <div class="mb-3">
-                <label for="exampleFormControlTextarea1" class="form-label">몸무게</label>
-                <textarea class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
             </div>
             <button type="submit" class="btn btn-primary">기록하기</button>
         </form>
     </div>
+    <script>
+        function redirectToMealPage(meal) {
+            // 각 버튼에 해당하는 meal 값을 가지고 dailyrecordmeal.html 페이지로 이동
+            location.href = '/dailyrecordmeal?meal=' + meal;
+        }
+    </script>
 </body>
+</html>
