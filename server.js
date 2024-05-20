@@ -135,9 +135,7 @@ passport.serializeUser((user, done) => {
 
 // 유저가 보낸 쿠키 분석 (세션 정보 적힌 쿠키 가지고 있는 유저가 요청 날릴 때마다 실행됨)
 passport.deserializeUser(async (user, done) => {
-  let result = await db
-    .collection("user_info")
-    .findOne({ _id: new ObjectId(user.id) });
+  let result = await db.collection("user_info").findOne({ _id: new ObjectId(user.id) });
   delete result.password;
   process.nextTick(() => {
     done(null, result); // result : 요청.user에 들어감
@@ -163,30 +161,47 @@ app.post('/login', async (request, response, next) => {
   })(request, response, next);
 }) 
 
+// 달력 페이지 
 app.get('/calendar', async (request,response)=>{
   let users = await db.collection('user_info').find().toArray();
-  response.render('calendar.ejs', {users : users});
+  // console.log(users[0]);
+  response.render('calendar.ejs', {users:users});
 })
 
+// 달력에서 날짜 클릭시 보여주는 페이지 
+app.get('/calendar/:date', async (request,response)=>{
+  let users = await db.collection('user_info').find({date:request.params.date}).toArray();
+  // console.log(request.params);
+  if (users.length > 0) {
+    // 데이터가 있을 경우, EJS 템플릿에 데이터 전달
+    response.render('calendar.ejs', { users: users[0]});
+    // console.log(users[0]);
+  } 
+  else {
+    // 데이터가 없을 경우-데이터 전달 안함
+    response.render('calendar.ejs', { users: [] });
+  }
+})
 
 app.get('/',(request,response)=>{
   response.sendFile(__dirname + '/InitialScreen.html')
 })
 
-app.get('/calendardetail/:Nickname', async (request,response)=>{
+// 캘린더 디테일 페이지 
+app.get('/calendardetail/:date/:Nickname', async (request,response)=>{
   let Nickname = request.params.Nickname;
   let users = await db.collection('user_info').find({ userNickname : request.params.Nickname}).toArray();
-  console.log(users[0])
-  // console.log(users[0].weight);
+  console.log(users[0]);
   response.render('calendardetail.ejs', {users : users[0]})
 });
 
+
 app.get('/daily-record', (req, res) => {
-    res.sendFile(__dirname + '/daily-record.html');
+    response.sendFile(__dirname + '/daily-record.html');
 }); //매일 기록
 
 app.get('/setting', (req, res) => {
-  res.sendFile(__dirname + '/setting.html');
+  response.sendFile(__dirname + '/setting.html');
 });
 
 
