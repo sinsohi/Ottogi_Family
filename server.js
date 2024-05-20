@@ -5,6 +5,11 @@ const bodyParser = require('body-parser'); //npm install body-parser
 const bcrypt = require('bcrypt') // bcrypt 셋팅
 const MongoStore = require("connect-mongo"); // connect-mongo 셋팅
 
+// 웹 소켓 세팅 
+const { createServer } = require('http')
+const { Server } = require('socket.io')
+const server = createServer(app)
+const io = new Server(server) 
 require("dotenv").config(); // .env 파일에 환경변수 보관
 
 app.use(express.static(__dirname + '/public'))
