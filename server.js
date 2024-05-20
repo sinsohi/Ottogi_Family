@@ -7,11 +7,9 @@ const MongoStore = require("connect-mongo"); // connect-mongo 셋팅
 
 require("dotenv").config(); // .env 파일에 환경변수 보관
 
+
 app.use(express.static(__dirname + '/public'))
-// app.use(express.static('public')); 
 
-
-//추가
 
 app.use(
   '/build/',
@@ -63,6 +61,7 @@ app.use(passport.session())
 
 // mongoDB 연결
 const { MongoClient, ObjectId } = require('mongodb');
+const { BADFAMILY } = require('dns');
 
 let db;
 const url = process.env.DBurl;
@@ -73,20 +72,92 @@ new MongoClient(url).connect().then((client)=>{
   console.log(err)
 })
 
-
-
-app.listen(process.env.PORT, ()=>{
+app.listen(process.env.PORT || 3000, ()=>{
     console.log('http://localhost:'+`${process.env.PORT}` +' 에서 서버 실행중')
 })
 
-app.get('/homePage',(request,response)=>{
-  response.render('homePage.ejs');
+app.get('/homePage',(req,res)=>{
+  res.render('homePage.ejs')
 })
 
+// member 전달
+app.get('/getMember', async (req, res) => {
+  try {
+    const client = await MongoClient.connect(url);
+    const db = client.db('Ottogi_Family');
 
-// app.get('/homePage',(request,response)=>{
-//   response.sendFile(__dirname + '/index.html')
-// })
+    let familyInfo = await db.collection('FamilyRoom').findOne({
+      member : req.user.userNickname
+    })
+
+    // console.log(familyInfo.member)
+    client.close();
+    
+    res.json(familyInfo.member); 
+
+  } catch (error) {
+    console.log('Error:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
+// BMI 전달
+app.get('/getBMI', async (req, res) => {
+  let bmi = [];
+  try {
+    const client = await MongoClient.connect(url);
+    const db = client.db('Ottogi_Family');
+
+    let userInfo = await db.collection('FamilyRoom').findOne({
+      member : req.user.userNickname
+    })
+
+    for(let i=0; i<userInfo.member.length; i++){
+      let result = await db.collection('user_info').findOne({
+        userNickname : userInfo.member[i]
+      })
+      // console.log(result.bmi)
+      bmi.push(result.healthStatus)
+      // console.log(bmi)
+
+    }
+
+    client.close();
+    res.json(bmi); 
+
+  } catch (error) {
+    console.log('Error:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
+// gender 전달
+app.get('/getGender', async (req, res) => {
+  let gender = [];
+  try {
+    const client = await MongoClient.connect(url);
+    const db = client.db('Ottogi_Family');
+
+    let userInfo = await db.collection('FamilyRoom').findOne({
+      member : req.user.userNickname
+    })
+
+    for(let i=0; i<userInfo.member.length; i++){
+      let result = await db.collection('user_info').findOne({
+        userNickname : userInfo.member[i]
+      })
+      gender.push(result.gender)
+    }
+
+    client.close();
+    res.json(gender); 
+
+  } catch (error) {
+    console.log('Error:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
 
 
 app.get('/register',(request,response)=>{
