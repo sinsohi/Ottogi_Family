@@ -23,6 +23,7 @@
     "express-session": "^1.18.0",
     "gsap": "^3.12.5",
     "mongodb": "^5.9.2",
+    "nodemon": "^3.1.0",
     "passport": "^0.7.0",
     "passport-local": "^1.0.0",
     "three": "^0.163.0",
