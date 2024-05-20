@@ -4,6 +4,7 @@ let familyInfo;
 let nickName = [];
 let bmi = [];
 let gender = [];
+let darkCircleStages = [1,2,3,1];
 
 
 export default async function ottogi_module2 (){
@@ -119,7 +120,10 @@ export default async function ottogi_module2 (){
                 rz: 0,
 				ry:0,
                 ...params
-            }
+            };
+
+            this.darkCircleIndex = params.darkCircleIndex; // darkCircleIndex
+
             
             // 그룹 생성 후 scene에 추가 
             this.group = new THREE.Group()
@@ -194,6 +198,39 @@ export default async function ottogi_module2 (){
             
             eyes.position.y = -0.1
             eyes.position.z = 0.7
+
+            // 다크써클 생성 함수 호출
+            this.createDarkCircles(darkCircleStages[this.darkCircleIndex]);
+        }
+
+        // 다크써클 생성 함수
+        createDarkCircles(stage) {
+            const darkCircles = new THREE.Group();
+            const material = new THREE.MeshLambertMaterial({ color: 0x000000, transparent: true, opacity: 0.7 });
+    
+            for (let i = 0; i < stage; i++) {
+                const curve = new THREE.EllipseCurve(
+                    0, 0,             // ax, aY
+                    0.3, 0.1,        // xRadius, yRadius
+                    0, 2 * Math.PI,   // aStartAngle, aEndAngle
+                    false,            // aClockwise
+                    0                 // aRotation
+                );
+    
+                const points = curve.getPoints(50);
+                const geometry = new THREE.BufferGeometry().setFromPoints(points);
+    
+                const darkCircle = new THREE.Line(geometry, material);
+                darkCircle.position.y = -0.15 - i * 0.05;
+                darkCircle.position.z = 0.73;
+
+                // 다크써클의 renderOrder를 높은 값으로 설정
+                darkCircle.renderOrder = 9999;
+    
+                darkCircles.add(darkCircle);
+            }
+    
+            this.head.add(darkCircles);
         }
         
 		// 흔들림 효과
@@ -244,7 +281,8 @@ export default async function ottogi_module2 (){
 
         const figure = new Figure({
             x: (i - Math.floor(member / 2)) * 4, // 오뚝이 캐릭터들을 중앙을 기준으로 균등하게 배치
-            ry: degreesToRadians((i - Math.floor(member / 2)) * -30)
+            ry: degreesToRadians((i - Math.floor(member / 2)) * -30),
+            darkCircleIndex : i // 다크써클 인덱스 추가
         });
 
         // bmi 단계에 따라 waistSize 변경
