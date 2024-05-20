@@ -302,9 +302,38 @@ app.post('/setting', async (req, res) => {
     healthStatus = '1단계비만';
   } else if (bmi >= 30 && bmi < 35) {
     healthStatus = '2단계비만';
-  } else {
+  } else if (bmi >= 36) {
     healthStatus = '3단계비만';
   }
+
+  let activityindex;
+  if (gender == "male" && activity == "비활동적") {
+    activityindex = 1;
+  } else if (gender == "male" && activity == "저활동적") {
+    activityindex = 1.11;
+  } else if (gender == "male" && activity == "활동적") {
+    activityindex = 1.25;
+  } else if (gender == "male" && activity == "매우활동적") {
+    activityindex = 1.48;
+  } else if (gender == "female" && activity == "비활동적") {
+    activityindex = 1.0;
+  } else if (gender == "female" && activity == "저활동적") {
+    activityindex = 1.12;
+  } else if (gender == "female" && activity == "활동적") {
+    activityindex = 1.27;
+  } else if (gender == "female" && activity == "매우활동적") {
+    activityindex = 1.45;
+  }  
+
+  let BMR; //기초대사량 = basal metabolic rate = BMR
+  if (gender == "male") {
+    BMR = (6.25 * height) + (10 * weight) - (5 * age) + 5;
+  } else if(gender == "female"){
+    BMR = (6.25 * height) + (10 * weight) - (5 * age) - 161; 
+  }
+
+  let RDA; //하루권장섭취량 = Recommended Daily Allowance = RDA
+  RDA = BMR * activityindex;
 
   const data = {
     userNickname: userNickname,
@@ -316,7 +345,10 @@ app.post('/setting', async (req, res) => {
     activity: activity,
     bmi: bmi, //bmi 값
     healthStatus: healthStatus, // bmi 결과
-    timestamp: koreanTime
+    timestamp: koreanTime,
+    activityindex: activityindex,
+    BMR: BMR,
+    RDA: RDA
   };
 
   db.collection('user_info').insertOne(data, (err, result) => {
