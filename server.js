@@ -355,35 +355,18 @@ app.post('/dailyrecordsleeptime', async (req, res) => {
   const sleepHour = req.body.sleepHour;
   const sleepMinute = req.body.sleepMinute;
   const userNickname = req.user.userNickname;
-
   const currentDate = new Date();
-
   const koreanTimeOffset = 9 * 60; // 한국 시간은 UTC+9
   const koreanTime = new Date(currentDate.getTime() + koreanTimeOffset * 60000);
-
-
   const data = {
     userNickname: userNickname,
     sleepHour: sleepHour,
     sleepMinute: sleepMinute,
     timestamp: koreanTime
   };
-
- await db.collection('DRsleeptime').insertOne(data);
-
- const startOfDay = new Date(currentDate.setHours(0, 0, 0, 0));
- const endOfDay = new Date(currentDate.setHours(23, 59, 59, 999));
-
- const userst = await db.collection('DRsleeptime').findOne({
-   userNickname: userNickname,
-   timestamp: { $gte: startOfDay, $lt: endOfDay }
- }, {
-   sort: { timestamp: -1 }
- });
-
- console.log('이거확인좀:', userst);
- res.render('dailyrecordsleeptime.ejs', { userst: userst });
+  await db.collection('DRsleeptime').insertOne(data);
 });
+ 
 
 
 
