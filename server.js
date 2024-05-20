@@ -300,6 +300,26 @@ app.post('/setting', async (req, res) => {
     healthStatus = '3단계비만';
   }
 
+  let activityindex;
+  if (gender == "male" && activity == "비활동적") {
+    activityindex = 1;
+  } else if (gender == "male" && activity == "저활동적") {
+    activityindex = 1.11;
+  } else if (gender == "male" && activity == "활동적") {
+    activityindex = 1.25;
+  } else if (gender == "male" && activity == "매우활동적") {
+    activityindex = 1.48;
+  } else if (gender == "female" && activity == "비활동적") {
+    activityindex = 1.0;
+  } else if (gender == "female" && activity == "저활동적") {
+    activityindex = 1.12;
+  } else if (gender == "female" && activity == "활동적") {
+    activityindex = 1.27;
+  } else if (gender == "female" && activity == "매우활동적") {
+    activityindex = 1.45;
+  }  
+
+
   const data = {
     userNickname: userNickname,
     gender: gender,
@@ -310,7 +330,8 @@ app.post('/setting', async (req, res) => {
     activity: activity,
     bmi: bmi, //bmi 값
     healthStatus: healthStatus, // bmi 결과
-    timestamp: koreanTime
+    timestamp: koreanTime,
+    activityindex, activityindex
   };
 
   db.collection('user_info').insertOne(data, (err, result) => {
