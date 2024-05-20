@@ -319,6 +319,12 @@ app.post('/setting', async (req, res) => {
     activityindex = 1.45;
   }  
 
+  let BMR; //기초대사량 = basal metabolic rate = BMR
+  if (gender == "male") {
+    BMR = (6.25 * height) + (10 * weight) - (5 * age) + 5;
+  } else if(gender == "female"){
+    BMR = (6.25 * height) + (10 * weight) - (5 * age) - 161; 
+  }
 
   const data = {
     userNickname: userNickname,
@@ -331,7 +337,8 @@ app.post('/setting', async (req, res) => {
     bmi: bmi, //bmi 값
     healthStatus: healthStatus, // bmi 결과
     timestamp: koreanTime,
-    activityindex, activityindex
+    activityindex: activityindex,
+    BMR: BMR
   };
 
   db.collection('user_info').insertOne(data, (err, result) => {
