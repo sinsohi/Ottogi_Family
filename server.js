@@ -6,9 +6,16 @@ const bcrypt = require('bcrypt'); // bcrypt 셋팅
 const MongoStore = require("connect-mongo"); // connect-mongo 셋팅
 require("dotenv").config(); // .env 파일에 환경변수 보관
 
+<<<<<<< HEAD
 app.use(express.static(__dirname + '/public'));
 
 // 추가
+=======
+
+app.use(express.static(__dirname + '/public'))
+
+
+>>>>>>> da98f5c0e0b334456f263f90648c4c03554d0abd
 app.use(
   '/build/',
   express.static(path.join(
@@ -55,6 +62,11 @@ app.use(passport.session());
 
 // mongoDB 연결
 const { MongoClient, ObjectId } = require('mongodb');
+<<<<<<< HEAD
+=======
+const { BADFAMILY } = require('dns');
+
+>>>>>>> da98f5c0e0b334456f263f90648c4c03554d0abd
 let db;
 const url = process.env.DBurl;
 new MongoClient(url).connect().then((client) => {
@@ -64,6 +76,7 @@ new MongoClient(url).connect().then((client) => {
   console.log(err);
 });
 
+<<<<<<< HEAD
 app.listen(process.env.PORT, () => {
   console.log('http://localhost:' + `${process.env.PORT}` + ' 에서 서버 실행중');
 });
@@ -78,6 +91,102 @@ app.get('/register', (request, response) => {
 
 app.post('/register', async (request, response) => {
   let hash = await bcrypt.hash(request.body.password, 10); // password hashing (암호화)
+=======
+app.listen(process.env.PORT || 3000, ()=>{
+    console.log('http://localhost:'+`${process.env.PORT}` +' 에서 서버 실행중')
+})
+
+app.get('/homePage',(req,res)=>{
+  res.render('homePage.ejs')
+})
+
+// member 전달
+app.get('/getMember', async (req, res) => {
+  try {
+    const client = await MongoClient.connect(url);
+    const db = client.db('Ottogi_Family');
+
+    let familyInfo = await db.collection('FamilyRoom').findOne({
+      member : req.user.userNickname
+    })
+
+    // console.log(familyInfo.member)
+    client.close();
+    
+    res.json(familyInfo.member); 
+
+  } catch (error) {
+    console.log('Error:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
+// BMI 전달
+app.get('/getBMI', async (req, res) => {
+  let bmi = [];
+  try {
+    const client = await MongoClient.connect(url);
+    const db = client.db('Ottogi_Family');
+
+    let userInfo = await db.collection('FamilyRoom').findOne({
+      member : req.user.userNickname
+    })
+
+    for(let i=0; i<userInfo.member.length; i++){
+      let result = await db.collection('user_info').findOne({
+        userNickname : userInfo.member[i]
+      })
+      // console.log(result.bmi)
+      bmi.push(result.healthStatus)
+      // console.log(bmi)
+
+    }
+
+    client.close();
+    res.json(bmi); 
+
+  } catch (error) {
+    console.log('Error:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
+// gender 전달
+app.get('/getGender', async (req, res) => {
+  let gender = [];
+  try {
+    const client = await MongoClient.connect(url);
+    const db = client.db('Ottogi_Family');
+
+    let userInfo = await db.collection('FamilyRoom').findOne({
+      member : req.user.userNickname
+    })
+
+    for(let i=0; i<userInfo.member.length; i++){
+      let result = await db.collection('user_info').findOne({
+        userNickname : userInfo.member[i]
+      })
+      gender.push(result.gender)
+    }
+
+    client.close();
+    res.json(gender); 
+
+  } catch (error) {
+    console.log('Error:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
+
+
+app.get('/register',(request,response)=>{
+  response.render('register.ejs');})
+
+app.post('/register', async (request,response)=>{
+  let hash = await bcrypt.hash(request.body.password,10) // password hashing (암호화)
+
+>>>>>>> da98f5c0e0b334456f263f90648c4c03554d0abd
   await db.collection('user_info').insertOne({
     userNickname: request.body.userNickname,
     username: request.body.username,
@@ -124,6 +233,7 @@ app.get('/login', (request, response) => {
 });
 
 // 아이디/비번이 DB와 일치하는지 검증하는 코드 
+<<<<<<< HEAD
 app.post('/login', async (요청, 응답, next) => {
   passport.authenticate('local', (error, user, info) => {
     if (error) return 응답.status(500).json(error);
@@ -199,6 +309,63 @@ app.post('/dailyrecordexercise', async (req, res) => {
     console.log('데이터를 성공적으로 삽입');
     res.status(200).send('성공적으로 제출');
   });
+=======
+app.post('/login', async (request, response, next) => {
+
+  passport.authenticate('local', (error, user, info) => {
+    if (error) return response.status(500).json(error)
+      if (!user) return response.status(401).json(info.message)
+      //일치할 경우 
+    request.logIn(user, (err) => {
+      //로그인 완료시 실행할 코드
+      if (err) return next(err);
+      response.render('homePage.ejs')
+    });
+  })(request, response, next);
+}) 
+
+// 달력 페이지 
+app.get('/calendar', async (request,response)=>{
+  let users = await db.collection('user_info').find().toArray();
+  // console.log(users[0]);
+  response.render('calendar.ejs', {users:users});
+})
+
+// 달력에서 날짜 클릭시 보여주는 페이지 
+app.get('/calendar/:date', async (request,response)=>{
+  let users = await db.collection('user_info').find({date:request.params.date}).toArray();
+  // console.log(request.params);
+  if (users.length > 0) {
+    // 데이터가 있을 경우, EJS 템플릿에 데이터 전달
+    response.render('calendar.ejs', { users: users[0]});
+    // console.log(users[0]);
+  } 
+  else {
+    // 데이터가 없을 경우-데이터 전달 안함
+    response.render('calendar.ejs', { users: [] });
+  }
+})
+
+app.get('/',(request,response)=>{
+  response.sendFile(__dirname + '/InitialScreen.html')
+})
+
+// 캘린더 디테일 페이지 
+app.get('/calendardetail/:date/:Nickname', async (request,response)=>{
+  let Nickname = request.params.Nickname;
+  let users = await db.collection('user_info').find({ userNickname : request.params.Nickname}).toArray();
+  console.log(users[0]);
+  response.render('calendardetail.ejs', {users : users[0]})
+});
+
+
+app.get('/daily-record', (req, res) => {
+    response.sendFile(__dirname + '/daily-record.html');
+}); //매일 기록
+
+app.get('/setting', (req, res) => {
+  response.sendFile(__dirname + '/setting.html');
+>>>>>>> da98f5c0e0b334456f263f90648c4c03554d0abd
 });
 
 
