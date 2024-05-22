@@ -37,46 +37,68 @@
                 수면 기록이 없습니다.
             <% } %>
         </p>
-        <h2>오늘의 운동 정보</h2>
-<p>
-    <% if (useres.length > 0) { %>
+        <h2>오늘의 운동</h2>
+        <p>
+            <% if (useres.length > 0) { %>
+                <ul id="exerciseList">
+                    <% useres.forEach(function(exercise, index) { %>
+                        <li>
+                            <%= exercise.exerciseName %> (소모 칼로리: <%= exercise.caloriesBurned %>kcal)
+                            <button class="deleteButton" data-id="<%= exercise._id %>">삭제</button>
+                        </li>
+                    <% }); %>
+                </ul>
+            <% } else { %>
+                운동 기록이 없습니다.
+            <% } %>    
+        </p>
+
+        <h2>오늘의 아침</h2>
         <ul>
-            <% useres.forEach(function(exercise) { %>
-                <li><%= exercise.exerciseName %> (소모 칼로리: <%= exercise.caloriesBurned %>kcal)</li>
+            <% userbf.forEach(function(item) { %>
+                <li><%= item.menuName %> (칼로리: <%= item.calories %>kcal)</li>
             <% }); %>
         </ul>
-    <% } else { %>
-        운동 기록이 없습니다.
-    <% } %>    
-</p>
 
-<h2>오늘의 아침</h2>
-<ul>
-    <% userbf.forEach(function(item) { %>
-        <li><%= item.menuName %> (칼로리: <%= item.calories %>kcal)</li>
-    <% }); %>
-</ul>
+        <h2>오늘의 점심</h2>
+        <ul>
+            <% userlc.forEach(function(item) { %>
+                <li><%= item.menuName %> (칼로리: <%= item.calories %>kcal)</li>
+            <% }); %>
+        </ul>
 
-<h2>오늘의 점심</h2>
-<ul>
-    <% userlc.forEach(function(item) { %>
-        <li><%= item.menuName %> (칼로리: <%= item.calories %>kcal)</li>
-    <% }); %>
-</ul>
-
-<h2>오늘의 저녁</h2>
-<ul>
-    <% userdn.forEach(function(item) { %>
-        <li><%= item.menuName %> (칼로리: <%= item.calories %>kcal)</li>
-    <% }); %>
-    </ul>
-
+        <h2>오늘의 저녁</h2>
+        <ul>
+            <% userdn.forEach(function(item) { %>
+                <li><%= item.menuName %> (칼로리: <%= item.calories %>kcal)</li>
+            <% }); %>
+        </ul>
     </div>
     <script>
-        function redirectToMealPage(meal) {
-            // 각 버튼에 해당하는 meal 값을 가지고 dailyrecordmeal.html 페이지로 이동
-            location.href = '/dailyrecordmeal?meal=' + meal;
-        }
+        document.addEventListener("DOMContentLoaded", function(event) {
+            var deleteButtons = document.querySelectorAll('.deleteButton');
+            deleteButtons.forEach(function(button) {
+                button.addEventListener('click', function() {
+                    var exerciseId = this.getAttribute('data-id');
+                    fetch('/delete-exercise', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({ id: exerciseId })
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            location.reload();
+                        } else {
+                            alert('데이터 삭제 실패');
+                        }
+                    })
+                    .catch(error => console.error('Error:', error));
+                });
+            });
+        });
     </script>
 </body>
 </html>

@@ -297,6 +297,22 @@ app.get('/daily-record', async (req, res) => {
   res.render('daily-record', { sleepTime: userst.length > 0 ? userst[0] : null, useres: useres, userbf, userlc, userdn, todayData });
 });
 
+app.post('/delete-exercise', async (req, res) => {
+  const exerciseId = req.body.id;
+
+  try {
+    const result = await db.collection('DRexercise').deleteOne({ _id: new ObjectId(exerciseId) });
+
+    if (result.deletedCount === 1) {
+      res.json({ success: true });
+    } else {
+      res.status(404).json({ success: false, message: '데이터 X' });
+    }
+  } catch (error) {
+    console.error('Error deleting exercise:', error);
+    res.status(500).json({ success: false, message: '서버 오류' });
+  }
+});
 
 
 app.get('/setting', (req, res) => {
