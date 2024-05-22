@@ -50,6 +50,27 @@
     <% } %>    
 </p>
 
+<h2>오늘의 아침</h2>
+<ul>
+    <% userbf.forEach(function(item) { %>
+        <li><%= item.menuName %> (칼로리: <%= item.calories %>kcal)</li>
+    <% }); %>
+</ul>
+
+<h2>오늘의 점심</h2>
+<ul>
+    <% userlc.forEach(function(item) { %>
+        <li><%= item.menuName %> (칼로리: <%= item.calories %>kcal)</li>
+    <% }); %>
+</ul>
+
+<h2>오늘의 저녁</h2>
+<ul>
+    <% userdn.forEach(function(item) { %>
+        <li><%= item.menuName %> (칼로리: <%= item.calories %>kcal)</li>
+    <% }); %>
+    </ul>
+
     </div>
     <script>
         function redirectToMealPage(meal) {

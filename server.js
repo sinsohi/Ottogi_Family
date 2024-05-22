@@ -264,8 +264,22 @@ app.get('/calendardetail/:date/:Nickname', async (request,response)=>{
 app.get('/daily-record', async (req, res) => {
   const userNickname = req.user.userNickname;
 
+  const koreanTime = new Date(new Date().getTime() + 9 * 60 * 60 * 1000);
+  const startOfToday = new Date(koreanTime.getFullYear(), koreanTime.getMonth(), koreanTime.getDate(), 0, 0, 0);
+  const endOfToday = new Date(koreanTime.getFullYear(), koreanTime.getMonth(), koreanTime.getDate(), 23, 59, 59);
+
+  const userbf = await db.collection('breakfast').find({ userNickname: userNickname, timestamp: { $gte: startOfToday, $lte: endOfToday } }).toArray();
+  const userlc = await db.collection('lunch').find({ userNickname: userNickname, timestamp: { $gte: startOfToday, $lte: endOfToday } }).toArray();
+  const userdn = await db.collection('dinner').find({ userNickname: userNickname, timestamp: { $gte: startOfToday, $lte: endOfToday } }).toArray();
+
+  const todayData = {
+    breakfast: userbf,
+    lunch: userlc,
+    dinner: userdn
+  };
+
   const userst = await db.collection('DRsleeptime')
-    .find({ userNickname: userNickname })
+    .find({ userNickname: userNickname, timestamp: { $gte: startOfToday, $lte: endOfToday } })
     .sort({ timestamp: -1 })
     .limit(1)
     .project({ _id: 0, sleepHour: 1, sleepMinute: 1 })
@@ -274,22 +288,15 @@ app.get('/daily-record', async (req, res) => {
   let useres = [];
 
   if (userst.length > 0) {
-    const currentDate = new Date();
-
-    const koreanTimeOffset = 9 * 60; // 한국 시간은 UTC+9
-    const koreanTime = new Date(currentDate.getTime() + koreanTimeOffset * 60000);
-
-    const startOfToday = new Date(koreanTime.getFullYear(), koreanTime.getMonth(), koreanTime.getDate(), 0, 0, 0);
-    const endOfToday = new Date(koreanTime.getFullYear(), koreanTime.getMonth(), koreanTime.getDate(), 23, 59, 59);
-
     useres = await db.collection('DRexercise').find({
       userNickname: userNickname,
       timestamp: { $gte: startOfToday, $lte: endOfToday }
     }).toArray();
   }
 
-  res.render('daily-record', { sleepTime: userst.length > 0 ? userst[0] : null, useres: useres });
+  res.render('daily-record', { sleepTime: userst.length > 0 ? userst[0] : null, useres: useres, userbf, userlc, userdn, todayData });
 });
+
 
 
 app.get('/setting', (req, res) => {
