@@ -261,10 +261,22 @@ app.get('/calendardetail/:date/:Nickname', async (request,response)=>{
   response.render('calendardetail.ejs', {users : users[0]})
 });
 
+app.get('/daily-record', async (req, res) => {
+  const userNickname = req.user.userNickname;
+  const userst = await db.collection('DRsleeptime')
+    .find({ userNickname: userNickname })
+    .sort({ timestamp: -1 })
+    .limit(1)
+    .project({ _id: 0, sleepHour: 1, sleepMinute: 1 })
+    .toArray();
 
-app.get('/daily-record', (req, res) => {
-    res.sendFile(__dirname + '/daily-record.html');
-}); //매일 기록
+  if (userst.length > 0) {
+    res.render('daily-record', { sleepTime: userst[0] });
+  } else {
+    res.render('daily-record', { sleepTime: null });
+  }
+});
+
 
 app.get('/setting', (req, res) => {
   res.sendFile(__dirname + '/setting.html');

@@ -1,4 +1,10 @@
 <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>매일 기록</title>
+</head>
 <body>
     <div class="container">
         <h2>매일 기록</h2>
@@ -10,18 +16,27 @@
                 <button type="submit" name="meal" value="dinner" class="btn btn-primary">저녁</button>
             </div>
         </form>        
-        <form action="/dailyrecordexercise" method="GET"> <!-- 수정: method="GET" 추가 -->
+        <form action="/dailyrecordexercise" method="GET">
             <div class="mb-3">
                 <label for="exampleFormControlTextarea1" class="form-label">운동량</label>
             </div>
             <button type="submit" class="btn btn-primary">기록하기</button>
         </form>
-        <form action="/dailyrecordsleeptime" method="GET"> <!-- 수정: method="GET" 추가 -->
+        <form action="/dailyrecordsleeptime" method="GET">
             <div class="mb-3">
                 <label for="exampleFormControlTextarea1" class="form-label">수면시간</label>
             </div>
             <button type="submit" class="btn btn-primary">기록하기</button>
         </form>
+        
+        <h2>오늘의 수면 시간</h2>
+        <p>
+            <% if (sleepTime) { %>
+                <%= sleepTime.sleepHour %>시 <%= sleepTime.sleepMinute %>분
+            <% } else { %>
+                수면 기록이 없습니다.
+            <% } %>
+        </p>
     </div>
     <script>
         function redirectToMealPage(meal) {
