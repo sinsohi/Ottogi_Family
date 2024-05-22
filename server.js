@@ -263,6 +263,7 @@ app.get('/calendardetail/:date/:Nickname', async (request,response)=>{
 
 app.get('/daily-record', async (req, res) => {
   const userNickname = req.user.userNickname;
+
   const userst = await db.collection('DRsleeptime')
     .find({ userNickname: userNickname })
     .sort({ timestamp: -1 })
@@ -270,11 +271,24 @@ app.get('/daily-record', async (req, res) => {
     .project({ _id: 0, sleepHour: 1, sleepMinute: 1 })
     .toArray();
 
+  let useres = [];
+
   if (userst.length > 0) {
-    res.render('daily-record', { sleepTime: userst[0] });
-  } else {
-    res.render('daily-record', { sleepTime: null });
+    const currentDate = new Date();
+
+    const koreanTimeOffset = 9 * 60; // 한국 시간은 UTC+9
+    const koreanTime = new Date(currentDate.getTime() + koreanTimeOffset * 60000);
+
+    const startOfToday = new Date(koreanTime.getFullYear(), koreanTime.getMonth(), koreanTime.getDate(), 0, 0, 0);
+    const endOfToday = new Date(koreanTime.getFullYear(), koreanTime.getMonth(), koreanTime.getDate(), 23, 59, 59);
+
+    useres = await db.collection('DRexercise').find({
+      userNickname: userNickname,
+      timestamp: { $gte: startOfToday, $lte: endOfToday }
+    }).toArray();
   }
+
+  res.render('daily-record', { sleepTime: userst.length > 0 ? userst[0] : null, useres: useres });
 });
 
 
@@ -316,15 +330,8 @@ app.post('/dailyrecordexercise', async (req, res) => {
     timestamp: koreanTime
   };
 
-  db.collection('DRexercise').insertOne(data, (err, result) => {
-    if (err) {
-      console.log('데이터베이스 오류:', err);
-      return res.status(500).send('데이터베이스 오류');
-    }
-    console.log('데이터를 성공적으로 삽입');
-    res.status(200).send('성공적으로 제출');
+  db.collection('DRexercise').insertOne(data);
   });
-});
 
 
 app.post('/dailyrecordmeal', async (req, res) => {
@@ -352,14 +359,7 @@ app.post('/dailyrecordmeal', async (req, res) => {
     calories: calories,
     timestamp: koreanTime
   };
-  db.collection(collectionName).insertOne(data, (err, result) => {
-    if (err) {
-      console.log('데이터베이스 오류:', err);
-      return res.status(500).send('데이터베이스 오류');
-    }
-    console.log('데이터를 성공적으로 삽입');
-    res.status(200).send('성공적으로 제출');
-  });
+  db.collection(collectionName).insertOne(data);
 });
 
 
@@ -459,12 +459,5 @@ app.post('/setting', async (req, res) => {
     RDA: RDA
   };
 
-  db.collection('user_info').insertOne(data, (err, result) => {
-    if (err) {
-      console.log('데이터베이스 오류:', err);
-      return res.status(500).send('데이터베이스 오류');
-    }
-    console.log('데이터를 성공적으로 삽입');
-    res.status(200).send('제출 완료');
-  });
+  db.collection('user_info').insertOne(data);
 });

@@ -37,6 +37,19 @@
                 수면 기록이 없습니다.
             <% } %>
         </p>
+        <h2>오늘의 운동 정보</h2>
+<p>
+    <% if (useres.length > 0) { %>
+        <ul>
+            <% useres.forEach(function(exercise) { %>
+                <li><%= exercise.exerciseName %> (소모 칼로리: <%= exercise.caloriesBurned %>kcal)</li>
+            <% }); %>
+        </ul>
+    <% } else { %>
+        운동 기록이 없습니다.
+    <% } %>    
+</p>
+
     </div>
     <script>
         function redirectToMealPage(meal) {
