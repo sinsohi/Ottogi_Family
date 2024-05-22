@@ -6,6 +6,11 @@
   <title>Document</title>
 </head>
 <body>
+  <!-- 친구추가 폼-->
+  <div class ="chat-form">
+    <input class="chat-input">
+    <button class="chat-button">추가</button>
+  </div>
 
   <!-- socket.io 라이브러리 설치 -->
   <script src="https://cdn.jsdelivr.net/npm/socket.io@4.7.2/client-dist/socket.io.min.js"></script>
@@ -14,6 +19,7 @@
     socket.emit('ask-join','1')
 
     document.querySelector('.chat-button').addEventListener('click', function() {
+      document.querySelector(' ').value
       socket.emit('message', {msg: '반가워', room: '1'})
       socket.on('name', (data)=> {
         console.log(data)
