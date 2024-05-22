@@ -6,6 +6,19 @@
   <title>Document</title>
 </head>
 <body>
-  
+
+  <!-- socket.io 라이브러리 설치 -->
+  <script src="https://cdn.jsdelivr.net/npm/socket.io@4.7.2/client-dist/socket.io.min.js"></script>
+  <script>
+    const socket = io()
+    socket.emit('ask-join','1')
+
+    document.querySelector('.chat-button').addEventListener('click', function() {
+      socket.emit('message', {msg: '반가워', room: '1'})
+      socket.on('name', (data)=> {
+        console.log(data)
+      })
+    })
+  </script>
 </body>
 </html>

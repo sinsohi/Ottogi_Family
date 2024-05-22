@@ -268,7 +268,18 @@ app.get('/calendardetail/:date/:Nickname', async (request,response)=>{
 
 // 가족추가 페이지 
 app.get('/adduser', async (request,response)=>{
+  response.render('adduser.ejs');
+})
 
+// 웹소켓 연결 확인   
+io.on('connection', (socket) => {
+  socket.on('age', (data)=>{
+    console.log('유저가 보낸거 ', data)
+    io.emit('name', 'Kim')
+  })
+  socket.on('message', (data)=> {
+    console.log(data)
+  })
 })
 
 app.get('/daily-record', (req, res) => {
@@ -477,7 +488,3 @@ app.post('/setting', async (req, res) => {
   });
 });
 
-// 웹소켓 연결 확인   
-io.on('connection', (socket) => {
-  console.log('websocket 연결됨')
-})
