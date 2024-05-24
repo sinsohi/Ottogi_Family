@@ -85,16 +85,15 @@ app.get('/getMember', async (req, res) => {
   try {
     const client = await MongoClient.connect(url);
     const db = client.db('Ottogi_Family');
-
+    const usreNickname = request.body.userNickname;
+    
     let familyInfo = await db.collection('FamilyRoom').findOne({
-      member : req.user.userNickname
-    })
+      member : userNickname
+    });
 
     // console.log(familyInfo.member)
     client.close();
-    
     res.json(familyInfo.member); 
-
   } catch (error) {
     console.log('Error:', error);
     res.status(500).json({ error: 'Internal Server Error' });
@@ -192,13 +191,15 @@ passport.use(
 );
 
 // 로그인시 세션 만들기 (요청.logIn() 쓰면 자동 실행됨)
+// 로그인을 성공한 user의 저장하는 함수(serializeUser)
 passport.serializeUser((user, done) => {
   process.nextTick(() => {
     done(null, { id: user._id, username: user.username });
   });
 });
 
-// 유저가 보낸 쿠키 분석 (세션 정보 적힌 쿠키 가지고 있는 유저가 요청 날릴 때마다 실행됨)
+// 유저가 보낸 쿠키 분석
+// 페이지에 방문하는 모든 client에 대한 정보를 전달(deserializeUser)
 passport.deserializeUser(async (user, done) => {
   let result = await db.collection("user_info").findOne({ _id: new ObjectId(user.id) });
   delete result.password;
@@ -267,11 +268,25 @@ app.get('/calendardetail/:date/:Nickname', async (request,response)=>{
 });
 
 // 가족추가 페이지 
-app.get('/adduser', async (request,response)=>{
-  let users = await db.collection('FamilyRoom').find({}).toArray();
-  console.log(users[0]);
-  response.render('adduser.ejs', {users:users});
+app.get('/addUser', async (request,response)=>{
+  try {
+    const client = await MongoClient.connect(url);
+    const db = client.db('Ottogi_Family');
 
+    let familyInfo = await db.collection('FamilyRoom').findOne({
+      member : req.user.userNickname
+    })
+
+    console.log(familyInfo.member)
+    client.close();
+    
+    res.json(familyInfo.member); 
+
+  } catch (error) {
+    console.log('Error:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+  response.render('addUser.ejs');
 })
 
 // 웹소켓 연결 확인   
