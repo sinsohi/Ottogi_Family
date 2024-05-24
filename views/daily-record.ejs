@@ -59,7 +59,8 @@
                     <% useres.forEach(function(exercise, index) { %>
                         <li>
                             <%= exercise.exerciseName %> (소모 칼로리: <%= exercise.caloriesBurned %>kcal)
-                            <button class="deleteButton" data-id="<%= exercise._id %>">삭제</button>
+                            <button class="deleteButton exercise" data-id="<%= exercise._id %>">삭제</button>
+
                         </li>
                     <% }); %>
                 </ul>
@@ -102,6 +103,7 @@
                 button.addEventListener('click', function() {
                     var mealType = '';
                     var itemId = this.getAttribute('data-id');
+                    var exerciseId = this.getAttribute('data-id');
 
                     if (button.classList.contains('exercise')) {
                         fetch('/delete-exercise', {
@@ -109,7 +111,7 @@
                             headers: {
                                 'Content-Type': 'application/json'
                             },
-                            body: JSON.stringify({ id: itemId })
+                            body: JSON.stringify({ id: exerciseId })
                         })
                         .then(response => response.json())
                         .then(data => {

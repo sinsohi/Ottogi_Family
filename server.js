@@ -392,7 +392,7 @@ app.post('/dailyrecordmeal', async (req, res) => {
   const koreanTimeOffset = 9 * 60; // 한국 시간은 UTC+9
   const koreanTime = new Date(currentDate.getTime() + koreanTimeOffset * 60000);
 
-  let collectionName;
+  let collectionName = 'default';
   if (meal === 'breakfast') {
     collectionName = 'breakfast';
   } else if (meal === 'lunch') {
