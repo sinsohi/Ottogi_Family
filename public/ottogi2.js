@@ -206,31 +206,39 @@ export default async function ottogi_module2 (){
         // 다크써클 생성 함수
         createDarkCircles(stage) {
             const darkCircles = new THREE.Group();
-            const material = new THREE.MeshLambertMaterial({ color: 0x000000, transparent: true, opacity: 0.7 });
-    
+            const material = new THREE.MeshBasicMaterial({ color: 0x000000 });
+        
+            const radiusIncrement = 0.05; // 반지름 증가량
+            const verticalSpacing = 0.05; // 수직 간격
+        
             for (let i = 0; i < stage; i++) {
                 const curve = new THREE.EllipseCurve(
-                    0, 0,             // ax, aY
-                    0.3, 0.1,        // xRadius, yRadius
-                    0, 2 * Math.PI,   // aStartAngle, aEndAngle
-                    false,            // aClockwise
-                    0                 // aRotation
+                    0, 0,                        // ax, aY
+                    0.09 + i * radiusIncrement, 0.1, // xRadius, yRadius (반지름 증가)
+                    Math.PI, 2 * Math.PI,        // aStartAngle, aEndAngle (반원 형태)
+                    false,                       // aClockwise
+                    0                            // aRotation
                 );
-    
+        
                 const points = curve.getPoints(50);
                 const geometry = new THREE.BufferGeometry().setFromPoints(points);
-    
+        
                 const darkCircle = new THREE.Line(geometry, material);
-                darkCircle.position.y = -0.15 - i * 0.05;
-                darkCircle.position.z = 0.73;
-
-                // 다크써클의 renderOrder를 높은 값으로 설정
-                darkCircle.renderOrder = 9999;
-    
+                darkCircle.position.y = -0.1 - i * verticalSpacing; // 수직 위치 조정
+                darkCircle.position.z = 0.72;
+        
                 darkCircles.add(darkCircle);
             }
-    
-            this.head.add(darkCircles);
+        
+            // 왼쪽 눈 아래에 다크써클 추가
+            const leftDarkCircles = darkCircles.clone();
+            leftDarkCircles.position.x = -0.36;
+            this.head.add(leftDarkCircles);
+        
+            // 오른쪽 눈 아래에 다크써클 추가
+            const rightDarkCircles = darkCircles.clone();
+            rightDarkCircles.position.x = 0.36;
+            this.head.add(rightDarkCircles);
         }
         
 		// 흔들림 효과
