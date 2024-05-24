@@ -269,23 +269,15 @@ app.get('/calendardetail/:date/:Nickname', async (request,response)=>{
 
 // 가족추가 페이지 
 app.get('/addUser', async (request,response)=>{
-  try {
-    const client = await MongoClient.connect(url);
-    const db = client.db('Ottogi_Family');
 
-    let familyInfo = await db.collection('FamilyRoom').findOne({
-      member : req.user.userNickname
-    })
+  // let users = await db.collection('FamilyRoom').find({}).toArray();
+  response.render('addUser.ejs');
+})
 
-    console.log(familyInfo.member)
-    client.close();
-    
-    res.json(familyInfo.member); 
-
-  } catch (error) {
-    console.log('Error:', error);
-    res.status(500).json({ error: 'Internal Server Error' });
-  }
+//FamilyRoom 데이터에 저장 
+app.post('/addUser', async (request,response)=>{
+  await db.collection('FamilyRoom').insertOne({member:request.body})
+  console.log(request.body);
   response.render('addUser.ejs');
 })
 

@@ -7,10 +7,12 @@
 </head>
 <body>
   <!-- 친구추가 폼-->
-  <div class ="chat-form">
-    <input class="chat-input">
-    <button class="chat-button">추가</button>
-  </div>
+  <form class="form-box" action="/addUser" method="POST">
+    <div class ="adduser">
+      <input name="Nickname" placeholder="닉네임을 입력하세요">
+      <button class="chat-button">추가</button>
+    </div>
+  </form>
 
   
   <!-- socket.io 라이브러리 설치 -->
@@ -18,15 +20,16 @@
   <script>
 
     const socket = io()
-    // socket.emit('ask-join','<%= users.userNickname %>')
 
-    document.querySelector('.chat-button').addEventListener('click', function() {
-      let userNickname = document.querySelector('.chat-input').value
-      // socket.emit('message', {msg: 'userNickname', FamilyRoom :<%= users.member %>})
-      socket.on('name', (data)=> {
-        console.log(data)
-      })
-    })
+    // document.querySelector('.chat-button').addEventListener('click', function() {
+    //   let userNickname = document.querySelector('.chat-input').value;
+    //   // 닉네임을 서버로 전송
+    //   socket.emit('addUser', userNickname);
+    //   // 서버로부터 응답 수신
+    //   socket.on('name', (data) => {
+    //     console.log(data);
+    //   });
+    // });
   </script>
 </body>
 </html>
