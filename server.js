@@ -285,14 +285,11 @@ app.get('/daily-record', async (req, res) => {
     .project({ _id: 0, sleepHour: 1, sleepMinute: 1 })
     .toArray();
 
-  let useres = [];
-
-  if (userst.length > 0) {
-    useres = await db.collection('DRexercise').find({
+    const useres = await db.collection('DRexercise').find({
       userNickname: userNickname,
       timestamp: { $gte: startOfToday, $lte: endOfToday }
     }).toArray();
-  }
+
 
   res.render('daily-record', { sleepTime: userst.length > 0 ? userst[0] : null, useres: useres, userbf, userlc, userdn, todayData });
 });
