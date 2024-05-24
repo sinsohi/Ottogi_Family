@@ -16,11 +16,11 @@
   <script src="https://cdn.jsdelivr.net/npm/socket.io@4.7.2/client-dist/socket.io.min.js"></script>
   <script>
     const socket = io()
-    socket.emit('ask-join','1')
+    // socket.emit('ask-join','<%= users.userNickname %>')
 
     document.querySelector('.chat-button').addEventListener('click', function() {
-      document.querySelector(' ').value
-      socket.emit('message', {msg: '반가워', room: '1'})
+      let userNickname = document.querySelector('.chat-input').value
+      // socket.emit('message', {msg: 'userNickname', FamilyRoom :<%= users.member %>})
       socket.on('name', (data)=> {
         console.log(data)
       })

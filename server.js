@@ -262,22 +262,24 @@ app.get('/calendardetail', (request, response) => {
 app.get('/calendardetail/:date/:Nickname', async (request,response)=>{
   let Nickname = request.params.Nickname;
   let users = await db.collection('user_info').find({ userNickname : request.params.Nickname}).toArray();
-  console.log(users[0]);
+  // console.log(users[0]);
   response.render('calendardetail.ejs', {users : users[0]})
 });
 
 // 가족추가 페이지 
 app.get('/adduser', async (request,response)=>{
-  response.render('adduser.ejs');
+  let users = await db.collection('FamilyRoom').find({}).toArray();
+  console.log(users[0]);
+  response.render('adduser.ejs', {users:users});
+
 })
 
 // 웹소켓 연결 확인   
 io.on('connection', (socket) => {
-  socket.on('age', (data)=>{
-    console.log('유저가 보낸거 ', data)
-    io.emit('name', 'Kim')
+  socket.on('ask-join', (data)=> {
+    socket.join(data)
   })
-  socket.on('message', (data)=> {
+  socket.on('message-send', (data)=> {
     console.log(data)
   })
 })
