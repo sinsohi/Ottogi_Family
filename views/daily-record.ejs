@@ -56,21 +56,27 @@
         <h2>오늘의 아침</h2>
         <ul>
             <% userbf.forEach(function(item) { %>
-                <li><%= item.menuName %> (칼로리: <%= item.calories %>kcal)</li>
+                <li><%= item.menuName %> (칼로리: <%= item.calories %>kcal)
+                    <button class="deleteButton breakfast" data-id="<%= item._id %>">삭제</button>
+                </li>
             <% }); %>
         </ul>
 
         <h2>오늘의 점심</h2>
         <ul>
             <% userlc.forEach(function(item) { %>
-                <li><%= item.menuName %> (칼로리: <%= item.calories %>kcal)</li>
+                <li><%= item.menuName %> (칼로리: <%= item.calories %>kcal)
+                    <button class="deleteButton lunch" data-id="<%= item._id %>">삭제</button>
+                </li>
             <% }); %>
         </ul>
 
         <h2>오늘의 저녁</h2>
         <ul>
             <% userdn.forEach(function(item) { %>
-                <li><%= item.menuName %> (칼로리: <%= item.calories %>kcal)</li>
+                <li><%= item.menuName %> (칼로리: <%= item.calories %>kcal)
+                    <button class="deleteButton dinner" data-id="<%= item._id %>">삭제</button>
+                </li>
             <% }); %>
         </ul>
     </div>
@@ -79,23 +85,51 @@
             var deleteButtons = document.querySelectorAll('.deleteButton');
             deleteButtons.forEach(function(button) {
                 button.addEventListener('click', function() {
-                    var exerciseId = this.getAttribute('data-id');
-                    fetch('/delete-exercise', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json'
-                        },
-                        body: JSON.stringify({ id: exerciseId })
-                    })
-                    .then(response => response.json())
-                    .then(data => {
-                        if (data.success) {
-                            location.reload();
-                        } else {
-                            alert('데이터 삭제 실패');
+                    var mealType = '';
+                    var itemId = this.getAttribute('data-id');
+
+                    if (button.classList.contains('exercise')) {
+                        fetch('/delete-exercise', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify({ id: itemId })
+                        })
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.success) {
+                                location.reload();
+                            } else {
+                                alert('데이터 삭제 실패');
+                            }
+                        })
+                        .catch(error => console.error('Error:', error));
+                    } else {
+                        if (button.classList.contains('breakfast')) {
+                            mealType = 'breakfast';
+                        } else if (button.classList.contains('lunch')) {
+                            mealType = 'lunch';
+                        } else if (button.classList.contains('dinner')) {
+                            mealType = 'dinner';
                         }
-                    })
-                    .catch(error => console.error('Error:', error));
+                        fetch('/delete-item', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify({ id: itemId, type: mealType })
+                        })
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.success) {
+                                location.reload();
+                            } else {
+                                alert('데이터 삭제 실패');
+                            }
+                        })
+                        .catch(error => console.error('Error:', error));
+                    }
                 });
             });
         });

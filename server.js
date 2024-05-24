@@ -311,6 +311,33 @@ app.post('/delete-exercise', async (req, res) => {
   }
 });
 
+app.post('/delete-item', async (req, res) => {
+  const itemId = req.body.id;
+  const mealType = req.body.type;
+
+  // mealType에 따라 해당 컬렉션 이름 설정
+  let collectionName = '';
+  if (mealType === 'breakfast') {
+    collectionName = 'breakfast';
+  } else if (mealType === 'lunch') {
+    collectionName = 'lunch';
+  } else if (mealType === 'dinner') {
+    collectionName = 'dinner';
+  } 
+  try {
+    const result = await db.collection(collectionName).deleteOne({ _id: new ObjectId(itemId) });
+
+    if (result.deletedCount === 1) {
+      res.json({ success: true });
+    } else {
+      res.status(404).json({ success: false, message: '데이터 X' });
+    }
+  } catch (error) {
+    console.error('Error deleting item:', error);
+    res.status(500).json({ success: false, message: '서버 오류' });
+  }
+});
+
 
 app.get('/setting', (req, res) => {
   res.sendFile(__dirname + '/setting.html');
