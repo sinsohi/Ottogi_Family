@@ -4,7 +4,9 @@ let familyInfo;
 let nickName = [];
 let bmi = [];
 let gender = [];
-let darkCircleStages = [1,2,3,1];
+let sleeptime = [];
+let darkCircleStages = [];
+let age=[];
 
 
 export default async function ottogi_module2 (){
@@ -49,7 +51,59 @@ export default async function ottogi_module2 (){
       } catch (error) {
         console.log('Error:', error);
       }
-    
+
+      try {
+        // sleeptime 데이터 가져오기
+        const response = await fetch('/getSleepTime');
+        const sleepInfo = await response.json();
+
+        // console.log(sleepInfo);
+        sleeptime = sleepInfo;
+
+      } catch (error) {
+        console.log('Error:', error);
+      }
+
+
+      try {
+        // age 데이터 가져오기
+        const response = await fetch('/getAge');
+        const ageInfo = await response.json();
+
+
+        // console.log(ageInfo);
+        age = ageInfo;
+
+      } catch (error) {
+        console.log('Error:', error);
+      }
+
+      // 연령별 적정 수면 시간 비교하여 다크써클 단계 설정
+      for(let i=0; i<familyInfo.length; i++){
+        // 6 ~ 13세 
+        if(age[i] >=6 && age[i]<=13){
+            if(sleeptime[i]>7 && sleeptime[i]<=8) darkCircleStages.push(1) // 7~8시간 수면 시 다크써클 1단계
+            if(sleeptime[i]>6 && sleeptime[i]<=7) darkCircleStages.push(2) // 6~7시간 수면 시 다크써클 2단계
+            if(sleeptime[i]>=0 && sleeptime[i]<=6) darkCircleStages.push(3) // 0~6시간 수면 시 다크써클 3단계
+        }
+
+        // 14 ~ 17세 
+        if(age[i] >=14 && age[i]<=17){
+            if(sleeptime[i]>6 && sleeptime[i]<=7) darkCircleStages.push(1) // 6~7시간 수면 시 다크써클 1단계
+            if(sleeptime[i]>5 && sleeptime[i]<=6) darkCircleStages.push(2) // 5~6시간 수면 시 다크써클 2단계
+            if(sleeptime[i]>=0 && sleeptime[i]<=5) darkCircleStages.push(3) // 0~5시간 수면 시 다크써클 3단계
+        }
+        
+        // 18세 이상
+        if(age[i] >=18){
+            if(sleeptime[i]>5 && sleeptime[i]<=6) darkCircleStages.push(1) // 5~6시간 수면 시 다크써클 1단계
+            if(sleeptime[i]>4 && sleeptime[i]<=5) darkCircleStages.push(2) // 4~5시간 수면 시 다크써클 2단계
+            if(sleeptime[i]>=0 && sleeptime[i]<=4) darkCircleStages.push(3) // 0~4시간 수면 시 다크써클 3단계
+        }
+    }
+
+
+
     // 배경 이미지
     const loader = new THREE.TextureLoader();
     loader.load('./img/HomePage.png', function(texture){
@@ -183,7 +237,7 @@ export default async function ottogi_module2 (){
 		// 눈 생성
         createEyes() {
             const eyes = new THREE.Group()
-            const geometry = new THREE.SphereGeometry(0.08, 12, 8)
+            const geometry = new THREE.SphereGeometry(0.07, 12, 8)
             const material = new THREE.MeshLambertMaterial({ color: 0x44445c })
             
             for(let i = 0; i < 2; i++) {
