@@ -184,8 +184,9 @@ passport.use(
     // password 비교
     if (await bcrypt.compare(입력한비번, result.password)) {
       return cb(null, result);
-    } else {
-      return cb(null, false, { message: '비번불일치' });
+    } 
+    else {
+      return cb(null, false, { message:'비번불일치' });
     }
   })
 );
@@ -194,7 +195,7 @@ passport.use(
 // 로그인을 성공한 user의 저장하는 함수(serializeUser)
 passport.serializeUser((user, done) => {
   process.nextTick(() => {
-    done(null, { id: user._id, username: user.username });
+    done(null, { id: user._id, username: user.username,nickname: user.userNickname });
   });
 });
 
@@ -275,11 +276,34 @@ app.get('/addUser', async (request,response)=>{
 })
 
 //FamilyRoom 데이터에 저장 
-app.post('/addUser', async (request,response)=>{
-  await db.collection('FamilyRoom').insertOne({member:request.body})
-  console.log(request.body);
-  response.render('addUser.ejs');
-})
+app.post('/addUser', async (request, response) => {
+  const userNickname = request.user.userNickname; // 로그인한 사용자의 닉네임
+  const newMember = request.body.member; // 새로 추가할 멤버 정보
+
+  try {
+    // 로그인한 사용자의 닉네임을 member 배열에만 추가
+    const updateResult = await db.collection('FamilyRoom').updateOne(
+      { nickname: userNickname }, // 문서 검색 조건
+      { 
+        $addToSet: { member: { $each: [userNickname, newMember] } } // 로그인한 사용자의 닉네임과 새 멤버를 member 배열에 추가
+      },
+      { upsert: true } // 문서가 존재하지 않을 경우 새로운 문서 생성
+    );
+
+    // 업데이트 결과에 따라 로그 출력
+    if (updateResult.matchedCount === 0) {
+      console.log(`새로운 FamilyRoom이 생성되었습니다. 닉네임: ${userNickname}`);
+    } else {
+      console.log(`${userNickname}의 FamilyRoom에 새 멤버가 추가되었습니다: ${newMember}`);
+    }
+    // 응답 렌더링
+    response.render('addUser.ejs', { userNickname: userNickname });
+  } catch (err) {
+    console.error(err);
+    response.status(500).send('가족추가 페이지 오류 발생');
+  }
+});
+
 
 // 웹소켓 연결 확인   
 io.on('connection', (socket) => {
