@@ -8,32 +8,13 @@
   </head>
   <body>
     <!-- 전송 버튼 누르면 register에 POST 요청 보냄 -->
-   <form class="form-box" action="/register" method="POST"> 
+   <form id="registrationForm" class="form-box" action="/register" method="POST"> 
     <h4>가입</h4>
-    <input name="userNickname">
-    <input name="username">
-    <input name="password" type="password">
-    <button type="submit">전송</button>
+    <input name="userNickname" placeholder="닉네임" required>
+    <input name="username" placeholder="아이디"required>
+    <input name="password" placeholder="비번"type="password" required>
+    <button type="submit">다음</button>
   </form>
-  <!-- 가족 추가로 연결 -->
-  <form id="checkboxForm">
-    <input type="checkbox" id="agreeCheckbox" name="agree">
-    <label for="agreeCheckbox">가족 추가 </label><br>
-  </form>
-
-  <script>
-    document.getElementById('registrationForm').onsubmit = function(e) {
-      // 체크박스가 선택되었는지 확인
-      const isCheckboxChecked = document.getElementById('agreeCheckbox').checked;
-      
-      // 체크박스가 선택되었으면, 기본 폼 제출을 방지하고 가족 페이지로 이동
-      if(isCheckboxChecked) {
-        e.preventDefault(); // 폼 제출 방지
-        window.location.href = "/addUser"; // 가족 페이지로 이동
-      }
-      // 그렇지 않으면, 폼은 정상적으로 제출됨
-    }
-  </script>
 
   </body>
 </html>

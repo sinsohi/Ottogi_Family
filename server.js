@@ -171,8 +171,29 @@ app.post('/register', async (request, response) => {
     username: request.body.username,
     password: hash
   });
-  response.sendFile(__dirname + '/InitialScreen.html');
+  // // 가족 추가시 FamilyRoom에 추가
+  // if(request.body.member) {
+  //   await db.collection('FamilyRoom').updateOne(
+  //     { nickname: request.body.userNickname },
+  //     {
+  //       $addToSet: { member: { $each: [
+  //       request.body.userNickname,request.body.member 
+  //       ]}}},
+  //     { upsert: true }
+  //   );
+  // }
+  response.render('addFamily.ejs');
 });
+
+// 그룹 추가하는 페이지 
+app.get('/addFamily', (request, response) => {
+  response.render('addFamily.ejs');
+})
+
+app.post('/addFamily', async(request, response) => {
+  // 그룹이 있다면 member그룹안에 넣기
+  // 그룹이 없다면 member그룹을 새로 만들기 
+})
 
 // 아이디/비번이 DB와 일치하는지 검증하는 로직 짜는 공간 (앞으로 유저가 제출한 아이디 비번이 DB랑 맞는지 검증하고 싶을때 이것만 실행하면 됨)
 passport.use(
@@ -272,7 +293,7 @@ app.get('/calendardetail/:date/:Nickname', async (request,response)=>{
 // 가족추가 페이지 
 app.get('/addUser', async (request,response)=>{
 
-  // let users = await db.collection('FamilyRoom').find({}).toArray();
+  let users = await db.collection('FamilyRoom').find({}).toArray();
   response.render('addUser.ejs');
 })
 
@@ -284,7 +305,7 @@ app.post('/addUser', async (request, response) => {
   try {
     // 먼저 해당 FamilyRoom의 현재 member 배열을 가져옵니다.
     const currentRoom = await db.collection('FamilyRoom').findOne({ nickname: userNickname });
-    // const iuUserExists = await db.collection('FamilyRoom').findOnde({"member.nickname":userNickname});
+    // const isUserExists = await db.collection('FamilyRoom').findOnde({"member.nickname":userNickname});
     
     if (currentRoom) {
       // 이미 FamilyRoom이 존재하는 경우, member 배열의 길이를 확인합니다.
@@ -334,8 +355,6 @@ app.post('/addUser', async (request, response) => {
     response.status(500).send('가족추가 페이지 오류 발생');
   }
 });
-
-
 
 // 웹소켓 연결 확인   
 io.on('connection', (socket) => {
