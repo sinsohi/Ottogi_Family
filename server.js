@@ -292,13 +292,23 @@ app.get('/daily-record', async (req, res) => {
 
     const burned = useres.reduce((total, exercise) => total + parseInt(exercise.caloriesBurned), 0);
 
+    const intake = userbf.reduce((total, item) => total + parseInt(item.calories), 0) +
+               userlc.reduce((total, item) => total + parseInt(item.calories), 0) +
+               userdn.reduce((total, item) => total + parseInt(item.calories), 0);
+
+    const calorieDelta = intake - burned;
+
+    console.log("Burned Calories:", burned);
+    console.log("Intake Calories:", intake);
+    console.log("calorieDelta:", calorieDelta);
+               
     // const user_info = {
     //   userNickname: userNickname,
     //   Timestamp: new Date(),
     //   burned: burneds
     // };
 
-  res.render('daily-record', { sleepTime: userst.length > 0 ? userst[0] : null, useres: useres, userbf, userlc, userdn, todayData, burned: burned});
+  res.render('daily-record', { sleepTime: userst.length > 0 ? userst[0] : null, useres: useres, userbf, userlc, userdn, todayData, burned: burned, intake: intake});
 });
 
 app.post('/delete-exercise', async (req, res) => {
