@@ -298,6 +298,27 @@ app.get('/daily-record', async (req, res) => {
 
     const calorieDelta = intake - burned;
 
+    const userInfo = {
+      userNickname: userNickname,
+      Timestamp: koreanTime,
+      burned: burned,
+      intake: intake,
+      calorieDelta: calorieDelta
+    };
+  
+    // await db.collection('user_info').updateOne(
+    //   { userNickname: userNickname, Timestamp: { $gte: startOfToday, $lte: endOfToday } },
+    //   { $set: userInfo },
+    //   { upsert: true }
+    // );
+
+    await db.collection('user_info').updateOne(
+      { userNickname: userNickname, date: startOfToday.toISOString().split('T')[0] },
+      { $set: userInfo },
+      { upsert: true }
+    );
+  
+
     console.log("Burned Calories:", burned);
     console.log("Intake Calories:", intake);
     console.log("calorieDelta:", calorieDelta);
@@ -308,7 +329,7 @@ app.get('/daily-record', async (req, res) => {
     //   burned: burneds
     // };
 
-  res.render('daily-record', { sleepTime: userst.length > 0 ? userst[0] : null, useres: useres, userbf, userlc, userdn, todayData, burned: burned, intake: intake});
+  res.render('daily-record', { sleepTime: userst.length > 0 ? userst[0] : null, useres: useres, userbf, userlc, userdn, todayData, burned: burned, intake: intake, calorieDelta: calorieDelta});
 });
 
 app.post('/delete-exercise', async (req, res) => {
