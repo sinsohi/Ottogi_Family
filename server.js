@@ -171,28 +171,46 @@ app.post('/register', async (request, response) => {
     username: request.body.username,
     password: hash
   });
-  // // 가족 추가시 FamilyRoom에 추가
-  // if(request.body.member) {
-  //   await db.collection('FamilyRoom').updateOne(
-  //     { nickname: request.body.userNickname },
-  //     {
-  //       $addToSet: { member: { $each: [
-  //       request.body.userNickname,request.body.member 
-  //       ]}}},
-  //     { upsert: true }
-  //   );
-  // }
-  response.render('addFamily.ejs');
+  // // FamilyRoom 컬렉션에 userNickname넣기
+  // await db.collection('FamilyRoom').insertOne(
+  //   {member : [request.body.userNickname]}
+  // )
+  // response.render('addFamily.ejs');
 });
 
 // 그룹 추가하는 페이지 
-app.get('/addFamily', (request, response) => {
+app.get('/addFamily', async(request, response) => {
   response.render('addFamily.ejs');
+  // 가족 추가시 FamilyRoom에 추가
+  
 })
 
-app.post('/addFamily', async(request, response) => {
-  // 그룹이 있다면 member그룹안에 넣기
-  // 그룹이 없다면 member그룹을 새로 만들기 
+app.post('/addFamily', async(req, res) => {
+  // 이미 가족이 존재하는 경우
+  // 새롭게 가족을 추가할 경우 
+  const Member = req.body.Member; // 로그인한 사용자의 닉네임
+  const NewMember = req.body.NewMember; // 새로 추가할 멤버 정보
+  
+  // 이미 가족이 존재하는 경우
+  if(Member) {
+    try {
+      const existingFamily = await db.collection('FamilyRoom').findOne({member:Member});
+      if(existingFamily) {
+        await db.collection('FamilyRoom').updateOne(
+          {member:[req.body.Member]}
+        );
+        console.log('Member : ${Member}추가');
+      }
+      // 가족 이름 틀림 
+      else {
+
+      }
+    }
+  }
+  // 새롭게 가족을 추가하는 경우
+  else {
+
+  }
 })
 
 // 아이디/비번이 DB와 일치하는지 검증하는 로직 짜는 공간 (앞으로 유저가 제출한 아이디 비번이 DB랑 맞는지 검증하고 싶을때 이것만 실행하면 됨)

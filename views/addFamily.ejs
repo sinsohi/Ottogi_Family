@@ -6,8 +6,12 @@
   <title>Document</title>
 </head>
 <body>
-  <input name="member" placeholder="기존 가족이 있으십니까?" >
-  <input name="member" placeholder="가족을 추가하시겠습니까?" >
-  <button type="submit"> 가족 추가</button>
+  <form class="form-box" action="/addFamily" method="POST">
+    <!-- 기존 가족 추가 -->
+    <input name="Member" placeholder="존재하는 가족의 닉네임을 입력하세요" >
+    <!-- 새로운 가족 추가 -->
+    <input name="NewMember" placeholder="새로운 가족을 입력하세요" >
+    <button type="submit"> 가족 추가</button>
+  </form>
 </body>
 </html>
