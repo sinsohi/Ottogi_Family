@@ -207,6 +207,87 @@ app.get('/getRDA', async (req, res) => {
   }
 });
 
+// intake 전달
+app.get('/getIntake', async (req, res) => {
+  let intake = [];
+  try {
+    const client = await MongoClient.connect(url);
+    const db = client.db('Ottogi_Family');
+
+    let userInfo = await db.collection('FamilyRoom').findOne({
+      member : req.user.userNickname
+    })
+
+    for(let i=0; i<userInfo.member.length; i++){
+      let result = await db.collection('user_info').findOne({
+        userNickname : userInfo.member[i]
+      })
+      intake.push(result.intake)
+    }
+
+    client.close();
+    res.json(intake); 
+
+  } catch (error) {
+    console.log('Error:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
+// burned 전달
+app.get('/getBurned', async (req, res) => {
+  let burned = [];
+  try {
+    const client = await MongoClient.connect(url);
+    const db = client.db('Ottogi_Family');
+
+    let userInfo = await db.collection('FamilyRoom').findOne({
+      member : req.user.userNickname
+    })
+
+    for(let i=0; i<userInfo.member.length; i++){
+      let result = await db.collection('user_info').findOne({
+        userNickname : userInfo.member[i]
+      })
+      burned.push(result.burned)
+    }
+
+    client.close();
+    res.json(burned); 
+
+  } catch (error) {
+    console.log('Error:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
+// ResultCalorie 전달
+app.get('/getResultCalorie', async (req, res) => {
+  let ResultCalorie = [];
+  try {
+    const client = await MongoClient.connect(url);
+    const db = client.db('Ottogi_Family');
+
+    let userInfo = await db.collection('FamilyRoom').findOne({
+      member : req.user.userNickname
+    })
+
+    for(let i=0; i<userInfo.member.length; i++){
+      let result = await db.collection('user_info').findOne({
+        userNickname : userInfo.member[i]
+      })
+      ResultCalorie.push(result.resultcalorie)
+    }
+
+    client.close();
+    res.json(ResultCalorie); 
+
+  } catch (error) {
+    console.log('Error:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
 // age 전달
 app.get('/getAge', async (req, res) => {
   let age = [];

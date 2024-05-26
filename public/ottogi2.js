@@ -8,6 +8,9 @@ let sleeptime = [];
 let darkCircleStages = [];
 let age = [];
 let RDA = [];
+let intake = [];
+let burned = [];
+let ResultCalorie = [];
 
 
 export default async function ottogi_module2 (){
@@ -72,6 +75,42 @@ export default async function ottogi_module2 (){
 
         console.log(RDAInfo);
         RDA = RDAInfo;
+
+      } catch (error) {
+        console.log('Error:', error);
+      }
+
+      try {
+        // Intake(누적 섭취 칼로리) 데이터 가져오기
+        const response = await fetch('/getIntake');
+        const IntakeInfo = await response.json();
+
+        console.log(IntakeInfo);
+        intake = IntakeInfo;
+
+      } catch (error) {
+        console.log('Error:', error);
+      }
+
+      try {
+        // burned(소모 칼로리) 데이터 가져오기
+        const response = await fetch('/getBurned');
+        const BurnedInfo = await response.json();
+
+        console.log(BurnedInfo);
+        burned = BurnedInfo;
+
+      } catch (error) {
+        console.log('Error:', error);
+      }
+
+      try {
+        // resultcalorie(섭취칼로리 - 소모칼로리) 데이터 가져오기
+        const response = await fetch('/getResultCalorie');
+        const ResultCalorieInfo = await response.json();
+
+        console.log(ResultCalorieInfo);
+        ResultCalorie = ResultCalorieInfo;
 
       } catch (error) {
         console.log('Error:', error);
