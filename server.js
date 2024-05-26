@@ -506,5 +506,16 @@ app.post('/setting', async (req, res) => {
     RDA: RDA
   };
 
-  db.collection('user_info').insertOne(data);
+  //db.collection('user_info').insertOne(data);
+  try {
+    await db.collection('user_info').updateOne(
+      { userNickname: userNickname },
+      { $set: data },
+      { upsert: true }
+    );
+
+  } catch (err) {
+    console.error('Error updating user info:', err);
+    res.status(500).send('Internal Server Error');
+  }
 });
