@@ -6,7 +6,8 @@ let bmi = [];
 let gender = [];
 let sleeptime = [];
 let darkCircleStages = [];
-let age=[];
+let age = [];
+let RDA = [];
 
 
 export default async function ottogi_module2 (){
@@ -59,6 +60,18 @@ export default async function ottogi_module2 (){
 
         // console.log(sleepInfo);
         sleeptime = sleepInfo;
+
+      } catch (error) {
+        console.log('Error:', error);
+      }
+
+      try {
+        // RDA(일일 권장 칼로리) 데이터 가져오기
+        const response = await fetch('/getRDA');
+        const RDAInfo = await response.json();
+
+        console.log(RDAInfo);
+        RDA = RDAInfo;
 
       } catch (error) {
         console.log('Error:', error);

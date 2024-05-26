@@ -62,7 +62,7 @@ const url = process.env.DBurl;
 new MongoClient(url).connect().then((client) => {
   console.log('DB연결성공');
   db = client.db('Ottogi_Family');
-}).catch((err) => {
+}).catch((err) => { 
   console.log(err);
 });
 
@@ -180,6 +180,33 @@ app.get('/getSleepTime', async (req, res) => {
   }
 });
 
+// RDA 전달
+app.get('/getRDA', async (req, res) => {
+  let RDA = [];
+  try {
+    const client = await MongoClient.connect(url);
+    const db = client.db('Ottogi_Family');
+
+    let userInfo = await db.collection('FamilyRoom').findOne({
+      member : req.user.userNickname
+    })
+
+    for(let i=0; i<userInfo.member.length; i++){
+      let result = await db.collection('user_info').findOne({
+        userNickname : userInfo.member[i]
+      })
+      RDA.push(result.RDA)
+    }
+
+    client.close();
+    res.json(RDA); 
+
+  } catch (error) {
+    console.log('Error:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
 // age 전달
 app.get('/getAge', async (req, res) => {
   let age = [];
@@ -270,7 +297,7 @@ app.post('/login', async (request, response, next) => {
     request.logIn(user, (err) => {
       //로그인 완료시 실행할 코드
       if (err) return next(err);
-      response.render('homePage.ejs')
+      response.redirect('/homePage')
     });
   })(request, response, next);
 }) 
@@ -373,6 +400,8 @@ app.post('/dailyrecordmeal', async (req, res) => {
   const meal = req.body.meal;
   const menuName = req.body.menuName;
   const calories = req.body.calories;
+
+
   const userNickname = req.user.userNickname; // 유저의 userNickname
 
   const currentDate = new Date();
