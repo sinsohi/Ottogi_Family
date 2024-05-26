@@ -290,8 +290,15 @@ app.get('/daily-record', async (req, res) => {
       timestamp: { $gte: startOfToday, $lte: endOfToday }
     }).toArray();
 
+    const burned = useres.reduce((total, exercise) => total + parseInt(exercise.caloriesBurned), 0);
 
-  res.render('daily-record', { sleepTime: userst.length > 0 ? userst[0] : null, useres: useres, userbf, userlc, userdn, todayData });
+    // const user_info = {
+    //   userNickname: userNickname,
+    //   Timestamp: new Date(),
+    //   burned: burneds
+    // };
+
+  res.render('daily-record', { sleepTime: userst.length > 0 ? userst[0] : null, useres: useres, userbf, userlc, userdn, todayData, burned: burned});
 });
 
 app.post('/delete-exercise', async (req, res) => {
