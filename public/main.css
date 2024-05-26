@@ -8,6 +8,17 @@ body {
 	overflow: hidden;
 }
 
+div{
+    position : absolute;
+    text-align : center;
+    width : 300px;
+    margin-left : -100px;
+    background-color: rgba(255,255,255,0.8);
+    padding : 5px;
+    border-radius: 5px;
+    z-index : 10;
+}
+
 .canvas-container {
     position : relative;
 }

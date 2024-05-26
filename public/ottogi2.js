@@ -375,12 +375,38 @@ export default async function ottogi_module2 (){
                 this.group.userData.nicknameElement.style.top = `${y}px`;
             }
         }
+
+        // 섭취 & 소모 칼로리 알림 메시지 생성
+        createInfoMessage(intake, burned){
+            const infoMessage = document.createElement('div');
+            infoMessage.textContent = `오늘 ${intake}kcal만큼 섭취하시고, ${burned}kcal만큼 소모하셨어요.`;
+
+            this.group.userData.infoMessage = infoMessage;
+            document.body.appendChild(infoMessage);
+            
+        }
+
+        // 알림 메시지 위치 설정
+        updateInfoMessagePosition(){
+            if(this.group.userData.infoMessage){
+                const worldPosition = new THREE.Vector3();
+                this.head.getWorldPosition(worldPosition);
+                const screenPosition = worldPosition.clone().project(camera);
+
+                const x = (screenPosition.x + 1) / 2 * window.innerWidth;
+                const y = -(screenPosition.y - 1) / 2 * window.innerHeight - 150;
+        
+                this.group.userData.infoMessage.style.left = `${x}px`;
+                this.group.userData.infoMessage.style.top = `${y}px`;
+            }
+        }
         
 		// 초기화
-        init(waistSize, headPosition, gender) {
+        init(waistSize, headPosition, gender, intake, burned) {
             this.createBody(waistSize, gender)
             this.createHead(headPosition)
 			this.group.rotation.y = this.params.ry // 모든 헬뚝이가 정면 바라보도록 수정
+            this.createInfoMessage(intake, burned) // 섭취 & 소모 칼로리 메시지 생성 메소드 호출
         }
     }
 
@@ -409,6 +435,7 @@ export default async function ottogi_module2 (){
 
         figure.init(waistSize,2,gender[i]);
         figure.createNickname(nickName[i]); // 닉네임 생성
+        figure.createInfoMessage(intake[i], burned[i]); // 칼로리 메시지 생성
         figures.push(figure);
     }
 
@@ -434,6 +461,7 @@ export default async function ottogi_module2 (){
         figures.forEach(figure => {
             figure.bounce();
             figure.updateNicknamePosition(); // 닉네임 위치 업데이트
+            figure.updateInfoMessagePosition(); // 섭취 & 소모 칼로리 위치 업데이트
         });
 
         render();
