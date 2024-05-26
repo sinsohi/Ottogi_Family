@@ -161,6 +161,7 @@ app.get('/getGender', async (req, res) => {
 
 app.get('/register', (request, response) => {
   response.render('register.ejs');
+  
 });
 
 app.post('/register', async (request, response) => {
@@ -279,11 +280,12 @@ app.get('/addUser', async (request,response)=>{
 app.post('/addUser', async (request, response) => {
   const userNickname = request.user.userNickname; // 로그인한 사용자의 닉네임
   const newMember = request.body.member; // 새로 추가할 멤버 정보
-
+  console.log(userNickname)
   try {
     // 먼저 해당 FamilyRoom의 현재 member 배열을 가져옵니다.
     const currentRoom = await db.collection('FamilyRoom').findOne({ nickname: userNickname });
-
+    // const iuUserExists = await db.collection('FamilyRoom').findOnde({"member.nickname":userNickname});
+    
     if (currentRoom) {
       // 이미 FamilyRoom이 존재하는 경우, member 배열의 길이를 확인합니다.
       if (currentRoom.member.length < 4) {
@@ -300,23 +302,34 @@ app.post('/addUser', async (request, response) => {
         // member 배열의 길이가 4 이상일 경우, 더 이상 추가하지 않습니다.
         console.log('FamilyRoom의 멤버는 최대 4명까지만 추가할 수 있습니다.');
       }
-    } else {
+    } 
+    else {
       // FamilyRoom이 존재하지 않는 경우, 새로운 문서를 생성합니다. 여기서도 최대 인원 제한을 적용할 수 있습니다.
       // 하지만 이 경우는 기본적으로 사용자 자신과 새 멤버 1명만 추가되므로, 제한에 걸리지 않습니다.
       const updateResult = await db.collection('FamilyRoom').updateOne(
         { nickname: userNickname },
         {
-          $addToSet: { member: { $each: [userNickname, newMember] } }
-        },
+          $addToSet: { 
+            member: { 
+              $each: [
+            {nickname: userNickname},
+            {nickname: newMember } 
+          ]
+        }
+      }
+    },
         { upsert: true }
       );
-
-      console.log(`새로운 FamilyRoom이 생성되었습니다. 닉네임: ${userNickname}`);
-    }
+      if (updateResult.matchedCount === 0) {
+        console.log(`새로운 FamilyRoom이 생성되었습니다. 닉네임: ${userNickname}`);
+      } else {
+        console.log(`${userNickname}의 FamilyRoom에 새 멤버가 추가되었습니다: ${newMember}`);
+      }
 
     // 응답 렌더링
     response.render('addUser.ejs', { userNickname: userNickname });
-  } catch (err) {
+  }}
+  catch (err) {
     console.error(err);
     response.status(500).send('가족추가 페이지 오류 발생');
   }
