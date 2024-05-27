@@ -399,6 +399,57 @@ export default async function ottogi_module2 (){
                 this.group.userData.infoMessage.style.top = `${y}px`;
             }
         }
+
+       
+        // 칼로리 메시지 위치 설정
+        updateCalorieMessagePosition() {
+        if (this.group.userData.calorieMessage) {
+        const worldPosition = new THREE.Vector3();
+        this.group.getWorldPosition(worldPosition);
+        const screenPosition = worldPosition.clone().project(camera);
+
+        const x = (screenPosition.x + 1) / 2 * window.innerWidth;
+        const y = -(screenPosition.y - 1) / 2 * window.innerHeight + 50;
+
+        this.group.userData.calorieMessage.style.left = `${x}px`;
+        this.group.userData.calorieMessage.style.top = `${y}px`;
+    }
+}
+
+    // resultcalorie 메시지 알림 생성
+    createCalorieMessage(resultcalorie){
+        const calorieMessage = document.createElement('article');
+
+        if(resultcalorie >= 0){
+            calorieMessage.textContent = `일일 권장 칼로리까지
+            ${resultcalorie}kcal 남았습니다.`;
+        }
+        else {
+            calorieMessage.textContent = `${Math.abs(resultcalorie)}kcl만큼 더 섭취하셨어요.
+            그만 드시고 운동하세요!`;
+            calorieMessage.style.backgroundColor = 'rgba(255, 0, 0, 0.8)';
+            calorieMessage.style.color = 'white';
+        }
+
+    this.group.userData.calorieMessage = calorieMessage;
+    document.body.appendChild(calorieMessage);
+}
+
+    // resultcalorie 메시지 위치 설정
+        updateCalorieMessagePosition() {
+            if (this.group.userData.calorieMessage) {
+            const worldPosition = new THREE.Vector3();
+            this.group.getWorldPosition(worldPosition);
+            const screenPosition = worldPosition.clone().project(camera);
+
+            const x = (screenPosition.x + 1) / 2 * window.innerWidth;
+            const y = -(screenPosition.y - 1) / 2 * window.innerHeight + 50;
+
+            this.group.userData.calorieMessage.style.left = `${x}px`;
+            this.group.userData.calorieMessage.style.top = `${y}px`;
+        }
+    }
+
         
 		// 초기화
         init(waistSize, headPosition, gender, intake, burned) {
@@ -435,6 +486,7 @@ export default async function ottogi_module2 (){
         figure.init(waistSize,2,gender[i]);
         figure.createNickname(nickName[i]); // 닉네임 생성
         figure.createInfoMessage(intake[i], burned[i]); // 칼로리 메시지 생성
+        figure.createCalorieMessage(ResultCalorie[i]); // resultcalorie 메시지 생성
         figures.push(figure);
     }
 
@@ -461,6 +513,7 @@ export default async function ottogi_module2 (){
             figure.bounce();
             figure.updateNicknamePosition(); // 닉네임 위치 업데이트
             figure.updateInfoMessagePosition(); // 섭취 & 소모 칼로리 위치 업데이트
+            figure.updateCalorieMessagePosition(); // resultcalorie 메시지 위치 업데이트
         });
 
         render();

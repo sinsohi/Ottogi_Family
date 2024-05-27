@@ -19,6 +19,17 @@ nav{
     z-index : 10;
 }
 
+article {
+    position : absolute;
+    text-align : center;
+    width : 300x;
+    margin-left : -100px;
+    background-color: rgba(255,255,255,0.8);
+    padding : 5px;
+    border-radius: 5px;
+    z-index : 10;
+}
+
 .canvas-container {
     position : relative;
 }
