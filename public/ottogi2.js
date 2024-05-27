@@ -418,15 +418,15 @@ export default async function ottogi_module2 (){
 }
 
     // resultcalorie 메시지 알림 생성
-    createCalorieMessage(resultcalorie){
+    createCalorieMessage(RDA, resultcalorie){
         const calorieMessage = document.createElement('article');
 
-        if(resultcalorie >= 0){
+        if((RDA-resultcalorie) >= 0){
             calorieMessage.textContent = `일일 권장 칼로리까지
-            ${resultcalorie}kcal 남았습니다.`;
+            ${RDA-resultcalorie}kcal 남았습니다.`;
         }
         else {
-            calorieMessage.textContent = `${Math.abs(resultcalorie)}kcl만큼 더 섭취하셨어요.
+            calorieMessage.textContent = `${Math.abs(RDA-resultcalorie)}kcl만큼 더 섭취하셨어요.
             그만 드시고 운동하세요!`;
             calorieMessage.style.backgroundColor = 'rgba(255, 0, 0, 0.8)';
             calorieMessage.style.color = 'white';
@@ -486,7 +486,7 @@ export default async function ottogi_module2 (){
         figure.init(waistSize,2,gender[i]);
         figure.createNickname(nickName[i]); // 닉네임 생성
         figure.createInfoMessage(intake[i], burned[i]); // 칼로리 메시지 생성
-        figure.createCalorieMessage(ResultCalorie[i]); // resultcalorie 메시지 생성
+        figure.createCalorieMessage(RDA[i], ResultCalorie[i]); // resultcalorie 메시지 생성
         figures.push(figure);
     }
 
