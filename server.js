@@ -267,7 +267,7 @@ app.get('/daily-record', async (req, res) => {
   const koreanTime = new Date(new Date().getTime() + 9 * 60 * 60 * 1000);
   
  // 한국 시간 기준 오늘의 시작 시간 (00:00:00.000)
-const startOfToday = new Date(koreanTime.getFullYear(), koreanTime.getMonth(), koreanTime.getDate() + 1);
+const startOfToday = new Date(koreanTime.getFullYear(), koreanTime.getMonth(), koreanTime.getDate());
 startOfToday.setUTCHours(0, 0, 0, 0);
 console.log('오늘의 시작:', startOfToday);
 
