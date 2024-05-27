@@ -8,12 +8,11 @@
 <body>
   <!-- 친구추가 폼-->
   <form class="form-box" action="/addUser" method="POST">
-    <div class ="adduser">
-      <input name="member" placeholder="추가하실 닉네임을 입력하세요">
-      <button class="chat-button">추가</button>
-    </div>
+  <input name="Member" placeholder="기존 가족 연결" >
+    <!-- 새로운 가족 추가 -->
+    <input name="NewMember" placeholder="새로운 가족 연결" >
+    <button type="submit"> 가족 추가</button>
   </form>
-
   
   <!-- socket.io 라이브러리 설치 -->
   <script src="https://cdn.jsdelivr.net/npm/socket.io@4.7.2/client-dist/socket.io.min.js"></script>
