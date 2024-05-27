@@ -166,11 +166,11 @@ app.get('/register', (request, response) => {
 
 app.post('/register', async (request, response) => {
   try{
-  const userNickname = req.body.userNickname;
+  const userNickname = request.body.userNickname;
   const existingUser = await db.collection('user_info').findOne({userNickname: userNickname});
 
   if (existingUser) {
-    return res.status(400).send('닉네임이 이미 사용 중입니다.');
+    return response.status(400).send('닉네임이 이미 사용 중입니다.');
   }
 
   let hash = await bcrypt.hash(request.body.password, 10); // password hashing (암호화)
@@ -187,7 +187,7 @@ app.post('/register', async (request, response) => {
   response.redirect('/addFamily');
 } catch (error) {
   console.log('Error:', error);
-  res.status(500).json({ error: 'Internal Server Error' });
+  response.status(500).json({ error: 'Internal Server Error' });
 }
 });
 
@@ -235,7 +235,7 @@ app.post('/addFamily', async(request, response) => {
           {member: {$in: [Member]}}, 
           {$addToSet: {member: userNickname}}
         );
-        response.redirect('/login');
+        response.redirect('/setting');
        }
       }
        // 가족 이름 틀림 
@@ -259,13 +259,13 @@ app.post('/addFamily', async(request, response) => {
         {member: {$in: [userNickname]}}, 
         {$addToSet: {member: NewMember}}
        );
-       response.redirect('/login');
+       response.redirect('/setting');
      }
     }
      else {
       await db.collection('FamilyRoom').insertOne(
         { member:[userNickname,NewMember] });
-        response.redirect('/login');
+        response.redirect('/setting');
      } 
     }
      catch(err) {
@@ -330,7 +330,7 @@ app.post('/login', async (request, response, next) => {
     request.logIn(user, (err) => {
       //로그인 완료시 실행할 코드
       if (err) return next(err);
-      response.render('setting.html')
+      response.render('homePage.ejs')
     });
   })(request, response, next);
 }) 

@@ -13,25 +13,18 @@
   font-family: 'Noto Sans KR', sans_serif;
 }
 
-.login-form{
-  width:600px;
-  border:2px solid;
-  border-radius:5px;
-  background-color: #fbf6f1;
-  padding: 20px;
-  margin: 0 auto;
-}
-
-.text-field {
+.form-box input {
   font-size: 14px;
   margin-bottom: 10px;
   border: none;
   border-radius: 5px;
   padding: 10px;
   width: 100%;
+  
 }
 
-.submit-btn {
+
+.form-box button {
   color: #000000;
   font-size: 14px;
   background-color: #fbf6f1;
@@ -40,6 +33,14 @@
   border: 2px solid;
   border-radius: 5px;
   width: 100%;
+}
+
+/* 회원가입 링크 */
+.form-box a {
+  margin-top: 10px;
+  text-align: center;
+  color: #007BFF;
+  text-decoration: none;
 }
 
 .links {
