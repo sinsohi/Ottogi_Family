@@ -171,59 +171,77 @@ app.post('/register', async (request, response) => {
     username: request.body.username,
     password: hash
   });
-  // // FamilyRoom 컬렉션에 userNickname넣기
-  // await db.collection('FamilyRoom').insertOne(
-  //   {member : [request.body.userNickname]}
-  // )
-  response.render('addFamily.ejs',{userNickname:userNickname});
+
+  // 세션에 닉네임 저장
+  request.session.userNickname = request.body.userNickname;
+  // console.log(request.session.userNickname)
+
+  response.redirect('/addFamily');
 });
 
 // 그룹 추가하는 페이지 
-app.get('/addFamily', async(request, response) => {
-  response.render('addFamily.ejs');
-  // 가족 추가시 FamilyRoom에 추가
-  
-})
+app.get('/addFamily', (request, response) => {
+  response.render('addFamily.ejs', { userNickname: request.session.userNickname });
 
-app.post('/addFamily', async(req, res) => {
-  // 이미 가족이 존재하는 경우
-  // 새롭게 가족을 추가할 경우 
-  const Member = req.body.Member; // 로그인한 사용자의 닉네임
-  const NewMember = req.body.NewMember; // 새로 추가할 멤버 정보
-  
-  // 이미 가족이 존재하는 경우
-  if(Member && !NewMember) {
-    try {
-      const existingFamily = await db.collection('FamilyRoom').findOne({member:Member});
-      if(existingFamily) {
-        await db.collection('FamilyRoom').updateOne(
-          {member:[req.userNickname]}
-        );
-      }
-      // 가족 이름 틀림 
-      else {
-        res.status(404).send(`${NewMember}에 속하지 않습니다.`)
-      }
-    }
-    catch(err) {
-      console.error(err);
-      res.status(500).send('가족 추가 과정에서 오류가 발생했습니다.');
-    }
-  }
-  // 새롭게 가족을 추가하는 경우
-  else if(NewMember && !Member) {
-    try {
-      await db.collection('FamilyRoom').insertOnde(
-        { member:[req.userNickname,NewMember] });
-    } catch(err) {
-      console.error(err);
-      res.status(500).send('새로운 가족 생성 과정에서 오류가 발생했습니다.');
-    }
-  }
-  else {
-    res.status(400).send('필요한 정보가 충분하지 않습니다.');
-  }
 });
+
+
+// 회원가입 후 가족 추가하는 페이지
+app.post('/addFamily', async(request, response) => {
+  // 1. 이미 가족이 존재하는 경우
+  // 2. 새롭게 가족을 추가할 경우 
+  const Member = request.body.Member; // 로그인한 사용자의 닉네임
+  const NewMember = request.body.NewMember; // 새로 추가할 멤버 정보
+  const userNickname = request.session.userNickname;
+  
+  console.log(Member, NewMember, userNickname);
+ 
+  // 이미 가족이 존재하는 경우
+   if(Member) {
+     try {
+       const existingFamily = await db.collection('FamilyRoom').findOne({member:{$in:[Member]}});
+       if(existingFamily) {
+        await db.collection('FamilyRoom').updateOne(
+          {member: {$in: [Member]}}, 
+          {$addToSet: {member: userNickname}}
+        );
+       }
+       // 가족 이름 틀림 
+       else {
+         console.log("속하지 않음`");
+       }
+     }
+     catch(err) {
+       console.error(err);
+       response.status(500).send('기존 가족 추가 과정에서 오류가 발생했습니다.');
+     }
+   }
+   // 새롭게 가족을 추가하는 경우
+   else if(NewMember) {
+     try {
+      const existingFamily = await db.collection('FamilyRoom').findOne({member:{$in:[userNickname]}});
+       if(existingFamily) {
+       await db.collection('FamilyRoom').updateOne(
+        {member: {$in: [userNickname]}}, 
+        {$addToSet: {member: NewMember}}
+       );
+     }
+     else {
+      await db.collection('FamilyRoom').insertOne(
+        { member:[userNickname,NewMember] });
+     } 
+    }
+     catch(err) {
+       console.error(err);
+       response.status(500).send('새로운 가족 생성 과정에서 오류가 발생했습니다.');
+     }
+   }
+   else {
+     response.status(400).send('필요한 정보가 충분하지 않습니다.');
+   }
+
+});
+
 
 // 아이디/비번이 DB와 일치하는지 검증하는 로직 짜는 공간 (앞으로 유저가 제출한 아이디 비번이 DB랑 맞는지 검증하고 싶을때 이것만 실행하면 됨)
 passport.use(
