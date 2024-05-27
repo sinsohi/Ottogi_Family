@@ -165,6 +165,14 @@ app.get('/register', (request, response) => {
 });
 
 app.post('/register', async (request, response) => {
+  try{
+  const userNickname = req.body.userNickname;
+  const existingUser = await db.collection('user_info').findOne({userNickname: userNickname});
+
+  if (existingUser) {
+    return res.status(400).send('닉네임이 이미 사용 중입니다.');
+  }
+
   let hash = await bcrypt.hash(request.body.password, 10); // password hashing (암호화)
   await db.collection('user_info').insertOne({
     userNickname: request.body.userNickname,
@@ -177,6 +185,10 @@ app.post('/register', async (request, response) => {
   // console.log(request.session.userNickname)
 
   response.redirect('/addFamily');
+} catch (error) {
+  console.log('Error:', error);
+  res.status(500).json({ error: 'Internal Server Error' });
+}
 });
 
 // 닉네임 중복 확인 라우터 추가
