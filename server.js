@@ -265,8 +265,15 @@ app.get('/daily-record', async (req, res) => {
   const userNickname = req.user.userNickname;
 
   const koreanTime = new Date(new Date().getTime() + 9 * 60 * 60 * 1000);
-  const startOfToday = new Date(koreanTime.getFullYear(), koreanTime.getMonth(), koreanTime.getDate(), 0, 0, 0);
-  const endOfToday = new Date(koreanTime.getFullYear(), koreanTime.getMonth(), koreanTime.getDate(), 23, 59, 59);
+  
+ // 한국 시간 기준 오늘의 시작 시간 (00:00:00.000)
+const startOfToday = new Date(koreanTime.getFullYear(), koreanTime.getMonth(), koreanTime.getDate() + 1);
+startOfToday.setUTCHours(0, 0, 0, 0);
+console.log('오늘의 시작:', startOfToday);
+
+// 한국 시간 기준 오늘의 끝 시간 (23:59:59.999)
+const endOfToday = new Date(startOfToday.getTime() + 24 * 60 * 60 * 1000 - 1);
+console.log('오늘의 끝:', endOfToday);
 
   const userbf = await db.collection('breakfast').find({ userNickname: userNickname, timestamp: { $gte: startOfToday, $lte: endOfToday } }).toArray();
   const userlc = await db.collection('lunch').find({ userNickname: userNickname, timestamp: { $gte: startOfToday, $lte: endOfToday } }).toArray();
@@ -305,13 +312,8 @@ app.get('/daily-record', async (req, res) => {
       intake: intake,
       calorieDelta: calorieDelta
     };
-  
-    // await db.collection('user_info').updateOne(
-    //   { userNickname: userNickname, Timestamp: { $gte: startOfToday, $lte: endOfToday } },
-    //   { $set: userInfo },
-    //   { upsert: true }
-    // );
 
+  
     await db.collection('user_info').updateOne(
       { userNickname: userNickname, date: startOfToday.toISOString().split('T')[0] },
       { $set: userInfo },
@@ -319,15 +321,9 @@ app.get('/daily-record', async (req, res) => {
     );
   
 
-    console.log("Burned Calories:", burned);
-    console.log("Intake Calories:", intake);
-    console.log("calorieDelta:", calorieDelta);
-               
-    // const user_info = {
-    //   userNickname: userNickname,
-    //   Timestamp: new Date(),
-    //   burned: burneds
-    // };
+    // console.log("Burned Calories:", burned);
+    // console.log("Intake Calories:", intake);
+    // console.log("calorieDelta:", calorieDelta);
 
   res.render('daily-record', { sleepTime: userst.length > 0 ? userst[0] : null, useres: useres, userbf, userlc, userdn, todayData, burned: burned, intake: intake, calorieDelta: calorieDelta});
 });
