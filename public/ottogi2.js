@@ -348,8 +348,9 @@ export default async function ottogi_module2 (){
         }
         
 		// 흔들림 효과
-        bounce() {
-            this.group.rotation.z = this.params.rz
+        bounce(time) {
+            const { rz } = this.params;
+            this.group.rotation.z = rz;
         }
 
         // 닉네임 생성
@@ -456,7 +457,6 @@ export default async function ottogi_module2 (){
             this.createBody(waistSize, gender)
             this.createHead(headPosition)
 			this.group.rotation.y = this.params.ry // 모든 헬뚝이가 정면 바라보도록 수정
-            // this.createInfoMessage(intake, burned) // 섭취 & 소모 칼로리 메시지 생성 메소드 호출
         }
     }
 
@@ -490,34 +490,30 @@ export default async function ottogi_module2 (){
         figures.push(figure);
     }
 
-    // GSAP Timeline을 생성
-    let tl = gsap.timeline({ repeat: -1, yoyo: true });
+  // GSAP Ticker를 사용하여 애니메이션 업데이트와 렌더링 실행
+  gsap.ticker.add((time) => {
+    figures.forEach((figure, index) => {
+        const speed = 1.8; // 모든 오뚝이의 속도를 0.5로 설정
+        const offset = index * 0.2;
+        
+        let angle;
+        if (ResultCalorie[index] > RDA[index]) {
+            angle = degreesToRadians(30); // RDA(일일 권장 칼로리)보다 resultcalorie가 높으면 angle 30도로 설정
+        } else {
+            angle = degreesToRadians(20);
+        }
+        
+        const sway = Math.sin(time * speed + offset) * angle;
 
-    // 오뚝이들이 오른쪽으로 10도 흔들리게 설정
-    tl.to(figures.map(figure => figure.params), {
-        rz: degreesToRadians(20),
-        duration: 1,
-        ease: "sine.inOut"
+        figure.params.rz = sway;
+        figure.bounce(time);
+        figure.updateNicknamePosition();
+        figure.updateInfoMessagePosition();
+        figure.updateCalorieMessagePosition();
     });
 
-    // 바로 이어서 왼쪽으로 10도 흔들리게 설정
-    tl.to(figures.map(figure => figure.params), {
-        rz: degreesToRadians(-20),
-        duration: 1,
-        ease: "sine.inOut"
-    });
-
-    // GSAP Ticker를 사용하여 애니메이션 업데이트와 렌더링 실행
-    gsap.ticker.add(() => {
-        figures.forEach(figure => {
-            figure.bounce();
-            figure.updateNicknamePosition(); // 닉네임 위치 업데이트
-            figure.updateInfoMessagePosition(); // 섭취 & 소모 칼로리 위치 업데이트
-            figure.updateCalorieMessagePosition(); // resultcalorie 메시지 위치 업데이트
-        });
-
-        render();
-    });
+    render();
+});
 }
 
 // module.exports = ottogi_module2;
