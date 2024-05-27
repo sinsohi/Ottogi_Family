@@ -378,12 +378,11 @@ export default async function ottogi_module2 (){
 
         // 섭취 & 소모 칼로리 알림 메시지 생성
         createInfoMessage(intake, burned){
-            const infoMessage = document.createElement('div');
+            const infoMessage = document.createElement('nav');
             infoMessage.textContent = `오늘 ${intake}kcal만큼 섭취하시고, ${burned}kcal만큼 소모하셨어요.`;
 
             this.group.userData.infoMessage = infoMessage;
             document.body.appendChild(infoMessage);
-            
         }
 
         // 알림 메시지 위치 설정
@@ -406,7 +405,7 @@ export default async function ottogi_module2 (){
             this.createBody(waistSize, gender)
             this.createHead(headPosition)
 			this.group.rotation.y = this.params.ry // 모든 헬뚝이가 정면 바라보도록 수정
-            this.createInfoMessage(intake, burned) // 섭취 & 소모 칼로리 메시지 생성 메소드 호출
+            // this.createInfoMessage(intake, burned) // 섭취 & 소모 칼로리 메시지 생성 메소드 호출
         }
     }
 
