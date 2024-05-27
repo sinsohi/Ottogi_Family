@@ -179,6 +179,23 @@ app.post('/register', async (request, response) => {
   response.redirect('/addFamily');
 });
 
+// 닉네임 중복 확인 라우터 추가
+app.get('/checkNickname', async (req, res) => {
+  try {
+    const userNickname = req.query.userNickname;
+    const existingUser = await db.collection('user_info').findOne({ userNickname: userNickname });
+
+    if (existingUser) {
+      return res.status(200).json({ exists: true });
+    } else {
+      return res.status(200).json({ exists: false });
+    }
+  } catch (error) {
+    console.log('Error:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
 // 그룹 추가하는 페이지 
 app.get('/addFamily', (request, response) => {
   response.render('addFamily.ejs', { userNickname: request.session.userNickname });
