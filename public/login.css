@@ -1,18 +1,21 @@
 /*기본적으로 걸린 모든 속성 reset*/
+
 .login-title {
-  text-align: left; 
-  margin-top: 0px;
-  margin-left: 0px;
-  text-decoration: underline;
-  text-decoration-thickness: 5px;
-  text-decoration-color:#a2ab91;
+
+}
+/* 폼전체 스타일 */
+.form-box {
+  display: flex;
+  flex-direction: column;
+  width: 300px;
+  margin: 0 auto;
+  padding: 20px;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
-*{
-  box-sizing: border-box;
-  font-family: 'Noto Sans KR', sans_serif;
-}
-
+/* 폼 입력 필드들에 스타일 적용 */
 .form-box input {
   font-size: 14px;
   margin-bottom: 10px;
@@ -20,10 +23,12 @@
   border-radius: 5px;
   padding: 10px;
   width: 100%;
-  
+  padding-left: 15px;  /* 좌측 여백 추가 */
+  padding-right: 15px; /* 우측 여백 추가 */
+  width: calc(100% - 30px); /* 좌우 여백을 제외한 너비 */
 }
 
-
+/* 로그인 버튼 */
 .form-box button {
   color: #000000;
   font-size: 14px;
@@ -43,13 +48,6 @@
   text-decoration: none;
 }
 
-.links {
-  text-align: center;
-}
-
-.links a{
-  font-size: 12px;
-}
 
 /*전체 사이트 배경*/
 body {
