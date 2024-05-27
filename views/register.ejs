@@ -11,10 +11,32 @@
    <form id="registrationForm" class="form-box" action="/register" method="POST"> 
     <h4>가입</h4>
     <input name="userNickname" placeholder="닉네임" required>
+    <span id="nicknameError" style="color:red; display:none;">닉네임이 이미 사용 중입니다.</span>
     <input name="username" placeholder="아이디"required>
     <input name="password" placeholder="비번"type="password" required>
-    <button type="submit">다음</button>
+    <button type="submit" id="submitBtn">다음</button>
   </form>
 
+  <script>
+    $(document).ready(function() {
+        $('#userNickname').on('input', function() {
+          const nickname = $(this).val();
+          if (nickname) {
+            $.get('/checkNickname', { userNickname: nickname }, function(data) {
+              if (data.exists) {
+                $('#nicknameError').show();
+                $('#submitBtn').prop('disabled', true);
+              } else {
+                $('#nicknameError').hide();
+                $('#submitBtn').prop('disabled', false);
+              }
+            });
+          } else {
+            $('#nicknameError').hide();
+            $('#submitBtn').prop('disabled', false);
+          }
+        });
+      });
+  </script>
   </body>
 </html>
