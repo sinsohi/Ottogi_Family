@@ -4,6 +4,12 @@ const path = require('path'); // 추가
 const bodyParser = require('body-parser'); // npm install body-parser
 const bcrypt = require('bcrypt'); // bcrypt 셋팅
 const MongoStore = require("connect-mongo"); // connect-mongo 셋팅
+
+// 웹 소켓 세팅 
+const { createServer } = require('http')
+const { Server } = require('socket.io')
+const server = createServer(app)
+const io = new Server(server) 
 require("dotenv").config(); // .env 파일에 환경변수 보관
 
 
@@ -66,10 +72,9 @@ new MongoClient(url).connect().then((client) => {
   console.log(err);
 });
 
-app.listen(process.env.PORT, () => {
-  console.log('http://localhost:' + `${process.env.PORT}` + ' 에서 서버 실행중');
-});
-
+server.listen(process.env.PORT, ()=>{
+    console.log('http://localhost:'+`${process.env.PORT}` +' 에서 서버 실행중')
+})
 
 app.get('/homePage',(req,res)=>{
   res.render('homePage.ejs')
@@ -80,16 +85,15 @@ app.get('/getMember', async (req, res) => {
   try {
     const client = await MongoClient.connect(url);
     const db = client.db('Ottogi_Family');
-
+    const usreNickname = request.body.userNickname;
+    
     let familyInfo = await db.collection('FamilyRoom').findOne({
-      member : req.user.userNickname
-    })
+      member : userNickname
+    });
 
     // console.log(familyInfo.member)
     client.close();
-    
     res.json(familyInfo.member); 
-
   } catch (error) {
     console.log('Error:', error);
     res.status(500).json({ error: 'Internal Server Error' });
@@ -157,17 +161,124 @@ app.get('/getGender', async (req, res) => {
 
 app.get('/register', (request, response) => {
   response.render('register.ejs');
+  
 });
 
 app.post('/register', async (request, response) => {
+  try{
+  const userNickname = request.body.userNickname;
+  const existingUser = await db.collection('user_info').findOne({userNickname: userNickname});
+
+  if (existingUser) {
+    return response.status(400).send('닉네임이 이미 사용 중입니다.');
+  }
+
   let hash = await bcrypt.hash(request.body.password, 10); // password hashing (암호화)
   await db.collection('user_info').insertOne({
     userNickname: request.body.userNickname,
     username: request.body.username,
     password: hash
   });
-  response.sendFile(__dirname + '/InitialScreen.html');
+
+  // 세션에 닉네임 저장
+  request.session.userNickname = request.body.userNickname;
+  // console.log(request.session.userNickname)
+
+  response.redirect('/addFamily');
+} catch (error) {
+  console.log('Error:', error);
+  response.status(500).json({ error: 'Internal Server Error' });
+}
 });
+
+// 닉네임 중복 확인 라우터 추가
+app.get('/checkNickname', async (req, res) => {
+  try {
+    const userNickname = req.query.userNickname;
+    const existingUser = await db.collection('user_info').findOne({ userNickname: userNickname });
+
+    if (existingUser) {
+      return res.status(200).json({ exists: true });
+    } else {
+      return res.status(200).json({ exists: false });
+    }
+  } catch (error) {
+    console.log('Error:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
+// 그룹 추가하는 페이지 
+app.get('/addFamily', (request, response) => {
+  response.render('addFamily.ejs', { userNickname: request.session.userNickname });
+
+});
+
+// 회원가입 후 가족 추가하는 페이지
+app.post('/addFamily', async(request, response) => {
+  // 1. 이미 가족이 존재하는 경우
+  // 2. 새롭게 가족을 추가할 경우 
+  const Member = request.body.Member; // 로그인한 사용자의 닉네임
+  const NewMember = request.body.NewMember; // 새로 추가할 멤버 정보
+  const userNickname = request.session.userNickname;
+  
+  //console.log(Member, NewMember, userNickname);
+ 
+  // 이미 가족이 존재하는 경우
+   if(Member) {
+     try {
+       const existingFamily = await db.collection('FamilyRoom').findOne({member:{$in:[Member]}});
+       
+       if(existingFamily) {
+        if(existingFamily.member.length < 4) {
+        await db.collection('FamilyRoom').updateOne(
+          {member: {$in: [Member]}}, 
+          {$addToSet: {member: userNickname}}
+        );
+        response.redirect('/setting');
+       }
+      }
+       // 가족 이름 틀림 
+       else {
+         console.log("속하지 않음`");
+       }
+     }
+     catch(err) {
+       console.error(err);
+       response.status(500).send('기존 가족 추가 과정에서 오류가 발생했습니다.');
+     }
+   }
+
+   // 새롭게 가족을 추가하는 경우
+   else if(NewMember) {
+     try {
+      const existingFamily = await db.collection('FamilyRoom').findOne({member:{$in:[userNickname]}});
+       if(existingFamily) {
+        if(existingFamily.member.length < 4) {
+       await db.collection('FamilyRoom').updateOne(
+        {member: {$in: [userNickname]}}, 
+        {$addToSet: {member: NewMember}}
+       );
+       response.redirect('/setting');
+     }
+    }
+     else {
+      await db.collection('FamilyRoom').insertOne(
+        { member:[userNickname,NewMember] });
+        response.redirect('/setting');
+     } 
+    }
+     catch(err) {
+       console.error(err);
+       response.status(500).send('새로운 가족 생성 과정에서 오류가 발생했습니다.');
+     }
+   }
+   else {
+     response.status(400).send('필요한 정보가 충분하지 않습니다.');
+   }
+
+});
+
 
 // 아이디/비번이 DB와 일치하는지 검증하는 로직 짜는 공간 (앞으로 유저가 제출한 아이디 비번이 DB랑 맞는지 검증하고 싶을때 이것만 실행하면 됨)
 passport.use(
@@ -180,20 +291,23 @@ passport.use(
     // password 비교
     if (await bcrypt.compare(입력한비번, result.password)) {
       return cb(null, result);
-    } else {
-      return cb(null, false, { message: '비번불일치' });
+    } 
+    else {
+      return cb(null, false, { message:'비번불일치' });
     }
   })
 );
 
 // 로그인시 세션 만들기 (요청.logIn() 쓰면 자동 실행됨)
+// 로그인을 성공한 user의 저장하는 함수(serializeUser)
 passport.serializeUser((user, done) => {
   process.nextTick(() => {
-    done(null, { id: user._id, username: user.username });
+    done(null, { id: user._id, username: user.username,nickname: user.userNickname });
   });
 });
 
-// 유저가 보낸 쿠키 분석 (세션 정보 적힌 쿠키 가지고 있는 유저가 요청 날릴 때마다 실행됨)
+// 유저가 보낸 쿠키 분석
+// 페이지에 방문하는 모든 client에 대한 정보를 전달(deserializeUser)
 passport.deserializeUser(async (user, done) => {
   let result = await db.collection("user_info").findOne({ _id: new ObjectId(user.id) });
   delete result.password;
@@ -257,10 +371,102 @@ app.get('/calendardetail', (request, response) => {
 app.get('/calendardetail/:date/:Nickname', async (request,response)=>{
   let Nickname = request.params.Nickname;
   let users = await db.collection('user_info').find({ userNickname : request.params.Nickname}).toArray();
-  console.log(users[0]);
+  // console.log(users[0]);
   response.render('calendardetail.ejs', {users : users[0]})
 });
 
+// 가족추가 페이지 
+app.get('/addUser', async (request,response)=>{
+
+  let users = await db.collection('FamilyRoom').find({}).toArray();
+  response.render('addUser.ejs');
+})
+
+//FamilyRoom 데이터에 저장 
+app.post('/addUser', async (request, response) => {
+  const userNickname = request.user.userNickname; // 로그인한 사용자의 닉네임
+  const NewMember = request.body.NewMember; // 새로 추가할 멤버 정보
+  const Member = request.body.Member // 기존의 멤버 
+
+  //console.log(userNickname)
+  // 기존 가족과 연결
+  if (Member) {
+    try {
+      // 기존 가족 찾기
+      const existingFamily = await db.collection('FamilyRoom').findOne({ member: { $in: [Member] } });
+      
+      if (existingFamily) {
+        // userNickname이 속한 가족 찾기
+        const userFamily = await db.collection('FamilyRoom').findOne({ member: { $in: [userNickname] } });
+        
+        if (userFamily) {
+          // 두 가족의 멤버 배열 병합 및 중복 제거
+          const combinedMembers = Array.from(new Set([...existingFamily.member, ...userFamily.member]));
+          
+          // userNickname이 속한 가족 삭제
+          await db.collection('FamilyRoom').deleteOne({ member: userNickname });
+
+          if (combinedMembers.length <= 4) {
+            // 기존 가족의 member 배열 업데이트
+            await db.collection('FamilyRoom').updateOne(
+              { _id: existingFamily._id },
+              { $set: { member: combinedMembers } }
+            );
+            
+            response.redirect('/homepage');
+          } else {
+            response.status(400).send('가족 구성원이 4명을 초과할 수 없습니다.');
+          }
+        } else {
+          response.status(400).send('userNickname이 속한 가족을 찾을 수 없습니다.');
+        }
+      } else {
+        console.log("속하지 않음");
+      }
+    } catch (err) {
+      console.error(err);
+      response.status(500).send('기존 가족 추가 과정에서 오류가 발생했습니다.');
+    }
+  } else if (NewMember) {
+    try {
+      const existingFamily = await db.collection('FamilyRoom').findOne({ member: { $in: [userNickname] } });
+      
+      if (existingFamily) {
+        if (existingFamily.member.length < 4) {
+          await db.collection('FamilyRoom').updateOne(
+            { _id: existingFamily._id },
+            { $addToSet: { member: NewMember } }
+          );
+          response.redirect('/homepage');
+        } else {
+          response.status(400).send('가족 구성원이 4명을 초과할 수 없습니다.');
+        }
+      } else {
+        await db.collection('FamilyRoom').insertOne(
+          { member: [userNickname, NewMember] }
+        );
+        response.redirect('/homepage');
+      }
+    } catch (err) {
+      console.error(err);
+      response.status(500).send('새로운 가족 생성 과정에서 오류가 발생했습니다.');
+    }
+  } else {
+    response.status(400).send('필요한 정보가 충분하지 않습니다.');
+  }
+  
+
+});
+
+// 웹소켓 연결 확인   
+io.on('connection', (socket) => {
+  socket.on('ask-join', (data)=> {
+    socket.join(data)
+  })
+  socket.on('message-send', (data)=> {
+    console.log(data)
+  })
+})
 
 app.get('/daily-record', (req, res) => {
     res.sendFile(__dirname + '/daily-record.html');
@@ -456,3 +662,4 @@ app.post('/setting', async (req, res) => {
     res.status(200).send('제출 완료');
   });
 });
+

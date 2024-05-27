@@ -8,13 +8,39 @@
   </head>
   <body>
     <!-- 전송 버튼 누르면 register에 POST 요청 보냄 -->
-   <form class="form-box" action="/register" method="POST"> 
+   <form id="registrationForm" class="form-box" action="/register" method="POST"> 
     <h4>가입</h4>
-    <input name="userNickname">
-    <input name="username">
-    <input name="password" type="password">
-    <button type="submit">전송</button>
-</form> 
-    </div>
+    <input name="userNickname" id="userNickname" placeholder="닉네임" required>
+    <span id="nicknameError" style="color:red; display:none;">닉네임이 이미 사용 중입니다.</span>
+    <input name="username" placeholder="아이디"required>
+    <input name="password" placeholder="비번"type="password" required>
+    <button type="submit" id="submitBtn">다음</button>
+  </form>
+
+
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script>
+    $(document).ready(function() {
+        $('#userNickname').on('input', function() {
+          const nickname = $(this).val();
+          if (nickname) {
+            $.get('/checkNickname', { userNickname: nickname }, function(data) {
+              if (data.exists) {
+                $('#nicknameError').show();
+                $('#submitBtn').prop('disabled', true);
+              } else {
+                $('#nicknameError').hide();
+                $('#submitBtn').prop('disabled', false);
+              }
+            });
+          } else {
+            $('#nicknameError').hide();
+            $('#submitBtn').prop('disabled', false);
+          }
+        });
+        $('#submitBtn').click(function() {
+        });
+      });
+  </script>
   </body>
 </html>
