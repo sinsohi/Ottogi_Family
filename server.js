@@ -467,72 +467,81 @@ io.on('connection', (socket) => {
     console.log(data)
   })
 })
+
 app.get('/daily-record', async (req, res) => {
-  const userNickname = req.user.userNickname;
+  try {
+    const userNickname = req.user.userNickname;
 
-  const koreanTime = new Date(new Date().getTime() + 9 * 60 * 60 * 1000);
-  
- // 한국 시간 기준 오늘의 시작 시간 (00:00:00.000)
-const startOfToday = new Date(koreanTime.getFullYear(), koreanTime.getMonth(), koreanTime.getDate());
-startOfToday.setUTCHours(0, 0, 0, 0);
-console.log('오늘의 시작:', startOfToday);
+    // 현재 날짜를 YYYY-MM-DD 형식으로 설정
+    var today = new Date();
+    var year = today.getFullYear();
+    var month = ('0' + (today.getMonth() + 1)).slice(-2);
+    var day = ('0' + today.getDate()).slice(-2);
+    var dateString = year + '-' + month + '-' + day;
 
-// 한국 시간 기준 오늘의 끝 시간 (23:59:59.999)
-const endOfToday = new Date(startOfToday.getTime() + 24 * 60 * 60 * 1000 - 1);
-console.log('오늘의 끝:', endOfToday);
+    console.log(dateString);
 
-  const userbf = await db.collection('breakfast').find({ userNickname: userNickname, timestamp: { $gte: startOfToday, $lte: endOfToday } }).toArray();
-  const userlc = await db.collection('lunch').find({ userNickname: userNickname, timestamp: { $gte: startOfToday, $lte: endOfToday } }).toArray();
-  const userdn = await db.collection('dinner').find({ userNickname: userNickname, timestamp: { $gte: startOfToday, $lte: endOfToday } }).toArray();
+    // 날짜를 기준으로 데이터를 필터링하는 함수
+    const isToday = (timestamp) => {
+      const date = new Date(timestamp);
+      const dateYear = date.getFullYear();
+      const dateMonth = ('0' + (date.getMonth() + 1)).slice(-2);
+      const dateDay = ('0' + date.getDate()).slice(-2);
+      return `${dateYear}-${dateMonth}-${dateDay}` === dateString;
+    };
 
-  const todayData = {
-    breakfast: userbf,
-    lunch: userlc,
-    dinner: userdn
-  };
+    const userbf = (await db.collection('breakfast').find({ userNickname: userNickname }).toArray()).filter(item => isToday(item.timestamp));
+    const userlc = (await db.collection('lunch').find({ userNickname: userNickname }).toArray()).filter(item => isToday(item.timestamp));
+    const userdn = (await db.collection('dinner').find({ userNickname: userNickname }).toArray()).filter(item => isToday(item.timestamp));
 
-  const userst = await db.collection('DRsleeptime')
-    .find({ userNickname: userNickname, timestamp: { $gte: startOfToday, $lte: endOfToday } })
-    .sort({ timestamp: -1 })
-    .limit(1)
-    .project({ _id: 0, sleepHour: 1, sleepMinute: 1 })
-    .toArray();
+    const todayData = {
+      breakfast: userbf,
+      lunch: userlc,
+      dinner: userdn
+    };
 
-    const useres = await db.collection('DRexercise').find({
-      userNickname: userNickname,
-      timestamp: { $gte: startOfToday, $lte: endOfToday }
-    }).toArray();
+    const userst = (await db.collection('DRsleeptime').find({ userNickname: userNickname }).sort({ timestamp: -1 }).limit(1).project({ _id: 0, sleepHour: 1, sleepMinute: 1 }).toArray()).filter(item => isToday(item.timestamp));
 
-    const burned = useres.reduce((total, exercise) => total + parseInt(exercise.caloriesBurned), 0);
+    const useres = (await db.collection('DRexercise').find({ userNickname: userNickname }).toArray()).filter(item => isToday(item.timestamp));
 
-    const intake = userbf.reduce((total, item) => total + parseInt(item.calories), 0) +
-               userlc.reduce((total, item) => total + parseInt(item.calories), 0) +
-               userdn.reduce((total, item) => total + parseInt(item.calories), 0);
+    const burned = useres.reduce((total, exercise) => total + Number(exercise.caloriesBurned), 0);
+    const intake = userbf.reduce((total, item) => total + Number(item.calories), 0) +
+                   userlc.reduce((total, item) => total + Number(item.calories), 0) +
+                   userdn.reduce((total, item) => total + Number(item.calories), 0);
 
     const calorieDelta = intake - burned;
 
     const userInfo = {
       userNickname: userNickname,
-      Timestamp: koreanTime,
+      Timestamp: dateString,
       burned: burned,
       intake: intake,
       calorieDelta: calorieDelta
     };
 
-  
     await db.collection('user_info').updateOne(
-      { userNickname: userNickname, date: startOfToday.toISOString().split('T')[0] },
+      { userNickname: userNickname, date: dateString },
       { $set: userInfo },
       { upsert: true }
     );
-  
 
-    // console.log("Burned Calories:", burned);
-    // console.log("Intake Calories:", intake);
-    // console.log("calorieDelta:", calorieDelta);
-
-  res.render('daily-record', { sleepTime: userst.length > 0 ? userst[0] : null, useres: useres, userbf, userlc, userdn, todayData, burned: burned, intake: intake, calorieDelta: calorieDelta});
+    res.render('daily-record', {
+      sleepTime: userst.length > 0 ? userst[0] : null,
+      useres: useres,
+      userbf,
+      userlc,
+      userdn,
+      todayData,
+      burned: burned,
+      intake: intake,
+      calorieDelta: calorieDelta
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('서버 에러 발생');
+  }
 });
+
 
 app.post('/delete-exercise', async (req, res) => {
   const exerciseId = req.body.id;
@@ -605,16 +614,21 @@ app.post('/dailyrecordexercise', async (req, res) => {
   const caloriesBurned = req.body.caloriesBurned;
   const userNickname = req.user.userNickname;
 
-  const currentDate = new Date();
+  var today = new Date();
 
-  const koreanTimeOffset = 9 * 60; // 한국 시간은 UTC+9
-  const koreanTime = new Date(currentDate.getTime() + koreanTimeOffset * 60000);
+var year = today.getFullYear();
+var month = ('0' + (today.getMonth() + 1)).slice(-2);
+var day = ('0' + today.getDate()).slice(-2);
+
+var dateString = year + '-' + month  + '-' + day;
+
+console.log(dateString);
 
   const data = {
     userNickname: userNickname,
     caloriesBurned: caloriesBurned,
     exerciseName: exerciseName,
-    timestamp: koreanTime
+    timestamp: dateString
   };
 
   db.collection('DRexercise').insertOne(data);
@@ -627,10 +641,15 @@ app.post('/dailyrecordmeal', async (req, res) => {
   const calories = req.body.calories;
   const userNickname = req.user.userNickname; // 유저의 userNickname
 
-  const currentDate = new Date();
+  var today = new Date();
 
-  const koreanTimeOffset = 9 * 60; // 한국 시간은 UTC+9
-  const koreanTime = new Date(currentDate.getTime() + koreanTimeOffset * 60000);
+var year = today.getFullYear();
+var month = ('0' + (today.getMonth() + 1)).slice(-2);
+var day = ('0' + today.getDate()).slice(-2);
+
+var dateString = year + '-' + month  + '-' + day;
+
+console.log(dateString);
 
   let collectionName = 'default';
   if (meal === 'breakfast') {
@@ -644,7 +663,7 @@ app.post('/dailyrecordmeal', async (req, res) => {
     userNickname: userNickname,
     menuName: menuName,
     calories: calories,
-    timestamp: koreanTime
+    timestamp: dateString
   };
   db.collection(collectionName).insertOne(data);
 });
@@ -654,14 +673,20 @@ app.post('/dailyrecordsleeptime', async (req, res) => {
   const sleepHour = req.body.sleepHour;
   const sleepMinute = req.body.sleepMinute;
   const userNickname = req.user.userNickname;
-  const currentDate = new Date();
-  const koreanTimeOffset = 9 * 60; // 한국 시간은 UTC+9
-  const koreanTime = new Date(currentDate.getTime() + koreanTimeOffset * 60000);
+  
+  var today = new Date();
+
+var year = today.getFullYear();
+var month = ('0' + (today.getMonth() + 1)).slice(-2);
+var day = ('0' + today.getDate()).slice(-2);
+
+var dateString = year + '-' + month  + '-' + day;
+
   const data = {
     userNickname: userNickname,
     sleepHour: sleepHour,
     sleepMinute: sleepMinute,
-    timestamp: koreanTime
+    timestamp: dateString
   };
   await db.collection('DRsleeptime').insertOne(data);
 });
@@ -679,12 +704,12 @@ app.post('/setting', async (req, res) => {
   const activity = req.body.activity;
   const bmi = req.body.bmi;
 
-  // 현재 날짜와 시간 가져오기 (UTC)
-  const currentDate = new Date();
+  // // 현재 날짜와 시간 가져오기 (UTC)
+  // const currentDate = new Date();
 
-  // UTC 시간을 한국 시간으로 변환
-  const koreanTimeOffset = 9 * 60; // 한국 시간은 UTC+9
-  const koreanTime = new Date(currentDate.getTime() + koreanTimeOffset * 60000);
+  // // UTC 시간을 한국 시간으로 변환
+  // const koreanTimeOffset = 9 * 60; // 한국 시간은 UTC+9
+  // const koreanTime = new Date(currentDate.getTime() + koreanTimeOffset * 60000);
 
   let healthStatus = '';
   if (bmi < 18.5) {
@@ -740,7 +765,7 @@ app.post('/setting', async (req, res) => {
     activity: activity,
     bmi: bmi, //bmi 값
     healthStatus: healthStatus, // bmi 결과
-    timestamp: koreanTime,
+    //timestamp: koreanTime,
     activityindex: activityindex,
     BMR: BMR,
     RDA: RDA
