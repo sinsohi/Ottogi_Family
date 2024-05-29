@@ -10,13 +10,15 @@
     <!-- 전송 버튼 누르면 register에 POST 요청 보냄 -->
    <form id="registrationForm" class="form-box" action="/register" method="POST"> 
     <h4>가입</h4>
-    <input name="userNickname" id="userNickname" placeholder="닉네임" required>
+    <input name="userNickname" id="userNickname" placeholder="Nickname" required>
     <span id="nicknameError" style="color:red; display:none;">닉네임이 이미 사용 중입니다.</span>
-    <input name="username" placeholder="아이디"required>
-    <input name="password" placeholder="비번"type="password" required>
-    <button type="submit" id="submitBtn">다음</button>
-  </form>
 
+    <input name="username" placeholder="ID"required>
+    <span id="IDError" style="color:red; display:none;">아이디가 이미 사용 중입니다.</span>
+    
+    <input name="password" placeholder="Password"type="password" required>
+    <button type="submit" id="submitBtn">NEXT</button>
+  </form>
 
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <script>
@@ -38,6 +40,25 @@
             $('#submitBtn').prop('disabled', false);
           }
         });
+
+        $('#username').on('input', function() {
+          const username = $(this).val();
+          if (username) {
+            $.get('/checkUsername', { username: username }, function(data) {
+              if (data.exists) {
+                $('#IDError').show();
+                $('#submitBtn').prop('disabled', true);
+              } else {
+                $('#IDError').hide();
+                $('#submitBtn').prop('disabled', false);
+              }
+            });
+          } else {
+            $('#IDError').hide();
+            $('#submitBtn').prop('disabled', false);
+          }
+        });
+        
         $('#submitBtn').click(function() {
         });
       });
