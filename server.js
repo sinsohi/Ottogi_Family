@@ -183,7 +183,8 @@ app.post('/register', async (request, response) => {
   // 세션에 닉네임 저장
   request.session.userNickname = request.body.userNickname;
   // console.log(request.session.userNickname)
-
+  
+  // 회원가입 성공 시 /addFamily페이지로 리다이렉션
   response.redirect('/addFamily');
 } catch (error) {
   console.log('Error:', error);
@@ -196,6 +197,23 @@ app.get('/checkNickname', async (req, res) => {
   try {
     const userNickname = req.query.userNickname;
     const existingUser = await db.collection('user_info').findOne({ userNickname: userNickname });
+
+    if (existingUser) {
+      return res.status(200).json({ exists: true });
+    } else {
+      return res.status(200).json({ exists: false });
+    }
+  } catch (error) {
+    console.log('Error:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
+//아이디 중복 확인 라우터 추가 
+app.get('/checkUsername', async (req, res) => {
+  try {
+    const username = req.query.username;
+    const existingUser = await db.collection('user_info').findOne({ username: username });
 
     if (existingUser) {
       return res.status(200).json({ exists: true });
@@ -341,8 +359,15 @@ app.get('/calender', (request, response) => {
 // 달력 페이지 
 app.get('/calendar', async (request,response)=>{
   let users = await db.collection('user_info').find().toArray();
-  // console.log(users[0]);
+  let family = await db.collection('FamilyRoom').find({member:request.user.userNickname}).toArray();
+  console.log(request.user.userNickname);
+  console.log(family[0]);
   response.render('calendar.ejs', {users:users});
+  if (family.length > 0) {
+    res.render('template', { members: family[0].member, date: someDate });
+  } else {
+    res.render('template', { members: [], date: someDate });
+  }
 })
 
 // 달력에서 날짜 클릭시 보여주는 페이지 

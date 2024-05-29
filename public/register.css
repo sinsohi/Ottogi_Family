@@ -43,7 +43,18 @@ div {
   display: block;
   margin-top: 10px;
 }
-
+/*
+#errorMessages {
+  span {
+    position: absolute;
+    color: red;
+    font-size: 14px;
+    display: none;
+    top: 50px;
+    left: 0;
+  }
+}
+*/
 /*전체 사이트 배경*/
 body {
   height: 100vh;

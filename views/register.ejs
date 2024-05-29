@@ -11,10 +11,10 @@
    <form id="registrationForm" class="form-box" action="/register" method="POST"> 
     <h4>가입</h4>
     <input name="userNickname" id="userNickname" placeholder="Nickname" required>
-    <span id="nicknameError" style="color:red; display:none;">닉네임이 이미 사용 중입니다.</span>
+    <span id="nicknameError" style="display: none;">닉네임이 이미 사용 중입니다.</span>
 
-    <input name="username" placeholder="ID"required>
-    <span id="IDError" style="color:red; display:none;">아이디가 이미 사용 중입니다.</span>
+    <input name="username" id="username" placeholder="ID"required>
+    <span id="IDError" style="display: none;">아이디가 이미 사용 중입니다.</span>
     
     <input name="password" placeholder="Password"type="password" required>
     <button type="submit" id="submitBtn">NEXT</button>
@@ -23,6 +23,7 @@
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <script>
     $(document).ready(function() {
+      //userNickname체크
         $('#userNickname').on('input', function() {
           const nickname = $(this).val();
           if (nickname) {
@@ -40,7 +41,7 @@
             $('#submitBtn').prop('disabled', false);
           }
         });
-
+       //username 체크  
         $('#username').on('input', function() {
           const username = $(this).val();
           if (username) {
@@ -58,7 +59,7 @@
             $('#submitBtn').prop('disabled', false);
           }
         });
-        
+
         $('#submitBtn').click(function() {
         });
       });
