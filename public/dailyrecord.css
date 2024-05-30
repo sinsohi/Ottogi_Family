@@ -9,10 +9,31 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    flex-direction: column;
     color: #000; /*텍스트색*/
 }
 
+.container {
+    display: flex;
+    justify-content: space-between;
+    width: 90%;
+    max-width: 1200px;
+    background-color: rgba(255, 255, 255, 0.8); /* 배경색을 반투명 흰색으로 설정 */
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    padding: 20px;
+}
+
+.left-panel, .right-panel {
+    width: 48%;
+}
+
+.left-panel {
+    margin-right: 2%;
+}
+
+.right-panel {
+    margin-left: 2%;
+}
 
 h2 {
     margin-top: 0;
@@ -51,7 +72,7 @@ ul {
 }
 
 li {
-    background-color: rgba(255, 255, 255, 0.2);
+    background-color: rgba(255, 255, 255, 0.8);
     margin: 10px 0;
     padding: 10px;
     border-radius: 4px;

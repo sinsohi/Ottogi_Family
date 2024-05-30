@@ -5,84 +5,86 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>매일 기록</title>
     <link href="/dailyrecord.css" rel="stylesheet">
-</head>
 <body>
     <div class="container">
-        <h2>매일 기록</h2>
-        <form action="/submit-form" method="POST">
-            <div class="mb-3">
-                <label for="exampleFormControlTextarea1" class="form-label">식단</label>
-                <button type="submit" name="meal" value="breakfast" class="btn btn-primary">아침</button>
-                <button type="submit" name="meal" value="lunch" class="btn btn-primary">점심</button>
-                <button type="submit" name="meal" value="dinner" class="btn btn-primary">저녁</button>
-            </div>
-        </form>        
-        <form action="/dailyrecordexercise" method="GET">
-            <div class="mb-3">
-                <label for="exampleFormControlTextarea1" class="form-label">운동량</label>
-            </div>
-            <button type="submit" class="btn btn-primary">기록하기</button>
-        </form>
-        <form action="/dailyrecordsleeptime" method="GET">
-            <div class="mb-3">
-                <label for="exampleFormControlTextarea1" class="form-label">수면시간</label>
-            </div>
-            <button type="submit" class="btn btn-primary">기록하기</button>
-        </form>
-        
-        <h2>오늘의 수면 시간</h2>
-        <p>
-            <% if (sleepTime) { %>
-                <%= sleepTime.sleepHour %>시 <%= sleepTime.sleepMinute %>분
-            <% } else { %>
-                수면 기록이 없습니다.
-            <% } %>
-        </p>
-        <h2>오늘의 운동</h2>
-        <p>
-            <% if (useres.length > 0) { %>
-                <ul id="exerciseList">
-                    <% useres.forEach(function(exercise, index) { %>
-                        <li>
-                            <%= exercise.exerciseName %> (소모 칼로리: <%= exercise.caloriesBurned %>kcal)
-                            <button class="deleteButton exercise" data-id="<%= exercise._id %>">삭제</button>
+        <div class="left-panel">
+            <h2>매일 기록</h2>
+            <form action="/submit-form" method="POST">
+                <div class="mb-3">
+                    <label for="exampleFormControlTextarea1" class="form-label">식단</label>
+                    <button type="submit" name="meal" value="breakfast" class="btn btn-primary">아침</button>
+                    <button type="submit" name="meal" value="lunch" class="btn btn-primary">점심</button>
+                    <button type="submit" name="meal" value="dinner" class="btn btn-primary">저녁</button>
+                </div>
+            </form>
+            <form action="/dailyrecordexercise" method="GET">
+                <div class="mb-3">
+                    <label for="exampleFormControlTextarea1" class="form-label">운동량</label>
+                </div>
+                <button type="submit" class="btn btn-primary">기록하기</button>
+            </form>
+            <form action="/dailyrecordsleeptime" method="GET">
+                <div class="mb-3">
+                    <label for="exampleFormControlTextarea1" class="form-label">수면시간</label>
+                </div>
+                <button type="submit" class="btn btn-primary">기록하기</button>
+            </form>
+        </div>
 
-                        </li>
-                    <% }); %>
-                </ul>
-            <% } else { %>
-                운동 기록이 없습니다.
-            <% } %>    
-        </p>
-        <p>오늘 소모한 칼로리: <%= parseInt(burned) %>kcal</p>
+        <div class="right-panel">
+            <h2>오늘의 수면 시간</h2>
+            <p>
+                <% if (sleepTime) { %>
+                    <%= sleepTime.sleepHour %>시 <%= sleepTime.sleepMinute %>분
+                <% } else { %>
+                    수면 기록이 없습니다.
+                <% } %>
+            </p>
+            <h2>오늘의 운동</h2>
+            <p>
+                <% if (useres.length > 0) { %>
+                    <ul id="exerciseList">
+                        <% useres.forEach(function(exercise, index) { %>
+                            <li>
+                                <%= exercise.exerciseName %> (소모 칼로리: <%= exercise.caloriesBurned %>kcal)
+                                <button class="deleteButton exercise" data-id="<%= exercise._id %>">삭제</button>
+                            </li>
+                        <% }); %>
+                    </ul>
+                <% } else { %>
+                    운동 기록이 없습니다.
+                <% } %>    
+            </p>
+            <p>오늘 소모한 칼로리: <%= parseInt(burned) %>kcal</p>
 
-        <h2>오늘의 아침</h2>
-        <ul>
-            <% userbf.forEach(function(item) { %>
-                <li><%= item.menuName %> (칼로리: <%= item.calories %>kcal)
-                    <button class="deleteButton breakfast" data-id="<%= item._id %>">삭제</button>
-                </li>
-            <% }); %>
-        </ul>
+            <h2>오늘의 아침</h2>
+            <ul>
+                <% userbf.forEach(function(item) { %>
+                    <li><%= item.menuName %> (칼로리: <%= item.calories %>kcal)
+                        <button class="deleteButton breakfast" data-id="<%= item._id %>">삭제</button>
+                    </li>
+                <% }); %>
+            </ul>
 
-        <h2>오늘의 점심</h2>
-        <ul>
-            <% userlc.forEach(function(item) { %>
-                <li><%= item.menuName %> (칼로리: <%= item.calories %>kcal)
-                    <button class="deleteButton lunch" data-id="<%= item._id %>">삭제</button>
-                </li>
-            <% }); %>
-        </ul>
+            <h2>오늘의 점심</h2>
+            <ul>
+                <% userlc.forEach(function(item) { %>
+                    <li><%= item.menuName %> (칼로리: <%= item.calories %>kcal)
+                        <button class="deleteButton lunch" data-id="<%= item._id %>">삭제</button>
+                    </li>
+                <% }); %>
+            </ul>
 
-        <h2>오늘의 저녁</h2>
-        <ul>
-            <% userdn.forEach(function(item) { %>
-                <li><%= item.menuName %> (칼로리: <%= item.calories %>kcal)
-                    <button class="deleteButton dinner" data-id="<%= item._id %>">삭제</button>
-                </li>
-            <% }); %>
-        </ul>
-        <p>오늘 섭취한 칼로리: <%= intake %>kcal</p>
+            <h2>오늘의 저녁</h2>
+            <ul>
+                <% userdn.forEach(function(item) { %>
+                    <li><%= item.menuName %> (칼로리: <%= item.calories %>kcal)
+                        <button class="deleteButton dinner" data-id="<%= item._id %>">삭제</button>
+                    </li>
+                <% }); %>
+            </ul>
+            <p>오늘 섭취한 칼로리: <%= intake %>kcal</p>
+        </div>
     </div>
     <script>
         document.addEventListener("DOMContentLoaded", function(event) {
@@ -141,3 +143,6 @@
     </script>
 </body>
 </html>
+
+
+
