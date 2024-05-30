@@ -494,14 +494,7 @@ app.get('/daily-record', async (req, res) => {
     const userlc = (await db.collection('lunch').find({ userNickname: userNickname }).toArray()).filter(item => isToday(item.timestamp));
     const userdn = (await db.collection('dinner').find({ userNickname: userNickname }).toArray()).filter(item => isToday(item.timestamp));
 
-    const todayData = {
-      breakfast: userbf,
-      lunch: userlc,
-      dinner: userdn
-    };
-
-    const userst = (await db.collection('DRsleeptime').find({ userNickname: userNickname }).sort({ timestamp: -1 }).limit(1).project({ _id: 0, sleepHour: 1, sleepMinute: 1 }).toArray()).filter(item => isToday(item.timestamp));
-
+    const userst = (await db.collection('DRsleeptime').find({ userNickname: userNickname }).toArray()).filter(item => isToday(item.timestamp));
     const useres = (await db.collection('DRexercise').find({ userNickname: userNickname }).toArray()).filter(item => isToday(item.timestamp));
 
     const burned = useres.reduce((total, exercise) => total + Number(exercise.caloriesBurned), 0);
@@ -525,12 +518,19 @@ app.get('/daily-record', async (req, res) => {
       { upsert: true }
     );
 
+    const todayData = {
+      breakfast: userbf,
+      lunch: userlc,
+      dinner: userdn
+    };
+
     res.render('daily-record', {
       sleepTime: userst.length > 0 ? userst[0] : null,
       useres: useres,
       userbf,
       userlc,
       userdn,
+      userst,
       todayData,
       burned: burned,
       intake: intake,
@@ -675,12 +675,10 @@ app.post('/dailyrecordsleeptime', async (req, res) => {
   const userNickname = req.user.userNickname;
   
   var today = new Date();
-
-var year = today.getFullYear();
-var month = ('0' + (today.getMonth() + 1)).slice(-2);
-var day = ('0' + today.getDate()).slice(-2);
-
-var dateString = year + '-' + month  + '-' + day;
+  var year = today.getFullYear();
+  var month = ('0' + (today.getMonth() + 1)).slice(-2);
+  var day = ('0' + today.getDate()).slice(-2);
+  var dateString = year + '-' + month  + '-' + day;
 
   const data = {
     userNickname: userNickname,
@@ -688,9 +686,13 @@ var dateString = year + '-' + month  + '-' + day;
     sleepMinute: sleepMinute,
     timestamp: dateString
   };
-  await db.collection('DRsleeptime').insertOne(data);
+
+  await db.collection('DRsleeptime').updateOne(
+    { userNickname: userNickname, timestamp: dateString },
+    { $set: data },
+    { upsert: true }
+  );
 });
- 
 
 
 
