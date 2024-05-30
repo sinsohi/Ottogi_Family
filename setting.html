@@ -7,7 +7,7 @@
 </head>
 <body>
     <h2>성별 선택</h2>
-    <form action="/setting" method="POST">
+    <form id="settingForm" action="/setting" method="POST" onsubmit="showPopup(event)">
         <input type="radio" id="male" name="gender" value="male">
         <label for="male">남자</label><br>
         <input type="radio" id="female" name="gender" value="female">
@@ -47,10 +47,19 @@
             var height = parseFloat(document.getElementById('height').value);
             var weight = parseFloat(document.getElementById('weight').value);
 
-            var heightInMeter = height / 100; //미터 변환
+            var heightInMeter = height / 100; // 미터 변환
             var bmi = weight / (heightInMeter * heightInMeter);
             document.getElementById('bmi').value = bmi;
-            document.getElementById('settingForm').submit();
+        }
+
+        function showPopup(event) {
+            event.preventDefault(); // 폼 제출 막기
+            calculateBMI(); // BMI 계산
+            alert("저장되었습니다.");
+            document.getElementById('settingForm').submit(); // 폼 제출
+            setTimeout(function() {
+                window.location.href = "/homePage"; // 리다이렉션
+            }, 1000); // 1초 후에 리다이렉션
         }
     </script>
 </body>

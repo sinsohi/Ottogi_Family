@@ -468,9 +468,125 @@ io.on('connection', (socket) => {
   })
 })
 
-app.get('/daily-record', (req, res) => {
-    res.sendFile(__dirname + '/daily-record.html');
-}); //매일 기록
+app.get('/daily-record', async (req, res) => {
+  try {
+    const userNickname = req.user.userNickname;
+
+    // 현재 날짜를 YYYY-MM-DD 형식으로 설정
+    var today = new Date();
+    var year = today.getFullYear();
+    var month = ('0' + (today.getMonth() + 1)).slice(-2);
+    var day = ('0' + today.getDate()).slice(-2);
+    var dateString = year + '-' + month + '-' + day;
+
+    console.log(dateString);
+
+    // 날짜를 기준으로 데이터를 필터링하는 함수
+    const isToday = (timestamp) => {
+      const date = new Date(timestamp);
+      const dateYear = date.getFullYear();
+      const dateMonth = ('0' + (date.getMonth() + 1)).slice(-2);
+      const dateDay = ('0' + date.getDate()).slice(-2);
+      return `${dateYear}-${dateMonth}-${dateDay}` === dateString;
+    };
+
+    const userbf = (await db.collection('breakfast').find({ userNickname: userNickname }).toArray()).filter(item => isToday(item.timestamp));
+    const userlc = (await db.collection('lunch').find({ userNickname: userNickname }).toArray()).filter(item => isToday(item.timestamp));
+    const userdn = (await db.collection('dinner').find({ userNickname: userNickname }).toArray()).filter(item => isToday(item.timestamp));
+
+    const todayData = {
+      breakfast: userbf,
+      lunch: userlc,
+      dinner: userdn
+    };
+
+    const userst = (await db.collection('DRsleeptime').find({ userNickname: userNickname }).sort({ timestamp: -1 }).limit(1).project({ _id: 0, sleepHour: 1, sleepMinute: 1 }).toArray()).filter(item => isToday(item.timestamp));
+
+    const useres = (await db.collection('DRexercise').find({ userNickname: userNickname }).toArray()).filter(item => isToday(item.timestamp));
+
+    const burned = useres.reduce((total, exercise) => total + Number(exercise.caloriesBurned), 0);
+    const intake = userbf.reduce((total, item) => total + Number(item.calories), 0) +
+                   userlc.reduce((total, item) => total + Number(item.calories), 0) +
+                   userdn.reduce((total, item) => total + Number(item.calories), 0);
+
+    const calorieDelta = intake - burned;
+
+    const userInfo = {
+      userNickname: userNickname,
+      Timestamp: dateString,
+      burned: burned,
+      intake: intake,
+      calorieDelta: calorieDelta
+    };
+
+    await db.collection('user_info').updateOne(
+      { userNickname: userNickname, date: dateString },
+      { $set: userInfo },
+      { upsert: true }
+    );
+
+    res.render('daily-record', {
+      sleepTime: userst.length > 0 ? userst[0] : null,
+      useres: useres,
+      userbf,
+      userlc,
+      userdn,
+      todayData,
+      burned: burned,
+      intake: intake,
+      calorieDelta: calorieDelta
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('서버 에러 발생');
+  }
+});
+
+
+app.post('/delete-exercise', async (req, res) => {
+  const exerciseId = req.body.id;
+
+  try {
+    const result = await db.collection('DRexercise').deleteOne({ _id: new ObjectId(exerciseId) });
+
+    if (result.deletedCount === 1) {
+      res.json({ success: true });
+    } else {
+      res.status(404).json({ success: false, message: '데이터 X' });
+    }
+  } catch (error) {
+    console.error('Error deleting exercise:', error);
+    res.status(500).json({ success: false, message: '서버 오류' });
+  }
+});
+
+app.post('/delete-item', async (req, res) => {
+  const itemId = req.body.id;
+  const mealType = req.body.type;
+
+  // mealType에 따라 해당 컬렉션 이름 설정
+  let collectionName = '';
+  if (mealType === 'breakfast') {
+    collectionName = 'breakfast';
+  } else if (mealType === 'lunch') {
+    collectionName = 'lunch';
+  } else if (mealType === 'dinner') {
+    collectionName = 'dinner';
+  } 
+  try {
+    const result = await db.collection(collectionName).deleteOne({ _id: new ObjectId(itemId) });
+
+    if (result.deletedCount === 1) {
+      res.json({ success: true });
+    } else {
+      res.status(404).json({ success: false, message: '데이터 X' });
+    }
+  } catch (error) {
+    console.error('Error deleting item:', error);
+    res.status(500).json({ success: false, message: '서버 오류' });
+  }
+});
+
 
 app.get('/setting', (req, res) => {
   res.sendFile(__dirname + '/setting.html');
@@ -498,27 +614,25 @@ app.post('/dailyrecordexercise', async (req, res) => {
   const caloriesBurned = req.body.caloriesBurned;
   const userNickname = req.user.userNickname;
 
-  const currentDate = new Date();
+  var today = new Date();
 
-  const koreanTimeOffset = 9 * 60; // 한국 시간은 UTC+9
-  const koreanTime = new Date(currentDate.getTime() + koreanTimeOffset * 60000);
+var year = today.getFullYear();
+var month = ('0' + (today.getMonth() + 1)).slice(-2);
+var day = ('0' + today.getDate()).slice(-2);
+
+var dateString = year + '-' + month  + '-' + day;
+
+console.log(dateString);
 
   const data = {
     userNickname: userNickname,
     caloriesBurned: caloriesBurned,
     exerciseName: exerciseName,
-    timestamp: koreanTime
+    timestamp: dateString
   };
 
-  db.collection('DRexercise').insertOne(data, (err, result) => {
-    if (err) {
-      console.log('데이터베이스 오류:', err);
-      return res.status(500).send('데이터베이스 오류');
-    }
-    console.log('데이터를 성공적으로 삽입');
-    res.status(200).send('성공적으로 제출');
+  db.collection('DRexercise').insertOne(data);
   });
-});
 
 
 app.post('/dailyrecordmeal', async (req, res) => {
@@ -527,12 +641,17 @@ app.post('/dailyrecordmeal', async (req, res) => {
   const calories = req.body.calories;
   const userNickname = req.user.userNickname; // 유저의 userNickname
 
-  const currentDate = new Date();
+  var today = new Date();
 
-  const koreanTimeOffset = 9 * 60; // 한국 시간은 UTC+9
-  const koreanTime = new Date(currentDate.getTime() + koreanTimeOffset * 60000);
+var year = today.getFullYear();
+var month = ('0' + (today.getMonth() + 1)).slice(-2);
+var day = ('0' + today.getDate()).slice(-2);
 
-  let collectionName;
+var dateString = year + '-' + month  + '-' + day;
+
+console.log(dateString);
+
+  let collectionName = 'default';
   if (meal === 'breakfast') {
     collectionName = 'breakfast';
   } else if (meal === 'lunch') {
@@ -544,16 +663,9 @@ app.post('/dailyrecordmeal', async (req, res) => {
     userNickname: userNickname,
     menuName: menuName,
     calories: calories,
-    timestamp: koreanTime
+    timestamp: dateString
   };
-  db.collection(collectionName).insertOne(data, (err, result) => {
-    if (err) {
-      console.log('데이터베이스 오류:', err);
-      return res.status(500).send('데이터베이스 오류');
-    }
-    console.log('데이터를 성공적으로 삽입');
-    res.status(200).send('성공적으로 제출');
-  });
+  db.collection(collectionName).insertOne(data);
 });
 
 
@@ -561,14 +673,20 @@ app.post('/dailyrecordsleeptime', async (req, res) => {
   const sleepHour = req.body.sleepHour;
   const sleepMinute = req.body.sleepMinute;
   const userNickname = req.user.userNickname;
-  const currentDate = new Date();
-  const koreanTimeOffset = 9 * 60; // 한국 시간은 UTC+9
-  const koreanTime = new Date(currentDate.getTime() + koreanTimeOffset * 60000);
+  
+  var today = new Date();
+
+var year = today.getFullYear();
+var month = ('0' + (today.getMonth() + 1)).slice(-2);
+var day = ('0' + today.getDate()).slice(-2);
+
+var dateString = year + '-' + month  + '-' + day;
+
   const data = {
     userNickname: userNickname,
     sleepHour: sleepHour,
     sleepMinute: sleepMinute,
-    timestamp: koreanTime
+    timestamp: dateString
   };
   await db.collection('DRsleeptime').insertOne(data);
 });
@@ -586,12 +704,12 @@ app.post('/setting', async (req, res) => {
   const activity = req.body.activity;
   const bmi = req.body.bmi;
 
-  // 현재 날짜와 시간 가져오기 (UTC)
-  const currentDate = new Date();
+  // // 현재 날짜와 시간 가져오기 (UTC)
+  // const currentDate = new Date();
 
-  // UTC 시간을 한국 시간으로 변환
-  const koreanTimeOffset = 9 * 60; // 한국 시간은 UTC+9
-  const koreanTime = new Date(currentDate.getTime() + koreanTimeOffset * 60000);
+  // // UTC 시간을 한국 시간으로 변환
+  // const koreanTimeOffset = 9 * 60; // 한국 시간은 UTC+9
+  // const koreanTime = new Date(currentDate.getTime() + koreanTimeOffset * 60000);
 
   let healthStatus = '';
   if (bmi < 18.5) {
@@ -647,19 +765,23 @@ app.post('/setting', async (req, res) => {
     activity: activity,
     bmi: bmi, //bmi 값
     healthStatus: healthStatus, // bmi 결과
-    timestamp: koreanTime,
+    //timestamp: koreanTime,
     activityindex: activityindex,
     BMR: BMR,
     RDA: RDA
   };
 
-  db.collection('user_info').insertOne(data, (err, result) => {
-    if (err) {
-      console.log('데이터베이스 오류:', err);
-      return res.status(500).send('데이터베이스 오류');
-    }
-    console.log('데이터를 성공적으로 삽입');
-    res.status(200).send('제출 완료');
-  });
+  //db.collection('user_info').insertOne(data);
+  try {
+    await db.collection('user_info').updateOne(
+      { userNickname: userNickname },
+      { $set: data },
+      { upsert: true }
+    );
+
+  } catch (err) {
+    console.error('Error updating user info:', err);
+    res.status(500).send('Internal Server Error');
+  }
 });
 
