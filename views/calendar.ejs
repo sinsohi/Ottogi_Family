@@ -69,20 +69,12 @@
       <td class="calendar-day">30</td>
     </tbody>
   </table>
-  <!-- user1의 디테일 페이지 연결 -->
-  <div class = "person">
-    <h4><a href="/calendardetail/<%= users.date %>/<%= users.userNickname %>"> <%=users.userNickname %></a></h4>
+
+<% for(let i = 0; i < users.length; i++) { %>
+  <div class="person">
+    <h4><a href="/calendardetail/<%= users[i].timestamp %>/<%= users[i].userNickname %>"><%= users[i].userNickname %></a></h4>
   </div>
-  <!-- user2의 디테일 페이지 연결
-  <div class = "person">
-    <h4><a href="/calendardetail/<%= users.date %>/<%= users.userNickname %>">사용자2</a></h4>
-  </div> -->
-  <!-- user3의 디테일 페이지 연결
-  <div class = "person">
-    <h4><a href="/calendardetail/<%= users.date %>/<%= users.userNickname %>">사용자3</a></h4>
-  </div> -->
-
-
+  <% } %>
   <!-- 웹소켓 연결 -->
   <script src="https://cdn.jsdelivr.net/npm/socket.io@4.7.2/client-dist/socket.io.min.js"></script>
   <script>

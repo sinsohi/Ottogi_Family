@@ -4,24 +4,64 @@ div {
 }
 
 .form-box {
-  background: white;
-  padding: 25px;
-  margin: 20px;
-  border-radius: 8px;
+  position: absolute; 
+  text-align:center;
+  font-size: 18px;
+  margin: auto;  
+  top: 0;
+  right: 0;
+  bottom: 200px;
+  left: 0;  
+  width: 380px;
+  height: 400px;
+  box-shadow: 0 20px 20px rgba(0, 0, 0, .2), 0px 0px 50px rgba(0, 0, 0, .2);
+  border-radius: 30px;
 }
 
 .form-box input {
-  padding: 10px;
-  font-size: 16px;
-  width: 100%;
-  border: 1px solid black;
-  border-radius: 5px;
+  border: 2px solid #c2bfbf;
+  font-size: 17px;
   margin-bottom: 10px;
+  border-radius: 5px;
+  padding: 10px;
+  padding-left: 15px;  /* 좌측 여백 추가 */
+  padding-right: 15px; /* 우측 여백 추가 */
+  width: calc(100% - 60px); /* 좌우 여백을 제외한 너비 */
 }
 
 .form-box button {
+  text-align: center;
+  font-weight: bold;
+  border-color: #c2bfbf;
+  font-size: 14px;
+  background-color: #fbf6f1;
+  margin: 0 auto 30px auto;
   padding: 10px;
-  border: none;
-  background: lightgrey;
+  border: 2px solid #c2bfbf;
   border-radius: 5px;
+  width: calc(100% - 180px);
+  display: block;
+  margin-top: 10px;
+}
+/*
+#errorMessages {
+  span {
+    position: absolute;
+    color: red;
+    font-size: 14px;
+    display: none;
+    top: 50px;
+    left: 0;
+  }
+}
+*/
+/*전체 사이트 배경*/
+body {
+  height: 100vh;
+  width: 100vw;
+  margin:0;
+  padding:0;
+  background-image: url('./img/Register_배경화면.png');
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
 }
