@@ -351,28 +351,30 @@ app.post('/login', async (request, response, next) => {
       response.render('homePage.ejs')
     });
   })(request, response, next);
+
 }) 
 
-app.get('/calender', (request, response) => {
-  response.sendFile(__dirname + '/calender.html');
-});
+
 // 달력 페이지 
 app.get('/calendar', async (request,response)=>{
-  let users = await db.collection('user_info').find().toArray();
-  let family = await db.collection('FamilyRoom').find({member:request.user.userNickname}).toArray();
-  console.log(request.user.userNickname);
-  console.log(family[0]);
-  response.render('calendar.ejs', {users:users});
+  let family = await db.collection('FamilyRoom').find({ member: request.user.userNickname }).toArray();
+
+  // familyRoom 컬렉션에서 일치하는 닉네임의 유저 정보들 저장
+  users = await db.collection('user_info').find({
+    userNickname: { $in: family[0].member }
+  }).toArray();
+
+  console.log(family[0].member);
+  console.log(users);
+  
   if (family.length > 0) {
-    res.render('template', { members: family[0].member, date: someDate });
-  } else {
-    res.render('template', { members: [], date: someDate });
-  }
+    response.render('calendar.ejs',{users:users});
+  } 
 })
 
 // 달력에서 날짜 클릭시 보여주는 페이지 
 app.get('/calendar/:date', async (request,response)=>{
-  let users = await db.collection('user_info').find({date:request.params.date}).toArray();
+  let users = await db.collection('user_info').find({timestamp:request.params.timestamp}).toArray();
   // console.log(request.params);
   if (users.length > 0) {
     // 데이터가 있을 경우, EJS 템플릿에 데이터 전달
@@ -392,9 +394,9 @@ app.get('/', (request, response) => {
 app.get('/calendardetail', (request, response) => {
   response.sendFile(__dirname + '/calendardetail.html');
 });
+
 // 캘린더 디테일 페이지 
 app.get('/calendardetail/:date/:Nickname', async (request,response)=>{
-  let Nickname = request.params.Nickname;
   let users = await db.collection('user_info').find({ userNickname : request.params.Nickname}).toArray();
   // console.log(users[0]);
   response.render('calendardetail.ejs', {users : users[0]})
