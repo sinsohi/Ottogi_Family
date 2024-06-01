@@ -1,5 +1,3 @@
-
-
 /* 달력 이동 제공 */
 // 현재 연도와 월을 가져옴
 let currentYear = new Date().getFullYear();
@@ -46,12 +44,12 @@ function createCalendar(year, month) {
           cell.classList.add("today");  
         }
         // 즉시 실행 함수를 사용하여 클릭 이벤트 리스너에 date 값을 "캡처"
-        (function(currentDate) {
+        (function(currentYear, currentMonth, currentDate) {
           cell.addEventListener('click', function() {
-            const formattedDate = `${year}-${String(month + 1).padStart(2, '0')}-${String(currentDate).padStart(2, '0')}`;
+            const formattedDate = `${currentYear}-${String(currentMonth + 1).padStart(2, '0')}-${String(currentDate).padStart(2, '0')}`;
             window.location.href = `/calendar/${formattedDate}`;
           });
-        })(date);
+        })(year, month, date);
         row.appendChild(cell);
         date++;
       }
@@ -79,8 +77,16 @@ function nextMonth() {
   }
   createCalendar(currentYear, currentMonth); // 새로운 달력을 생성
 }
-
-
-
 // 초기 달력을 생성
 createCalendar(currentYear, currentMonth);
+
+function toggleDayColor(element) {
+  // 이전에 선택된 날짜 요소의 스타일 제거
+  const selectedDays = document.querySelectorAll('.calendar-day.selected');
+  selectedDays.forEach(day => day.classList.remove('.calendar-day.selected'));
+
+  // 클릭된 날짜 요소의 스타일 추가
+  element.classList.add('.calendar-day.selected');
+}
+
+
