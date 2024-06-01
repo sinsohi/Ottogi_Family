@@ -1,5 +1,3 @@
-
-
 /* 달력 이동 제공 */
 // 현재 연도와 월을 가져옴
 let currentYear = new Date().getFullYear();
@@ -60,6 +58,7 @@ function createCalendar(year, month) {
   }
 }
 
+
 // 이전 달로 이동하는 함수
 function prevMonth() {
   currentMonth--;
@@ -79,8 +78,5 @@ function nextMonth() {
   }
   createCalendar(currentYear, currentMonth); // 새로운 달력을 생성
 }
-
-
-
 // 초기 달력을 생성
 createCalendar(currentYear, currentMonth);

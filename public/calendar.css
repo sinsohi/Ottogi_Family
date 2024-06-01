@@ -68,7 +68,7 @@ body {
   width: 100vw;
   margin:0;
   padding:0;
-  background-image: url('./Calendar_배경화면.png');
+  background-image: url('./img/Calendar_배경화면.png');
   background-repeat: no-repeat;
   background-size: 100% 100%;
 }
@@ -91,6 +91,11 @@ body {
 }
 
 .today {
+  background-color: #a2ab91;
+  font-weight: bold;
+}
+
+.selected-day {
   background-color: #a2ab91;
   font-weight: bold;
 }
