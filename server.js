@@ -388,7 +388,7 @@ app.get('/calendar/:timestamp', async (request,response)=>{
   // FamilyRoom 컬렉션에서 사용자들의 닉네임 가져오기 - members에 저장 
   const family = await db.collection('FamilyRoom').find({ member: request.user.userNickname }).toArray();
   const timestamp = request.params.timestamp;
-  //console.log(users.length);
+  console.log(users.length);
   //console.log(members);
   //console.log(users);
   console.log(family[0].member);
