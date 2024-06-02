@@ -80,6 +80,7 @@ app.get('/homePage',(req,res)=>{
   res.render('homePage.ejs')
 })
 
+
 // member 전달
 app.get('/getMember', async (req, res) => {
   try {
@@ -183,7 +184,8 @@ app.post('/register', async (request, response) => {
   // 세션에 닉네임 저장
   request.session.userNickname = request.body.userNickname;
   // console.log(request.session.userNickname)
-
+  
+  // 회원가입 성공 시 /addFamily페이지로 리다이렉션
   response.redirect('/addFamily');
 } catch (error) {
   console.log('Error:', error);
@@ -196,6 +198,23 @@ app.get('/checkNickname', async (req, res) => {
   try {
     const userNickname = req.query.userNickname;
     const existingUser = await db.collection('user_info').findOne({ userNickname: userNickname });
+
+    if (existingUser) {
+      return res.status(200).json({ exists: true });
+    } else {
+      return res.status(200).json({ exists: false });
+    }
+  } catch (error) {
+    console.log('Error:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
+//아이디 중복 확인 라우터 추가 
+app.get('/checkUsername', async (req, res) => {
+  try {
+    const username = req.query.username;
+    const existingUser = await db.collection('user_info').findOne({ username: username });
 
     if (existingUser) {
       return res.status(200).json({ exists: true });
@@ -333,46 +352,71 @@ app.post('/login', async (request, response, next) => {
       response.render('homePage.ejs')
     });
   })(request, response, next);
+
 }) 
 
-app.get('/calender', (request, response) => {
-  response.sendFile(__dirname + '/calender.html');
-});
+
 // 달력 페이지 
 app.get('/calendar', async (request,response)=>{
-  let users = await db.collection('user_info').find().toArray();
-  // console.log(users[0]);
-  response.render('calendar.ejs', {users:users});
+  const family = await db.collection('FamilyRoom').find({ member: request.user.userNickname }).toArray();
+
+  // familyRoom 컬렉션에서 일치하는 닉네임의 유저 정보들 저장
+  const users = await db.collection('user_info').find({
+    userNickname: { $in: family[0].member }
+  }).toArray();
+  const today = new Date();
+  const timestamp = today.toISOString().slice(0, 10);
+  console.log(timestamp); 
+
+  
+  console.log(family[0].member);
+  if (family[0].member.length > 0) {
+    response.render('calendar.ejs',{family : family[0].member, users, timestamp});
+  } 
+  
 })
 
-// 달력에서 날짜 클릭시 보여주는 페이지 
-app.get('/calendar/:date', async (request,response)=>{
-  let users = await db.collection('user_info').find({date:request.params.date}).toArray();
-  // console.log(request.params);
-  if (users.length > 0) {
+// calendar.js에서 timestamp 추출
+// 그 날에 해당하는 헬뚜기그룹들을 보여주는 페이지 
+app.get('/calendar/:timestamp', async (request,response)=>{
+  // 달력에서 클릭한 날짜의 사용자 정보 가져오기
+  console.log(request.params.timestamp);
+  const users = await db.collection('user_info').find(
+    { timestamp: request.params.timestamp },
+    { userNickname: request.user.userNickname}).toArray();
+
+  // FamilyRoom 컬렉션에서 사용자들의 닉네임 가져오기 - members에 저장 
+  const family = await db.collection('FamilyRoom').find({ member: request.user.userNickname }).toArray();
+  const timestamp = request.params.timestamp;
+  console.log(users.length);
+  //console.log(members);
+  //console.log(users);
+  console.log(family[0].member);
+  if (family[0].member.length > 0) {
     // 데이터가 있을 경우, EJS 템플릿에 데이터 전달
-    response.render('calendar.ejs', { users: users[0]});
+    response.render('calendar.ejs',{users,family:family[0].member, timestamp});
     // console.log(users[0]);
   } 
-  else {
-    // 데이터가 없을 경우-데이터 전달 안함
-    response.render('calendar.ejs', { users: [] });
-  }
 })
 
 app.get('/', (request, response) => {
   response.sendFile(__dirname + '/InitialScreen.html');
 });
 
-app.get('/calendardetail', (request, response) => {
-  response.sendFile(__dirname + '/calendardetail.html');
+app.get('/calendardetail', async(request, response) => {
+  response.render('calendardetail.ejs');
 });
+
 // 캘린더 디테일 페이지 
-app.get('/calendardetail/:date/:Nickname', async (request,response)=>{
-  let Nickname = request.params.Nickname;
-  let users = await db.collection('user_info').find({ userNickname : request.params.Nickname}).toArray();
-  // console.log(users[0]);
-  response.render('calendardetail.ejs', {users : users[0]})
+app.get('/calendardetail/:timestamp/:Nickname', async (request,response)=>{
+  let users = await db.collection('user_info').find(
+    { userNickname : request.params.Nickname},
+    { timestamp : request.params.timestamp}
+  ).toArray();
+  const timestamp = request.params.timestamp;
+  console.log(users[0]);
+  const Nickname = request.params.Nickname;
+  response.render('calendardetail.ejs', {users : users[0], timestamp, Nickname})
 });
 
 // 가족추가 페이지 
