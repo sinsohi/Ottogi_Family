@@ -5,11 +5,6 @@ const bodyParser = require('body-parser'); // npm install body-parser
 const bcrypt = require('bcrypt'); // bcrypt 셋팅
 const MongoStore = require("connect-mongo"); // connect-mongo 셋팅
 
-// 웹 소켓 세팅 
-const { createServer } = require('http')
-const { Server } = require('socket.io')
-const server = createServer(app)
-const io = new Server(server) 
 require("dotenv").config(); // .env 파일에 환경변수 보관
 
 
@@ -72,7 +67,7 @@ new MongoClient(url).connect().then((client) => {
   console.log(err);
 });
 
-server.listen(process.env.PORT, ()=>{
+app.listen(process.env.PORT, ()=>{
     console.log('http://localhost:'+`${process.env.PORT}` +' 에서 서버 실행중')
 })
 
@@ -186,7 +181,7 @@ app.post('/register', async (request, response) => {
   // console.log(request.session.userNickname)
   
   // 회원가입 성공 시 /addFamily페이지로 리다이렉션
-  response.redirect('/addFamily');
+  response.redirect('/firstlogin');
 } catch (error) {
   console.log('Error:', error);
   response.status(500).json({ error: 'Internal Server Error' });
@@ -338,6 +333,22 @@ passport.deserializeUser(async (user, done) => {
 app.get('/login', (request, response) => {
   response.render('login.ejs');
 });
+
+// /register-> /firstlogin -> /addFamily -> /setting -> /daiy-record  
+app.post('/firstlogin', async (request, response, next) => {
+
+  passport.authenticate('local', (error, user, info) => {
+    if (error) return response.status(500).json(error)
+      if (!user) return response.status(401).json(info.message)
+      //일치할 경우 
+    request.logIn(user, (err) => {
+      //로그인 완료시 실행할 코드
+      if (err) return next(err);
+      response.render('addFamily.ejs')
+    });
+  })(request, response, next);
+
+})
 
 // 아이디/비번이 DB와 일치하는지 검증하는 코드  
 app.post('/login', async (request, response, next) => {
@@ -501,16 +512,6 @@ app.post('/addUser', async (request, response) => {
   
 
 });
-
-// 웹소켓 연결 확인   
-io.on('connection', (socket) => {
-  socket.on('ask-join', (data)=> {
-    socket.join(data)
-  })
-  socket.on('message-send', (data)=> {
-    console.log(data)
-  })
-})
 
 app.get('/daily-record', async (req, res) => {
   try {
