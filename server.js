@@ -1,5 +1,5 @@
 const express = require('express'); // express 라이브러리
-const app = express();
+const app = express()
 const path = require('path'); // 추가
 const bodyParser = require('body-parser'); // npm install body-parser
 const bcrypt = require('bcrypt'); // bcrypt 셋팅
@@ -545,25 +545,39 @@ app.post('/login', async (request, response, next) => {
 
 }) 
 
-
 // 달력 페이지 
-app.get('/calendar', async (request,response)=>{
-  const family = await db.collection('FamilyRoom').find({ member: request.user.userNickname }).toArray();
+app.get('/calendar', async (req, res)=>{
+  try {
+    let users = []
+    const client = await MongoClient.connect(url);
+    const db = client.db('Ottogi_Family');
 
-  // familyRoom 컬렉션에서 일치하는 닉네임의 유저 정보들 저장
-  const users = await db.collection('user_info').find({
-    userNickname: { $in: family[0].member }
-  }).toArray();
-  const today = new Date();
-  const timestamp = today.toISOString().slice(0, 10);
-  console.log(timestamp); 
+    // FamilyRoom 컬렉션에서 현재 로그인된 user가 member로 들어있는 document 찾기
+    let userInfo = await db.collection('FamilyRoom').findOne({
+      member : req.user.userNickname
+    })
 
-  
-  console.log(family[0].member);
-  if (family[0].member.length > 0) {
-    response.render('calendar.ejs',{family : family[0].member, users, timestamp});
-  } 
-  
+    // users 배열에 가족 user들의 nickName 삽입
+    for(let i=0; i<userInfo.member.length; i++){
+      let result = await db.collection('user_info').findOne({
+        userNickname : userInfo.member[i]
+      })
+      users.push(result.userNickname)
+    }
+
+    // 현재 날짜를 timestamp 변수에 집어넣음
+    const today = new Date();
+    const timestamp = today.toISOString().slice(0, 10);
+    console.log(timestamp); 
+
+    // calendar.ejs render
+    res.render('calendar.ejs',{family : userInfo.member, users, timestamp});
+
+  } catch (error) {
+    console.log('Error:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+
 })
 
 // calendar.js에서 timestamp 추출
