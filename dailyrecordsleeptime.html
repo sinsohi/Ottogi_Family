@@ -36,8 +36,11 @@
         </form>
     </div>
     <script>
-        function showPopup() {
+        function showPopup(event) {
             alert("수면 기록이 저장되었습니다!");
+            setTimeout(function() {
+                window.location.href = "/daily-record"; // 리다이렉션
+            }, 1000); // 1초 후에 리다이렉션
         }
     </script>
 </body>

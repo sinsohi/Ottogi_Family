@@ -23,7 +23,7 @@
 <body>
     <div class="container">
         <h2>운동 기록</h2>
-        <form action="/dailyrecordexercise" method="POST" onsubmit="addExercise()">
+        <form action="/dailyrecordexercise" method="POST" onsubmit="return addExercise()">
             <div class="mb-3">
                 <label for="exerciseName" class="form-label">운동 이름</label>
                 <input type="text" name="exerciseName" class="form-control" id="exerciseName" placeholder="운동 이름 입력" required>
@@ -32,9 +32,10 @@
                 <label for="caloriesBurned" class="form-label">소모 칼로리</label>
                 <input type="number" name="caloriesBurned" class="form-control" id="caloriesBurned" placeholder="운동으로 소모한 칼로리 입력" required>
             </div>
-            <button type="submit" class="btn btn-primary">직접 기록</button>
+            <button type="submit" class="btn btn-primary">추가</button>
         </form>
         <div id="exerciseList"></div>
+        <button onclick="showPopup()" class="btn btn-primary">저장</button> <!-- 저장 버튼 추가 -->
     </div>
 
     <script>
@@ -48,8 +49,14 @@
             newExerciseEntry.innerText = `${exerciseName}: ${caloriesBurned} 칼로리`;
             exerciseListElement.appendChild(newExerciseEntry);
 
-            // 폼을 서버로 제출
             return true; // 기본 동작인 폼 제출을 유지
+        }
+
+        function showPopup() {
+            alert("운동 기록이 저장되었습니다!");
+            setTimeout(function() {
+                window.location.href = "/daily-record"; // 1초 후에 리다이렉션
+            }, 1000); // 1초 후에 리다이렉션
         }
     </script>
 </body>
