@@ -6,10 +6,10 @@ const bcrypt = require('bcrypt'); // bcrypt 셋팅
 const MongoStore = require("connect-mongo"); // connect-mongo 셋팅
 
 // 웹 소켓 세팅 
-// const { createServer } = require('http')
-// const { Server } = require('socket.io')
-// const server = createServer(app)
-// const io = new Server(server) 
+const { createServer } = require('http')
+const { Server } = require('socket.io')
+const server = createServer(app)
+const io = new Server(server) 
 require("dotenv").config(); // .env 파일에 환경변수 보관
 
 
@@ -349,119 +349,35 @@ app.post('/register', async (request, response) => {
   request.session.userNickname = request.body.userNickname;
   // console.log(request.session.userNickname)
   
-  // 회원가입 성공 시 /addFamily페이지로 리다이렉션
-  response.redirect('/addFamily');
+  // 회원가입 성공 시 /firstlogin 페이지로 리다이렉션
+  response.redirect('/firstlogin');
 } catch (error) {
   console.log('Error:', error);
   response.status(500).json({ error: 'Internal Server Error' });
 }
 });
 
-// 닉네임 중복 확인 라우터 추가
-app.get('/checkNickname', async (req, res) => {
-  try {
-    const userNickname = req.query.userNickname;
-    const existingUser = await db.collection('user_info').findOne({ userNickname: userNickname });
 
-    if (existingUser) {
-      return res.status(200).json({ exists: true });
-    } else {
-      return res.status(200).json({ exists: false });
-    }
-  } catch (error) {
-    console.log('Error:', error);
-    res.status(500).json({ error: 'Internal Server Error' });
-  }
+app.get('/firstlogin', async(request, response) => {
+  response.render('firstlogin.ejs');
 });
 
-//아이디 중복 확인 라우터 추가 
-app.get('/checkUsername', async (req, res) => {
-  try {
-    const username = req.query.username;
-    const existingUser = await db.collection('user_info').findOne({ username: username });
 
-    if (existingUser) {
-      return res.status(200).json({ exists: true });
-    } else {
-      return res.status(200).json({ exists: false });
-    }
-  } catch (error) {
-    console.log('Error:', error);
-    res.status(500).json({ error: 'Internal Server Error' });
-  }
-});
+// /register-> /firstlogin -> /addFamily -> /setting -> /daiy-record  
+app.post('/firstlogin', async (request, response, next) => {
 
-// 그룹 추가하는 페이지 
-app.get('/addFamily', (request, response) => {
-  response.render('addFamily.ejs', { userNickname: request.session.userNickname });
+  passport.authenticate('local', (error, user, info) => {
+    if (error) return response.status(500).json(error)
+      if (!user) return response.status(401).json(info.message)
+      //일치할 경우 
+    request.logIn(user, (err) => {
+      //로그인 완료시 실행할 코드
+      if (err) return next(err);
+      response.render('addFamily.ejs')
+    });
+  })(request, response, next);
 
-});
-
-// 회원가입 후 가족 추가하는 페이지
-app.post('/addFamily', async(request, response) => {
-  // 1. 이미 가족이 존재하는 경우
-  // 2. 새롭게 가족을 추가할 경우 
-  const Member = request.body.Member; // 로그인한 사용자의 닉네임
-  const NewMember = request.body.NewMember; // 새로 추가할 멤버 정보
-  const userNickname = request.session.userNickname;
-  
-  //console.log(Member, NewMember, userNickname);
- 
-  // 이미 가족이 존재하는 경우
-   if(Member) {
-     try {
-       const existingFamily = await db.collection('FamilyRoom').findOne({member:{$in:[Member]}});
-       
-       if(existingFamily) {
-        if(existingFamily.member.length < 4) {
-        await db.collection('FamilyRoom').updateOne(
-          {member: {$in: [Member]}}, 
-          {$addToSet: {member: userNickname}}
-        );
-        response.redirect('/setting');
-       }
-      }
-       // 가족 이름 틀림 
-       else {
-         console.log("속하지 않음`");
-       }
-     }
-     catch(err) {
-       console.error(err);
-       response.status(500).send('기존 가족 추가 과정에서 오류가 발생했습니다.');
-     }
-   }
-
-   // 새롭게 가족을 추가하는 경우
-   else if(NewMember) {
-     try {
-      const existingFamily = await db.collection('FamilyRoom').findOne({member:{$in:[userNickname]}});
-       if(existingFamily) {
-        if(existingFamily.member.length < 4) {
-       await db.collection('FamilyRoom').updateOne(
-        {member: {$in: [userNickname]}}, 
-        {$addToSet: {member: NewMember}}
-       );
-       response.redirect('/setting');
-     }
-    }
-     else {
-      await db.collection('FamilyRoom').insertOne(
-        { member:[userNickname,NewMember] });
-        response.redirect('/setting');
-     } 
-    }
-     catch(err) {
-       console.error(err);
-       response.status(500).send('새로운 가족 생성 과정에서 오류가 발생했습니다.');
-     }
-   }
-   else {
-     response.status(400).send('필요한 정보가 충분하지 않습니다.');
-   }
-
-});
-
+})
 
 // 아이디/비번이 DB와 일치하는지 검증하는 로직 짜는 공간 (앞으로 유저가 제출한 아이디 비번이 DB랑 맞는지 검증하고 싶을때 이것만 실행하면 됨)
 passport.use(
@@ -517,7 +433,96 @@ app.post('/login', async (request, response, next) => {
     });
   })(request, response, next);
 
-}) 
+})
+
+// 닉네임 중복 확인 라우터 추가
+app.get('/checkNickname', async (req, res) => {
+  try {
+    const userNickname = req.query.userNickname;
+    const existingUser = await db.collection('user_info').findOne({ userNickname: userNickname });
+
+    if (existingUser) {
+      return res.status(200).json({ exists: true });
+    } else {
+      return res.status(200).json({ exists: false });
+    }
+  } catch (error) {
+    console.log('Error:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
+//아이디 중복 확인 라우터 추가 
+app.get('/checkUsername', async (req, res) => {
+  try {
+    const username = req.query.username;
+    const existingUser = await db.collection('user_info').findOne({ username: username });
+
+    if (existingUser) {
+      return res.status(200).json({ exists: true });
+    } else {
+      return res.status(200).json({ exists: false });
+    }
+  } catch (error) {
+    console.log('Error:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
+// 그룹 추가하는 페이지 
+app.get('/addFamily', (request, response) => {
+  response.render('addFamily.ejs', { userNickname: request.session.userNickname });
+
+});
+
+// 회원가입 후 가족 추가하는 페이지
+app.post('/addFamily', async(request, response) => {
+  // 1. 이미 가족이 존재하는 경우
+  // 2. 새롭게 가족을 추가할 경우 
+  const Member = request.body.Member; // 로그인한 사용자의 닉네임
+  const NewMember = request.body.NewMember; // 새로 추가할 멤버 정보
+  const userNickname = request.session.userNickname;
+  const NotFamily = request.body.NotFamily; // 체크박스 값
+
+  //console.log(Member, NewMember, userNickname);
+ 
+  // 이미 가족이 존재하는 경우
+   if(Member) {
+     try {
+       const existingFamily = await db.collection('FamilyRoom').findOne({member:{$in:[Member]}});
+       
+       if(existingFamily) {
+        if(existingFamily.member.length < 4) {
+        await db.collection('FamilyRoom').updateOne(
+          {member: {$in: [Member]}}, 
+          {$addToSet: {member: userNickname}}
+        );
+        response.redirect('/setting');
+       }
+      }
+       // 가족 이름 틀림 
+       else {
+         console.log("속하지 않음`");
+       }
+     }
+     catch(err) {
+       console.error(err);
+       response.status(500).send('기존 가족 추가 과정에서 오류가 발생했습니다.');
+     }
+   }
+   else if(NotFamily === 'yes') {
+    await db.collection('FamilyRoom').insertOne(
+      { member: [request.user.userNickname] }
+    );
+    response.redirect('/setting');
+   }
+   else {
+     response.status(400).send('필요한 정보가 충분하지 않습니다.');
+   }
+});
+
+
+ 
 
 
 // 달력 페이지 
@@ -667,14 +672,14 @@ app.post('/addUser', async (request, response) => {
 });
 
 // 웹소켓 연결 확인   
-// io.on('connection', (socket) => {
-//   socket.on('ask-join', (data)=> {
-//     socket.join(data)
-//   })
-//   socket.on('message-send', (data)=> {
-//     console.log(data)
-//   })
-// })
+io.on('connection', (socket) => {
+  socket.on('ask-join', (data)=> {
+    socket.join(data)
+  })
+  socket.on('message-send', (data)=> {
+    console.log(data)
+  })
+})
 
 app.get('/daily-record', async (req, res) => {
   try {
@@ -702,14 +707,7 @@ app.get('/daily-record', async (req, res) => {
     const userlc = (await db.collection('lunch').find({ userNickname: userNickname }).toArray()).filter(item => isToday(item.timestamp));
     const userdn = (await db.collection('dinner').find({ userNickname: userNickname }).toArray()).filter(item => isToday(item.timestamp));
 
-    const todayData = {
-      breakfast: userbf,
-      lunch: userlc,
-      dinner: userdn
-    };
-
-    const userst = (await db.collection('DRsleeptime').find({ userNickname: userNickname }).sort({ timestamp: -1 }).limit(1).project({ _id: 0, sleepHour: 1, sleepMinute: 1 }).toArray()).filter(item => isToday(item.timestamp));
-
+    const userst = (await db.collection('DRsleeptime').find({ userNickname: userNickname }).toArray()).filter(item => isToday(item.timestamp));
     const useres = (await db.collection('DRexercise').find({ userNickname: userNickname }).toArray()).filter(item => isToday(item.timestamp));
 
     const burned = useres.reduce((total, exercise) => total + Number(exercise.caloriesBurned), 0);
@@ -719,13 +717,20 @@ app.get('/daily-record', async (req, res) => {
 
     const calorieDelta = intake - burned;
 
+    const userData = await db.collection('user_info').findOne({ userNickname: userNickname });
+    const weight = userData ? userData.weight : null;
+
+    //console.log(userst);
     const userInfo = {
       userNickname: userNickname,
-      Timestamp: dateString,
       burned: burned,
       intake: intake,
-      calorieDelta: calorieDelta
-    };
+      calorieDelta: calorieDelta,
+      sleepHour: userst.length > 0 ? userst[0].sleepHour : null,
+      sleepMinute: userst.length > 0 ? userst[0].sleepMinute : null,
+      weight: weight
+    };    
+    
 
     await db.collection('user_info').updateOne(
       { userNickname: userNickname, date: dateString },
@@ -733,12 +738,22 @@ app.get('/daily-record', async (req, res) => {
       { upsert: true }
     );
 
+    const todayData = {
+      breakfast: userbf,
+      lunch: userlc,
+      dinner: userdn
+    };
+
+    // console.log(userlc);
+    // console.log(intake);
+    
     res.render('daily-record', {
       sleepTime: userst.length > 0 ? userst[0] : null,
       useres: useres,
       userbf,
       userlc,
       userdn,
+      userst,
       todayData,
       burned: burned,
       intake: intake,
@@ -748,8 +763,8 @@ app.get('/daily-record', async (req, res) => {
     console.error(error);
     res.status(500).send('서버 에러 발생');
   }
+  
 });
-
 
 app.post('/delete-exercise', async (req, res) => {
   const exerciseId = req.body.id;
@@ -879,6 +894,7 @@ console.log(dateString);
 });
 
 
+
 app.post('/dailyrecordsleeptime', async (req, res) => {
   const sleepHour = req.body.sleepHour;
   const sleepMinute = req.body.sleepMinute;
@@ -900,9 +916,6 @@ var dateString = year + '-' + month  + '-' + day;
   };
   await db.collection('DRsleeptime').insertOne(data);
 });
- 
-
-
 
 app.post('/setting', async (req, res) => {
   const userNickname = req.user.userNickname;
