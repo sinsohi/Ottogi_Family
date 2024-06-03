@@ -6,10 +6,10 @@ const bcrypt = require('bcrypt'); // bcrypt 셋팅
 const MongoStore = require("connect-mongo"); // connect-mongo 셋팅
 
 // 웹 소켓 세팅 
-const { createServer } = require('http')
-const { Server } = require('socket.io')
-const server = createServer(app)
-const io = new Server(server) 
+// const { createServer } = require('http')
+// const { Server } = require('socket.io')
+// const server = createServer(app)
+// const io = new Server(server) 
 require("dotenv").config(); // .env 파일에 환경변수 보관
 
 
@@ -72,7 +72,7 @@ new MongoClient(url).connect().then((client) => {
   console.log(err);
 });
 
-server.listen(process.env.PORT, ()=>{
+app.listen(process.env.PORT, ()=>{
     console.log('http://localhost:'+`${process.env.PORT}` +' 에서 서버 실행중')
 })
 
@@ -86,20 +86,22 @@ app.get('/getMember', async (req, res) => {
   try {
     const client = await MongoClient.connect(url);
     const db = client.db('Ottogi_Family');
-    const usreNickname = request.body.userNickname;
-    
+
     let familyInfo = await db.collection('FamilyRoom').findOne({
-      member : userNickname
-    });
+      member : req.user.userNickname
+    })
 
     // console.log(familyInfo.member)
     client.close();
+    
     res.json(familyInfo.member); 
+
   } catch (error) {
     console.log('Error:', error);
     res.status(500).json({ error: 'Internal Server Error' });
   }
 });
+
 
 // BMI 전달
 app.get('/getBMI', async (req, res) => {
@@ -665,14 +667,14 @@ app.post('/addUser', async (request, response) => {
 });
 
 // 웹소켓 연결 확인   
-io.on('connection', (socket) => {
-  socket.on('ask-join', (data)=> {
-    socket.join(data)
-  })
-  socket.on('message-send', (data)=> {
-    console.log(data)
-  })
-})
+// io.on('connection', (socket) => {
+//   socket.on('ask-join', (data)=> {
+//     socket.join(data)
+//   })
+//   socket.on('message-send', (data)=> {
+//     console.log(data)
+//   })
+// })
 
 app.get('/daily-record', async (req, res) => {
   try {
