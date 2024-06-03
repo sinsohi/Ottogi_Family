@@ -71,7 +71,7 @@ app.listen(process.env.PORT, () => {
 });
 
 
-app.get('/homePage',(req,res)=>{
+app.get('/homePage',async (req,res)=>{
   res.render('homePage.ejs')
 })
 

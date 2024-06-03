@@ -380,7 +380,8 @@ export default async function ottogi_module2 (){
         // 섭취 & 소모 칼로리 알림 메시지 생성
         createInfoMessage(intake, burned){
             const infoMessage = document.createElement('nav');
-            infoMessage.textContent = `오늘 ${intake}kcal만큼 섭취하시고, ${burned}kcal만큼 소모하셨어요.`;
+            infoMessage.innerHTML = `오늘 ${intake}kcal만큼 섭취하시고, <br> 
+            ${burned}kcal만큼 소모하셨어요.`;
 
             this.group.userData.infoMessage = infoMessage;
             document.body.appendChild(infoMessage);
@@ -409,11 +410,19 @@ export default async function ottogi_module2 (){
         this.group.getWorldPosition(worldPosition);
         const screenPosition = worldPosition.clone().project(camera);
 
-        const x = (screenPosition.x + 1) / 2 * window.innerWidth;
-        const y = -(screenPosition.y - 1) / 2 * window.innerHeight + 50;
 
-        this.group.userData.calorieMessage.style.left = `${x}px`;
-        this.group.userData.calorieMessage.style.top = `${y}px`;
+        const x = (screenPosition.x + 1) / 2 * window.innerWidth;
+        const y = (screenPosition.y - 5) / 2 * window.innerHeight - 300;
+
+        // this.group.userData.calorieMessage.style.left = `${x}px`;
+        // this.group.userData.calorieMessage.style.top = `${y}px`;
+
+        // 절대 위치 설정을 위해 style 업데이트
+        const calorieMessage = this.group.userData.calorieMessage;
+        calorieMessage.style.position = 'absolute'; // position 설정이 있는지 확인
+        calorieMessage.style.left = `${x}px`;
+        calorieMessage.style.top = `${y}px`;
+
     }
 }
 
@@ -422,11 +431,11 @@ export default async function ottogi_module2 (){
         const calorieMessage = document.createElement('article');
 
         if((RDA-resultcalorie) >= 0){
-            calorieMessage.textContent = `일일 권장 칼로리까지
+            calorieMessage.innerHTML = `일일 권장 칼로리까지<br>
             ${RDA-resultcalorie}kcal 남았습니다.`;
         }
         else {
-            calorieMessage.textContent = `${Math.abs(RDA-resultcalorie)}kcl만큼 더 섭취하셨어요.
+            calorieMessage.innerHTML = `${Math.abs(RDA-resultcalorie)}kcl만큼 더 섭취하셨어요.<br>
             그만 드시고 운동하세요!`;
             calorieMessage.style.backgroundColor = 'rgba(255, 0, 0, 0.8)';
             calorieMessage.style.color = 'white';
