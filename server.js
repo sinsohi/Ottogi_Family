@@ -502,6 +502,7 @@ app.post('/addUser', async (request, response) => {
 
 });
 
+
 app.get('/daily-record', async (req, res) => {
   try {
     const userNickname = req.user.userNickname;
@@ -528,14 +529,7 @@ app.get('/daily-record', async (req, res) => {
     const userlc = (await db.collection('lunch').find({ userNickname: userNickname }).toArray()).filter(item => isToday(item.timestamp));
     const userdn = (await db.collection('dinner').find({ userNickname: userNickname }).toArray()).filter(item => isToday(item.timestamp));
 
-    const todayData = {
-      breakfast: userbf,
-      lunch: userlc,
-      dinner: userdn
-    };
-
-    const userst = (await db.collection('DRsleeptime').find({ userNickname: userNickname }).sort({ timestamp: -1 }).limit(1).project({ _id: 0, sleepHour: 1, sleepMinute: 1 }).toArray()).filter(item => isToday(item.timestamp));
-
+    const userst = (await db.collection('DRsleeptime').find({ userNickname: userNickname }).toArray()).filter(item => isToday(item.timestamp));
     const useres = (await db.collection('DRexercise').find({ userNickname: userNickname }).toArray()).filter(item => isToday(item.timestamp));
 
     const burned = useres.reduce((total, exercise) => total + Number(exercise.caloriesBurned), 0);
@@ -545,13 +539,20 @@ app.get('/daily-record', async (req, res) => {
 
     const calorieDelta = intake - burned;
 
+    const userData = await db.collection('user_info').findOne({ userNickname: userNickname });
+    const weight = userData ? userData.weight : null;
+
+    //console.log(userst);
     const userInfo = {
       userNickname: userNickname,
-      Timestamp: dateString,
       burned: burned,
       intake: intake,
-      calorieDelta: calorieDelta
-    };
+      calorieDelta: calorieDelta,
+      sleepHour: userst.length > 0 ? userst[0].sleepHour : null,
+      sleepMinute: userst.length > 0 ? userst[0].sleepMinute : null,
+      weight: weight
+    };    
+    
 
     await db.collection('user_info').updateOne(
       { userNickname: userNickname, date: dateString },
@@ -559,12 +560,22 @@ app.get('/daily-record', async (req, res) => {
       { upsert: true }
     );
 
+    const todayData = {
+      breakfast: userbf,
+      lunch: userlc,
+      dinner: userdn
+    };
+
+    // console.log(userlc);
+    // console.log(intake);
+    
     res.render('daily-record', {
       sleepTime: userst.length > 0 ? userst[0] : null,
       useres: useres,
       userbf,
       userlc,
       userdn,
+      userst,
       todayData,
       burned: burned,
       intake: intake,
@@ -574,8 +585,8 @@ app.get('/daily-record', async (req, res) => {
     console.error(error);
     res.status(500).send('서버 에러 발생');
   }
+  
 });
-
 
 app.post('/delete-exercise', async (req, res) => {
   const exerciseId = req.body.id;
@@ -703,6 +714,7 @@ console.log(dateString);
 });
 
 
+
 app.post('/dailyrecordsleeptime', async (req, res) => {
   const sleepHour = req.body.sleepHour;
   const sleepMinute = req.body.sleepMinute;
@@ -724,9 +736,6 @@ var dateString = year + '-' + month  + '-' + day;
   };
   await db.collection('DRsleeptime').insertOne(data);
 });
- 
-
-
 
 app.post('/setting', async (req, res) => {
   const userNickname = req.user.userNickname;
