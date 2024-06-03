@@ -180,13 +180,36 @@ app.post('/register', async (request, response) => {
   request.session.userNickname = request.body.userNickname;
   // console.log(request.session.userNickname)
   
-  // 회원가입 성공 시 /addFamily페이지로 리다이렉션
+  // 회원가입 성공 시 /firstlogin 페이지로 리다이렉션
   response.redirect('/firstlogin');
 } catch (error) {
   console.log('Error:', error);
   response.status(500).json({ error: 'Internal Server Error' });
 }
 });
+
+
+app.get('/firstlogin', async(request, response) => {
+  response.render('firstlogin.ejs');
+});
+
+
+// /register-> /firstlogin -> /addFamily -> /setting -> /daiy-record  
+app.post('/firstlogin', async (request, response, next) => {
+
+  passport.authenticate('local', (error, user, info) => {
+    if (error) return response.status(500).json(error)
+      if (!user) return response.status(401).json(info.message)
+      //일치할 경우 
+    request.logIn(user, (err) => {
+      //로그인 완료시 실행할 코드
+      if (err) return next(err);
+      response.render('addFamily.ejs')
+    });
+  })(request, response, next);
+
+})
+
 
 // 닉네임 중복 확인 라우터 추가
 app.get('/checkNickname', async (req, res) => {
@@ -333,22 +356,6 @@ passport.deserializeUser(async (user, done) => {
 app.get('/login', (request, response) => {
   response.render('login.ejs');
 });
-
-// /register-> /firstlogin -> /addFamily -> /setting -> /daiy-record  
-app.post('/firstlogin', async (request, response, next) => {
-
-  passport.authenticate('local', (error, user, info) => {
-    if (error) return response.status(500).json(error)
-      if (!user) return response.status(401).json(info.message)
-      //일치할 경우 
-    request.logIn(user, (err) => {
-      //로그인 완료시 실행할 코드
-      if (err) return next(err);
-      response.render('addFamily.ejs')
-    });
-  })(request, response, next);
-
-})
 
 // 아이디/비번이 DB와 일치하는지 검증하는 코드  
 app.post('/login', async (request, response, next) => {
