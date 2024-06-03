@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>식단 기록</title>
+    <!-- <style>
+        body {
+            background-image: url('/dailyrecord.JPG');
+            background-size: cover; /* 배경 이미지가 화면 전체를 덮도록 설정 */
+            background-position: center; /* 배경 이미지의 위치를 중앙으로 설정 */
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            height: 100vh; /* 화면 전체 높이만큼 설정 */
+        }
+        .container {
+            height: 100%; /* 부모 요소인 body에 대해 상대적으로 높이를 100% 설정 */
+            padding-bottom: 0; /* 하단 공백 제거 */
+        }
+    </style>   -->
+</head>
+<body>
+    <div class="container">
+        <h2>매일 기록 - 식단</h2>
+        <div id="mealContent">
+            
+        </div>
+    </div>
+
+    <div class="container">
+        <h2>메뉴 직접 추가</h2>
+        <div id="addMenu">
+            <label for="menuName">음식 이름:</label>
+            <input type="text" id="menuName" name="menuName">
+            <label for="calories">칼로리:</label>
+            <input type="number" id="calories" name="calories">
+            <button onclick="addMenu()">추가</button>
+        </div>
+    </div>
+
+    <script>
+        window.onload = function () {
+            const urlParams = new URLSearchParams(window.location.search);
+            const meal = urlParams.get('meal');
+            
+            let mealContent = '';
+            if (meal === 'breakfast') {
+                mealContent = '<h3>아침 식단</h3><p>아침 메뉴 내용</p>';
+            } else if (meal === 'lunch') {
+                mealContent = '<h3>점심 식단</h3><p>점심 메뉴 내용</p>';
+            } else if (meal === 'dinner') {
+                mealContent = '<h3>저녁 식단</h3><p>저녁 메뉴 내용</p>';
+            } 
+            const mealContentElement = document.getElementById('mealContent');
+            mealContentElement.innerHTML = mealContent;
+        };
+        
+        function addMenu() {
+            const menuName = document.getElementById('menuName').value;
+            const calories = document.getElementById('calories').value;
+
+            const newMenuItem = document.createElement('div');
+            newMenuItem.classList.add('menu-item');
+
+            newMenuItem.innerHTML = `<p><strong>${menuName}</strong>: ${calories} 칼로리</p>`;
+            
+            const mealContentElement = document.getElementById('mealContent');
+            mealContentElement.appendChild(newMenuItem);
+
+            const urlParams = new URLSearchParams(window.location.search);
+            const meal = urlParams.get('meal');
+            const data = {
+                meal: meal,
+                menuName: menuName,
+                calories: calories
+            };
+
+            fetch('/dailyrecordmeal', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(data),
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log('Success:', data);
+            })
+            .catch((error) => {
+                console.error('Error:', error);
+            });
+        }
+    </script>
+</body>
+</html>
