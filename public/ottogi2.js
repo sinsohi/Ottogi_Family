@@ -484,7 +484,7 @@ export default async function ottogi_module2 (){
             darkCircleIndex : i // 다크써클 인덱스 추가
         });
 
-        // bmi 단계에 따라 waistSize 변경
+        // bmi 단계에 따라 waistSize 변경=
         if (bmi[i] === '저체중') waistSize = 0.6;
         else if (bmi[i] === '정상') waistSize = 1;
         else if (bmi[i] === '비만전단계') waistSize = 1.3;
