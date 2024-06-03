@@ -5,11 +5,6 @@ const bodyParser = require('body-parser'); // npm install body-parser
 const bcrypt = require('bcrypt'); // bcrypt 셋팅
 const MongoStore = require("connect-mongo"); // connect-mongo 셋팅
 
-// 웹 소켓 세팅 
-const { createServer } = require('http')
-const { Server } = require('socket.io')
-const server = createServer(app)
-const io = new Server(server) 
 require("dotenv").config(); // .env 파일에 환경변수 보관
 
 
@@ -68,7 +63,7 @@ const url = process.env.DBurl;
 new MongoClient(url).connect().then((client) => {
   console.log('DB연결성공');
   db = client.db('Ottogi_Family');
-}).catch((err) => { 
+}).catch((err) => {
   console.log(err);
 });
 
@@ -76,7 +71,7 @@ app.listen(process.env.PORT, ()=>{
     console.log('http://localhost:'+`${process.env.PORT}` +' 에서 서버 실행중')
 })
 
-app.get('/homePage',async (req,res)=>{
+app.get('/homePage',(req,res)=>{
   res.render('homePage.ejs')
 })
 
@@ -86,22 +81,20 @@ app.get('/getMember', async (req, res) => {
   try {
     const client = await MongoClient.connect(url);
     const db = client.db('Ottogi_Family');
-
+    const usreNickname = request.body.userNickname;
+    
     let familyInfo = await db.collection('FamilyRoom').findOne({
-      member : req.user.userNickname
-    })
+      member : userNickname
+    });
 
     // console.log(familyInfo.member)
     client.close();
-    
     res.json(familyInfo.member); 
-
   } catch (error) {
     console.log('Error:', error);
     res.status(500).json({ error: 'Internal Server Error' });
   }
 });
-
 
 // BMI 전달
 app.get('/getBMI', async (req, res) => {
@@ -159,170 +152,6 @@ app.get('/getGender', async (req, res) => {
     res.status(500).json({ error: 'Internal Server Error' });
   }
 });
-
-// sleeptime 전달
-app.get('/getSleepTime', async (req, res) => {
-  let sleeptime = [];
-  try {
-    const client = await MongoClient.connect(url);
-    const db = client.db('Ottogi_Family');
-
-    let userInfo = await db.collection('FamilyRoom').findOne({
-      member : req.user.userNickname
-    })
-
-    for(let i=0; i<userInfo.member.length; i++){
-      let result = await db.collection('user_info').findOne({
-        userNickname : userInfo.member[i]
-      })
-      sleeptime.push(result.sleeptime)
-    }
-
-    client.close();
-    res.json(sleeptime); 
-
-  } catch (error) {
-    console.log('Error:', error);
-    res.status(500).json({ error: 'Internal Server Error' });
-  }
-});
-
-// RDA 전달
-app.get('/getRDA', async (req, res) => {
-  let RDA = [];
-  try {
-    const client = await MongoClient.connect(url);
-    const db = client.db('Ottogi_Family');
-
-    let userInfo = await db.collection('FamilyRoom').findOne({
-      member : req.user.userNickname
-    })
-
-    for(let i=0; i<userInfo.member.length; i++){
-      let result = await db.collection('user_info').findOne({
-        userNickname : userInfo.member[i]
-      })
-      RDA.push(result.RDA)
-    }
-
-    client.close();
-    res.json(RDA); 
-
-  } catch (error) {
-    console.log('Error:', error);
-    res.status(500).json({ error: 'Internal Server Error' });
-  }
-});
-
-// intake 전달
-app.get('/getIntake', async (req, res) => {
-  let intake = [];
-  try {
-    const client = await MongoClient.connect(url);
-    const db = client.db('Ottogi_Family');
-
-    let userInfo = await db.collection('FamilyRoom').findOne({
-      member : req.user.userNickname
-    })
-
-    for(let i=0; i<userInfo.member.length; i++){
-      let result = await db.collection('user_info').findOne({
-        userNickname : userInfo.member[i]
-      })
-      intake.push(result.intake)
-    }
-
-    client.close();
-    res.json(intake); 
-
-  } catch (error) {
-    console.log('Error:', error);
-    res.status(500).json({ error: 'Internal Server Error' });
-  }
-});
-
-// burned 전달
-app.get('/getBurned', async (req, res) => {
-  let burned = [];
-  try {
-    const client = await MongoClient.connect(url);
-    const db = client.db('Ottogi_Family');
-
-    let userInfo = await db.collection('FamilyRoom').findOne({
-      member : req.user.userNickname
-    })
-
-    for(let i=0; i<userInfo.member.length; i++){
-      let result = await db.collection('user_info').findOne({
-        userNickname : userInfo.member[i]
-      })
-      burned.push(result.burned)
-    }
-
-    client.close();
-    res.json(burned); 
-
-  } catch (error) {
-    console.log('Error:', error);
-    res.status(500).json({ error: 'Internal Server Error' });
-  }
-});
-
-// ResultCalorie 전달
-app.get('/getResultCalorie', async (req, res) => {
-  let ResultCalorie = [];
-  try {
-    const client = await MongoClient.connect(url);
-    const db = client.db('Ottogi_Family');
-
-    let userInfo = await db.collection('FamilyRoom').findOne({
-      member : req.user.userNickname
-    })
-
-    for(let i=0; i<userInfo.member.length; i++){
-      let result = await db.collection('user_info').findOne({
-        userNickname : userInfo.member[i]
-      })
-      ResultCalorie.push(result.resultcalorie)
-    }
-
-    client.close();
-    res.json(ResultCalorie); 
-
-  } catch (error) {
-    console.log('Error:', error);
-    res.status(500).json({ error: 'Internal Server Error' });
-  }
-});
-
-// age 전달
-app.get('/getAge', async (req, res) => {
-  let age = [];
-  try {
-    const client = await MongoClient.connect(url);
-    const db = client.db('Ottogi_Family');
-
-    let userInfo = await db.collection('FamilyRoom').findOne({
-      member : req.user.userNickname
-    })
-
-    for(let i=0; i<userInfo.member.length; i++){
-      let result = await db.collection('user_info').findOne({
-        userNickname : userInfo.member[i]
-      })
-      age.push(result.age)
-    }
-
-    client.close();
-    res.json(age); 
-
-  } catch (error) {
-    console.log('Error:', error);
-    res.status(500).json({ error: 'Internal Server Error' });
-  }
-});
-
-
 
 app.get('/register', (request, response) => {
   response.render('register.ejs');
@@ -429,7 +258,7 @@ app.post('/login', async (request, response, next) => {
     request.logIn(user, (err) => {
       //로그인 완료시 실행할 코드
       if (err) return next(err);
-      response.redirect('/homePage')
+      response.render('homePage.ejs')
     });
   })(request, response, next);
 
@@ -671,16 +500,6 @@ app.post('/addUser', async (request, response) => {
 
 });
 
-// 웹소켓 연결 확인   
-io.on('connection', (socket) => {
-  socket.on('ask-join', (data)=> {
-    socket.join(data)
-  })
-  socket.on('message-send', (data)=> {
-    console.log(data)
-  })
-})
-
 app.get('/daily-record', async (req, res) => {
   try {
     const userNickname = req.user.userNickname;
@@ -763,8 +582,8 @@ app.get('/daily-record', async (req, res) => {
     console.error(error);
     res.status(500).send('서버 에러 발생');
   }
-  
 });
+
 
 app.post('/delete-exercise', async (req, res) => {
   const exerciseId = req.body.id;
@@ -862,8 +681,6 @@ app.post('/dailyrecordmeal', async (req, res) => {
   const meal = req.body.meal;
   const menuName = req.body.menuName;
   const calories = req.body.calories;
-
-
   const userNickname = req.user.userNickname; // 유저의 userNickname
 
   var today = new Date();

@@ -36,6 +36,7 @@
             <label for="calories">칼로리:</label>
             <input type="number" id="calories" name="calories">
             <button onclick="addMenu()">추가</button>
+            <button onclick="saveMenu()">저장</button> <!-- 저장 버튼 추가 -->
         </div>
     </div>
 
@@ -90,6 +91,12 @@
             .catch((error) => {
                 console.error('Error:', error);
             });
+        }
+        function saveMenu() {
+            alert("식단이 저장되었습니다!");
+            setTimeout(function() {
+                window.location.href = "/daily-record"; // 1초 후에 리다이렉션
+            }, 1000); // 1초 후에 리다이렉션
         }
     </script>
 </body>
