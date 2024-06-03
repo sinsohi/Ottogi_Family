@@ -714,7 +714,7 @@ app.get('/daily-record', async (req, res) => {
 
     const userInfo = {
       userNickname: userNickname,
-      Timestamp: dateString,
+      //Timestamp: dateString,
       burned: burned,
       intake: intake,
       calorieDelta: calorieDelta
