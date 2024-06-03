@@ -738,6 +738,9 @@ app.get('/daily-record', async (req, res) => {
 
     const calorieDelta = intake - burned;
 
+    const userData = await db.collection('user_info').findOne({ userNickname: userNickname });
+    const weight = userData ? userData.weight : null;
+
     //console.log(userst);
     const userInfo = {
       userNickname: userNickname,
@@ -745,7 +748,8 @@ app.get('/daily-record', async (req, res) => {
       intake: intake,
       calorieDelta: calorieDelta,
       sleepHour: userst.length > 0 ? userst[0].sleepHour : null,
-  sleepMinute: userst.length > 0 ? userst[0].sleepMinute : null
+      sleepMinute: userst.length > 0 ? userst[0].sleepMinute : null,
+      weight: weight
     };    
     
 
