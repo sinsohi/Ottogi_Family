@@ -568,7 +568,9 @@ app.get('/calendar', async (req, res)=>{
     // 현재 날짜를 timestamp 변수에 집어넣음
     const today = new Date();
     const timestamp = today.toISOString().slice(0, 10);
-    console.log(timestamp); 
+    // console.log(timestamp); 
+
+    // console.log(userInfo.member)
 
     // calendar.ejs render
     res.render('calendar.ejs',{family : userInfo.member, users, timestamp});
@@ -582,26 +584,168 @@ app.get('/calendar', async (req, res)=>{
 
 // calendar.js에서 timestamp 추출
 // 그 날에 해당하는 헬뚜기그룹들을 보여주는 페이지 
+// app.get('/calendar/:timestamp', async (request,response)=>{
+//   // 달력에서 클릭한 날짜의 사용자 정보 가져오기
+//   // console.log(request.params.timestamp);
+//   const users = await db.collection('user_info').find(
+//     { date: request.params.timestamp ,
+//      userNickname: request.user.userNickname}).toArray();
+
+//   // FamilyRoom 컬렉션에서 사용자들의 닉네임 가져오기 - members에 저장 
+//   const family = await db.collection('FamilyRoom').find({ member: request.user.userNickname }).toArray();
+//   const timestamp = request.params.timestamp;
+//   // console.log(users.length);
+//   //console.log(members);
+//   //console.log(users);
+//   // console.log(family[0].member);
+//   if (family[0].member.length > 0) {
+//     // 데이터가 있을 경우, EJS 템플릿에 데이터 전달
+//     response.render('calendar.ejs',{users, family:family[0].member, timestamp});
+//     // console.log(users[0]);
+//   } 
+// })
+
+// calendar.js에서 timestamp 추출
+// 그 날에 해당하는 헬뚜기그룹들을 보여주는 페이지 
 app.get('/calendar/:timestamp', async (request,response)=>{
   // 달력에서 클릭한 날짜의 사용자 정보 가져오기
-  console.log(request.params.timestamp);
-  const users = await db.collection('user_info').find(
-    { timestamp: request.params.timestamp },
-    { userNickname: request.user.userNickname}).toArray();
+  try {
+    let users = []
 
-  // FamilyRoom 컬렉션에서 사용자들의 닉네임 가져오기 - members에 저장 
-  const family = await db.collection('FamilyRoom').find({ member: request.user.userNickname }).toArray();
-  const timestamp = request.params.timestamp;
-  console.log(users.length);
-  //console.log(members);
-  //console.log(users);
-  console.log(family[0].member);
-  if (family[0].member.length > 0) {
-    // 데이터가 있을 경우, EJS 템플릿에 데이터 전달
-    response.render('calendar.ejs',{users,family:family[0].member, timestamp});
-    // console.log(users[0]);
-  } 
+    // FamilyRoom 컬렉션에서 현재 로그인된 user가 member로 들어있는 document 찾기
+    let userInfo = await db.collection('FamilyRoom').findOne({
+      member : request.user.userNickname,
+    })
+
+    // 해당 날짜에 기록을 한 가족 users들의 nickName을 users 배열에 삽입
+    for(let i=0; i<userInfo.member.length; i++){
+      let result = await db.collection('user_info').findOne({
+        userNickname : userInfo.member[i],
+        date : request.params.timestamp
+      })
+      if(result.userNickname != null) users.push(result.userNickname);
+    }
+
+  // calendar.ejs render
+  if(users.length > 0){
+    response.render('calendar.ejs',{family : userInfo.member, users : users, timestamp : request.params.timestamp});
+  } else {
+    response.send("이 날 기록한 유저가 없습니다.")
+  }
+
+
+  } catch (error) {
+    console.log('Error:', error);
+    response.status(500).json({ error: 'Internal Server Error' });
+  }
 })
+
+// timestamp 날짜에 기록한 member 전달
+app.get('/getMember/:timestamp', async (req, res) => {
+  try {
+    const client = await MongoClient.connect(url);
+    const db = client.db('Ottogi_Family');
+
+    let familyInfo = await db.collection('FamilyRoom').findOne({
+      member : req.user.userNickname,
+      date : request.params.timestamp
+    })
+
+    // console.log(familyInfo.member)
+    client.close();
+    
+    res.json(familyInfo.member); 
+
+  } catch (error) {
+    console.log('Error:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
+
+// BMI 전달
+app.get('/getBMI', async (req, res) => {
+  let bmi = [];
+  try {
+    const client = await MongoClient.connect(url);
+    const db = client.db('Ottogi_Family');
+
+    let userInfo = await db.collection('FamilyRoom').findOne({
+      member : req.user.userNickname
+    })
+
+    for(let i=0; i<userInfo.member.length; i++){
+      let result = await db.collection('user_info').findOne({
+        userNickname : userInfo.member[i]
+      })
+      // console.log(result.bmi)
+      bmi.push(result.healthStatus)
+      // console.log(bmi)
+    }
+
+    client.close();
+    res.json(bmi); 
+
+  } catch (error) {
+    console.log('Error:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
+// gender 전달
+app.get('/getGender', async (req, res) => {
+  let gender = [];
+  try {
+    const client = await MongoClient.connect(url);
+    const db = client.db('Ottogi_Family');
+
+    let userInfo = await db.collection('FamilyRoom').findOne({
+      member : req.user.userNickname
+    })
+
+    for(let i=0; i<userInfo.member.length; i++){
+      let result = await db.collection('user_info').findOne({
+        userNickname : userInfo.member[i]
+      })
+      gender.push(result.gender)
+    }
+
+    client.close();
+    res.json(gender); 
+
+  } catch (error) {
+    console.log('Error:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
+// sleeptime 전달
+app.get('/getSleepTime', async (req, res) => {
+  let sleeptime = [];
+  try {
+    const client = await MongoClient.connect(url);
+    const db = client.db('Ottogi_Family');
+
+    let userInfo = await db.collection('FamilyRoom').findOne({
+      member : req.user.userNickname
+    })
+
+    for(let i=0; i<userInfo.member.length; i++){
+      let result = await db.collection('user_info').findOne({
+        userNickname : userInfo.member[i]
+      })
+      sleeptime.push(result.sleeptime)
+    }
+
+    client.close();
+    res.json(sleeptime); 
+
+  } catch (error) {
+    console.log('Error:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
 
 app.get('/', (request, response) => {
   response.sendFile(__dirname + '/InitialScreen.html');
@@ -613,14 +757,38 @@ app.get('/calendardetail', async(request, response) => {
 
 // 캘린더 디테일 페이지 
 app.get('/calendardetail/:timestamp/:Nickname', async (request,response)=>{
-  let users = await db.collection('user_info').find(
-    { userNickname : request.params.Nickname},
-    { timestamp : request.params.timestamp}
-  ).toArray();
+  let users = await db.collection('user_info').findOne(
+    { userNickname : request.params.Nickname,
+     date : request.params.timestamp }
+  );
   const timestamp = request.params.timestamp;
-  console.log(users[0]);
+  console.log(users);
+
   const Nickname = request.params.Nickname;
-  response.render('calendardetail.ejs', {users : users[0], timestamp, Nickname})
+  response.render('calendardetail.ejs', {Nickname : request.params.Nickname ,users : users, timestamp : timestamp})
+   
+  })
+  
+  // timestamp 날짜에 기록한 member 전달
+  app.get('/getMember/:timestamp', async (req, res) => {
+    try {
+      const client = await MongoClient.connect(url);
+      const db = client.db('Ottogi_Family');
+  
+      let familyInfo = await db.collection('FamilyRoom').findOne({
+        member : req.user.userNickname,
+        date : request.params.timestamp
+      })
+  
+      // console.log(familyInfo.member)
+      client.close();
+      
+      res.json(familyInfo.member); 
+  
+    } catch (error) {
+      console.log('Error:', error);
+      res.status(500).json({ error: 'Internal Server Error' });
+    }
 });
 
 // 가족추가 페이지 
@@ -727,7 +895,7 @@ app.get('/daily-record', async (req, res) => {
     var day = ('0' + today.getDate()).slice(-2);
     var dateString = year + '-' + month + '-' + day;
 
-    console.log(dateString);
+    // console.log(dateString);
 
     // 날짜를 기준으로 데이터를 필터링하는 함수
     const isToday = (timestamp) => {
@@ -870,7 +1038,7 @@ var day = ('0' + today.getDate()).slice(-2);
 
 var dateString = year + '-' + month  + '-' + day;
 
-console.log(dateString);
+// console.log(dateString);
 
   const data = {
     userNickname: userNickname,
@@ -899,7 +1067,7 @@ var day = ('0' + today.getDate()).slice(-2);
 
 var dateString = year + '-' + month  + '-' + day;
 
-console.log(dateString);
+// console.log(dateString);
 
   let collectionName = 'default';
   if (meal === 'breakfast') {
