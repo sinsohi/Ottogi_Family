@@ -89,3 +89,37 @@ button {
     margin-right: 50px; /* 라벨 사이 간격 조정*/
     white-space: nowrap;/*줄바꿈강제로막음*/
 } 
+
+.activity-label {
+    display: inline-block;
+    margin-right: 10px;
+}
+
+.activity-icon {
+    width: 30px;
+    height: 30px;
+    vertical-align: middle;
+}
+
+input[type="radio"] {
+    display: none;
+}
+
+.activity-label {
+    display: inline-block;
+    margin-right: 10px;
+}
+
+.activity-icon {
+    width: 30px;
+    height: 30px;
+    vertical-align: middle;
+}
+
+input[type="radio"] {
+    display: none;
+}
+
+input[type="radio"]:checked + .activity-label img {
+    border: 2px solid black;
+}
