@@ -1,0 +1,75 @@
+body {
+    font-family: Arial, sans-serif;
+    background-image: url('dailyrecord.JPG');
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+}
+
+h2 {
+    margin-top: 20px;
+    font-size: 24px; /* 글자 크기 증가 */
+}
+
+.activity-level {
+    margin-bottom: 20px; /* 간격 증가 */
+}
+
+input[type="text"],
+input[type="radio"],
+button {
+    margin: 10px 0; /* 간격 증가 */
+    padding: 10px; /* 패딩 증가 */
+    font-size: 20px; /* 글자 크기 증가 */
+}
+
+button {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #0056b3;
+}
+
+.container {
+    max-width: 600px;
+    margin: 0;
+    margin-left: 20px; /* 원하는 값으로 설정합니다 */
+}
+
+.row {
+    display: flex;
+    flex-wrap: nowrap; /* 줄바꿈을 막습니다. */
+    justify-content: space-between; /* 왼쪽과 오른쪽 사이의 간격을 늘립니다. */
+    margin-bottom: 20px; /* 간격 증가 */
+}
+
+.col {
+    flex: 1;
+}
+
+.col:not(:last-child) {
+    margin-right: 30px; /* 오른쪽 간격을 늘립니다. */
+}
+
+.col:nth-child(2),
+.col:nth-child(3) {
+    margin-right: -800px; /* 성별과 나이, 신장과 체중 사이의 간격을 넓힙니다. */
+    margin-bottom: 0; /* 세로 간격을 없앱니다. */
+}
+
+.col:nth-child(3),
+.col:nth-child(4) {
+    margin-right: -800px; /* 신장과 체중 사이의 간격을 더 벌립니다. */
+    margin-bottom: 0; /* 세로 간격을 없앱니다. */
+}
+
+
+@media screen and (max-width: 768px) {
+    .container {
+        padding: 0 10px;
+    }
+}
