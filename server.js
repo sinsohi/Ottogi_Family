@@ -605,6 +605,7 @@ app.get('/calendar/:timestamp', async (request,response)=>{
   // calendar.ejs render
   if(users.length > 0){
     response.render('calendar.ejs',{family : userInfo.member, users : users, timestamp : request.params.timestamp});
+
   } else {
     response.send("이 날 기록한 유저가 없습니다.")
   }
@@ -657,7 +658,7 @@ app.post('/addUser', async (request, response) => {
   if (Member) {
     try {
       // 기존 가족 찾기
-      const existingFamily = await db.collection('FamilyRoom').findOne({ member: { $in: [Member] } });
+      const existingFamily = await db.collection('FamilyRoom').findOne({ member : Member });
       
       if (existingFamily) {
         // userNickname이 속한 가족 찾기
