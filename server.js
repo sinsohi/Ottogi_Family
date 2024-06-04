@@ -598,6 +598,7 @@ app.get('/calendar/:timestamp', async (request,response)=>{
         userNickname : userInfo.member[i],
         date : request.params.timestamp
       })
+      if (!result) continue; // 일치하는 문서가 없으면 다음 반복으로 넘김
       if(result.userNickname != null) users.push(result.userNickname);
     }
 
@@ -615,28 +616,6 @@ app.get('/calendar/:timestamp', async (request,response)=>{
   }
 })
 
-// timestamp 날짜에 기록한 member 전달
-app.get('/getMember/:timestamp', async (req, res) => {
-  try {
-    const client = await MongoClient.connect(url);
-    const db = client.db('Ottogi_Family');
-
-    let familyInfo = await db.collection('FamilyRoom').findOne({
-      member : req.user.userNickname,
-      date : request.params.timestamp
-    })
-
-    // console.log(familyInfo.member)
-    client.close();
-    
-    res.json(familyInfo.member); 
-
-  } catch (error) {
-    console.log('Error:', error);
-    res.status(500).json({ error: 'Internal Server Error' });
-  }
-});
-
 
 app.get('/', (request, response) => {
   response.sendFile(__dirname + '/InitialScreen.html');
@@ -648,15 +627,17 @@ app.get('/calendardetail', async(request, response) => {
 
 // 캘린더 디테일 페이지 
 app.get('/calendardetail/:timestamp/:Nickname', async (request,response)=>{
-  let users = await db.collection('user_info').find(
-    { userNickname : request.params.Nickname},
-    { timestamp : request.params.timestamp}
-  ).toArray();
+  let users = await db.collection('user_info').findOne(
+    { userNickname : request.params.Nickname,
+     date : request.params.timestamp }
+  );
   const timestamp = request.params.timestamp;
-  console.log(users[0]);
+  console.log(users);
+
   const Nickname = request.params.Nickname;
-  response.render('calendardetail.ejs', {users : users[0], timestamp, Nickname})
-});
+  response.render('calendardetail.ejs', {Nickname : Nickname ,users : users, timestamp : timestamp})
+   
+  })
 
 // 가족추가 페이지 
 app.get('/addUser', async (request,response)=>{
