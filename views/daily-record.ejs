@@ -84,6 +84,7 @@
                 <% }); %>
             </ul>
             <p>오늘 섭취한 칼로리: <%= intake %>kcal</p>
+            <button id="redirectButton" class="btn btn-primary">홈페이지로 이동</button>
         </div>
     </div>
     <div id="message"></div>
@@ -146,6 +147,11 @@
         });
     });
 });
+function showPopup() {
+        window.location.href = "/homePage";
+    }
+
+    document.getElementById('redirectButton').addEventListener('click', showPopup);
     </script>
 </body>
 </html>

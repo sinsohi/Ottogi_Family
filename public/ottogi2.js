@@ -162,12 +162,12 @@ export default async function ottogi_module2 (){
         scene.background = texture;
     });
 
-	// 각도를 라디언으로 바꿔주는 함수
+   // 각도를 라디언으로 바꿔주는 함수
     const degreesToRadians = (degrees) => {
         return degrees * (Math.PI / 180)
     }
 
-	// 화면 크기 설정
+   // 화면 크기 설정
     const sizes = {
         width: window.innerWidth,
         height: window.innerHeight
@@ -194,7 +194,7 @@ export default async function ottogi_module2 (){
     camera.position.z = 8
     scene.add(camera)
 
-	// 창 크기가 바뀔 때마다 카메라 비율 재조정
+   // 창 크기가 바뀔 때마다 카메라 비율 재조정
     window.addEventListener('resize', () =>
     {
         sizes.width = window.innerWidth
@@ -224,7 +224,7 @@ export default async function ottogi_module2 (){
                 y: -2,
                 z: 0,
                 rz: 0,
-				ry:0,
+            ry:0,
                 ...params
             };
 
@@ -247,7 +247,7 @@ export default async function ottogi_module2 (){
         }
         
         
-		// 몸통
+      // 몸통
         createBody(bmi, gender) {
             const waistSize = bmi;
             
@@ -270,7 +270,7 @@ export default async function ottogi_module2 (){
             this.group.add(this.body)
         }
         
-		// 머리 생성
+      // 머리 생성
         createHead(position) {
             this.head = new THREE.Group()
             const geometry = new THREE.SphereGeometry(0.8, 32, 16)
@@ -286,7 +286,7 @@ export default async function ottogi_module2 (){
             this.createEyes()
         }
         
-		// 눈 생성
+      // 눈 생성
         createEyes() {
             const eyes = new THREE.Group()
             const geometry = new THREE.SphereGeometry(0.07, 12, 8)
@@ -465,7 +465,7 @@ export default async function ottogi_module2 (){
         init(waistSize, headPosition, gender, intake, burned) {
             this.createBody(waistSize, gender)
             this.createHead(headPosition)
-			this.group.rotation.y = this.params.ry // 모든 헬뚝이가 정면 바라보도록 수정
+         this.group.rotation.y = this.params.ry // 모든 헬뚝이가 정면 바라보도록 수정
         }
     }
 
@@ -484,7 +484,7 @@ export default async function ottogi_module2 (){
             darkCircleIndex : i // 다크써클 인덱스 추가
         });
 
-        // bmi 단계에 따라 waistSize 변경=
+        // bmi 단계에 따라 waistSize 변경
         if (bmi[i] === '저체중') waistSize = 0.6;
         else if (bmi[i] === '정상') waistSize = 1;
         else if (bmi[i] === '비만전단계') waistSize = 1.3;
