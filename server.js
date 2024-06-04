@@ -430,6 +430,15 @@ app.post('/addUser', async (request, response) => {
   const NewMember = request.body.NewMember; // 새로 추가할 멤버 정보
   const Member = request.body.Member // 기존의 멤버 
 
+  try {
+    // NewMember와 Member가 userinfo 컬렉션에 존재하는지 확인
+    const isMemberValid = Member ? await db.collection('userinfo').findOne({ userNickname: Member }) : true;
+    const isNewMemberValid = NewMember ? await db.collection('userinfo').findOne({ userNickname: NewMember }) : true;
+
+    if (!isMemberValid || !isNewMemberValid) {
+      return response.status(400).send('일치하는 닉네임이 없습니다.');
+    }
+
   //console.log(userNickname)
   // 기존 가족과 연결
   if (Member) {
@@ -494,10 +503,12 @@ app.post('/addUser', async (request, response) => {
       response.status(500).send('새로운 가족 생성 과정에서 오류가 발생했습니다.');
     }
   } else {
-    response.status(400).send('필요한 정보가 충분하지 않습니다.');
+    response.status(400).send('필요한 정보가 충분하지 않습니다'); 
   }
-  
-
+  } catch (err) {
+      console.error(err);
+      response.status(500).send('요청 처리 중 오류가 발생했습니다.');
+  }  
 });
 
 app.get('/daily-record', async (req, res) => {
