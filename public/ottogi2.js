@@ -347,7 +347,7 @@ export default async function ottogi_module2 (){
             this.head.add(rightDarkCircles);
         }
         
-      // 흔들림 효과
+		// 흔들림 효과
         bounce(time) {
             const { rz } = this.params;
             this.group.rotation.z = rz;
@@ -461,7 +461,7 @@ export default async function ottogi_module2 (){
     }
 
         
-      // 초기화
+		// 초기화
         init(waistSize, headPosition, gender, intake, burned) {
             this.createBody(waistSize, gender)
             this.createHead(headPosition)
