@@ -9,52 +9,62 @@
 <body>
     <div class="container">
         <h1 style="text-align: left;">00님의 정보 입력</h1>
-        <div class="row">
-            <div class="col">
-                <h2>성별</h2>
-        <label><input type="radio" id="male" name="gender" value="male">남자</label>
-        <label><input type="radio" id="female" name="gender" value="female">여자</label>
+        <form id="settingForm" action="/setting" method="POST" onsubmit="showPopup(event)">
+            <div class="row">
+                <div class="col">
+                    <h2>성별</h2>
+                    <label><input type="radio" id="male" name="gender" value="male">남자</label>
+                    <label><input type="radio" id="female" name="gender" value="female">여자</label>
+                </div>
+                <div class="col">
+                    <h2>나이</h2>
+                    <input type="text" id="age" name="age" placeholder="나이를 입력하세요 (세)" required><br>
+                </div>
             </div>
-            <div class="col">
-                <h2>나이</h2>
-                <input type="text" id="age" name="age" placeholder="나이를 입력하세요 (세)" required><br>
-            </div>
-        </div>
 
-        <div class="row">
-            <div class="col">
-                <h2>신장</h2>
-                <input type="text" id="height" name="height" placeholder="키를 입력하세요 (cm)" required><br>
+            <div class="row">
+                <div class="col">
+                    <h2>신장</h2>
+                    <input type="text" id="height" name="height" placeholder="키를 입력하세요 (cm)" required><br>
+                </div>
             </div>
-        </div>
 
-        <div class="row">
-            <div class="col">
-                <h2>체중</h2>
-                <input type="text" id="weight" name="weight" placeholder="몸무게를 입력하세요 (kg)" required><br>
+            <div class="row">
+                <div class="col">
+                    <h2>체중</h2>
+                    <input type="text" id="weight" name="weight" placeholder="몸무게를 입력하세요 (kg)" required><br>
+                </div>
+                <div class="col">
+                    <h2>목표 수면시간</h2>
+                    <input type="text" id="sleeptime" name="sleeptime" placeholder="수면시간 입력 (시간)" required><br>
+                </div>
             </div>
-            <div class="col">
-                <h2>목표 수면시간</h2>
-                <input type="text" id="sleeptime" name="sleeptime" placeholder="수면시간 입력 (시간)" required><br>
+
+            <div class="row">
+                <div class="col">
+                    <h2>평소 활동량</h2>
+                    <label><input type="radio" id="sedentary" name="activity" value="비활동적">비활동적</label>
+                    <label><input type="radio" id="lightly_active" name="activity" value="저활동적">저활동적</label>
+                    <label><input type="radio" id="active" name="activity" value="활동적">활동적</label>
+                    <label><input type="radio" id="very_active" name="activity" value="매우활동적">매우활동적</label>
+                </div>
             </div>
-        </div>
 
-        <div class="row">
-            <div class="col">
-                <h2>평소 활동량</h2>
-                <label><input type="radio" id="sedentary" name="activity" value="비활동적">비활동적</label>
-                <label><input type="radio" id="lightly_active" name="activity" value="저활동적">저활동적</label>
-                <label><input type="radio" id="active" name="activity" value="활동적">활동적</label>
-                <label><input type="radio" id="very_active" name="activity" value="매우활동적">매우활동적</label>
-            </div>
-        </div>
+            <input type="hidden" id="bmi" name="bmi">
 
-        <input type="hidden" id="bmi" name="bmi">
-
-        <button type="submit" onclick="showPopup(event)">저장</button>
+            <button type="submit" onclick="showPopup(event)">저장</button>
+        </form>
     </div>
-
     <script>
+        function calculateBMI() {
+            var height = parseFloat(document.getElementById('height').value);
+            var weight = parseFloat(document.getElementById('weight').value);
+
+            var heightInMeter = height / 100; // 미터 변환
+            var bmi = weight / (heightInMeter * heightInMeter);
+            document.getElementById('bmi').value = bmi;
+        }
+
         function showPopup(event) {
             event.preventDefault(); // 폼 제출 막기
             calculateBMI(); // BMI 계산
