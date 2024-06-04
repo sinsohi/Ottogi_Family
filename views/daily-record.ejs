@@ -35,7 +35,7 @@
             <h2>오늘의 수면 시간</h2>
             <p>
                 <% if (sleepTime) { %>
-                    <%= sleepTime.sleepHour %>시 <%= sleepTime.sleepMinute %>분
+                    <%= sleepTime.sleepHour %>시간 <%= sleepTime.sleepMinute %>분
                 <% } else { %>
                     수면 기록이 없습니다.
                 <% } %>
@@ -84,62 +84,74 @@
                 <% }); %>
             </ul>
             <p>오늘 섭취한 칼로리: <%= intake %>kcal</p>
+            <button id="redirectButton" class="btn btn-primary">홈페이지로 이동</button>
         </div>
     </div>
+    <div id="message"></div>
     <script>
         document.addEventListener("DOMContentLoaded", function(event) {
-            var deleteButtons = document.querySelectorAll('.deleteButton');
-            deleteButtons.forEach(function(button) {
-                button.addEventListener('click', function() {
-                    var mealType = '';
-                    var itemId = this.getAttribute('data-id');
-                    var exerciseId = this.getAttribute('data-id');
+        var messageDiv = document.getElementById('message');
+        var message = "헬뚝이는 매일 기록 페이지에서 식단, 운동, 수면 시간을 최소 1회 기록하면 생성됩니다!";
+    
+    messageDiv.innerText = message;
 
-                    if (button.classList.contains('exercise')) {
-                        fetch('/delete-exercise', {
-                            method: 'POST',
-                            headers: {
-                                'Content-Type': 'application/json'
-                            },
-                            body: JSON.stringify({ id: exerciseId })
-                        })
-                        .then(response => response.json())
-                        .then(data => {
-                            if (data.success) {
-                                location.reload();
-                            } else {
-                                alert('데이터 삭제 실패');
-                            }
-                        })
-                        .catch(error => console.error('Error:', error));
+    var deleteButtons = document.querySelectorAll('.deleteButton');
+    deleteButtons.forEach(function(button) {
+        button.addEventListener('click', function() {
+            var mealType = '';
+            var itemId = this.getAttribute('data-id');
+            var exerciseId = this.getAttribute('data-id');
+
+            if (button.classList.contains('exercise')) {
+                fetch('/delete-exercise', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ id: exerciseId })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        location.reload();
                     } else {
-                        if (button.classList.contains('breakfast')) {
-                            mealType = 'breakfast';
-                        } else if (button.classList.contains('lunch')) {
-                            mealType = 'lunch';
-                        } else if (button.classList.contains('dinner')) {
-                            mealType = 'dinner';
-                        }
-                        fetch('/delete-item', {
-                            method: 'POST',
-                            headers: {
-                                'Content-Type': 'application/json'
-                            },
-                            body: JSON.stringify({ id: itemId, type: mealType })
-                        })
-                        .then(response => response.json())
-                        .then(data => {
-                            if (data.success) {
-                                location.reload();
-                            } else {
-                                alert('데이터 삭제 실패');
-                            }
-                        })
-                        .catch(error => console.error('Error:', error));
+                        alert('데이터 삭제 실패');
                     }
-                });
-            });
+                })
+                .catch(error => console.error('Error:', error));
+            } else {
+                if (button.classList.contains('breakfast')) {
+                    mealType = 'breakfast';
+                } else if (button.classList.contains('lunch')) {
+                    mealType = 'lunch';
+                } else if (button.classList.contains('dinner')) {
+                    mealType = 'dinner';
+                }
+                fetch('/delete-item', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ id: itemId, type: mealType })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        location.reload();
+                    } else {
+                        alert('데이터 삭제 실패');
+                    }
+                })
+                .catch(error => console.error('Error:', error));
+            }
         });
+    });
+});
+function showPopup() {
+        window.location.href = "/homePage";
+    }
+
+    document.getElementById('redirectButton').addEventListener('click', showPopup);
     </script>
 </body>
 </html>

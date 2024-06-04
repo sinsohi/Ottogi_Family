@@ -1,15 +1,10 @@
 const express = require('express'); // express 라이브러리
-const app = express();
+const app = express()
 const path = require('path'); // 추가
 const bodyParser = require('body-parser'); // npm install body-parser
 const bcrypt = require('bcrypt'); // bcrypt 셋팅
 const MongoStore = require("connect-mongo"); // connect-mongo 셋팅
 
-// 웹 소켓 세팅 
-const { createServer } = require('http')
-const { Server } = require('socket.io')
-const server = createServer(app)
-const io = new Server(server) 
 require("dotenv").config(); // .env 파일에 환경변수 보관
 
 
@@ -68,15 +63,15 @@ const url = process.env.DBurl;
 new MongoClient(url).connect().then((client) => {
   console.log('DB연결성공');
   db = client.db('Ottogi_Family');
-}).catch((err) => {
+}).catch((err) => { 
   console.log(err);
 });
 
-server.listen(process.env.PORT, ()=>{
+app.listen(process.env.PORT, ()=>{
     console.log('http://localhost:'+`${process.env.PORT}` +' 에서 서버 실행중')
 })
 
-app.get('/homePage',(req,res)=>{
+app.get('/homePage',async (req,res)=>{
   res.render('homePage.ejs')
 })
 
@@ -86,20 +81,22 @@ app.get('/getMember', async (req, res) => {
   try {
     const client = await MongoClient.connect(url);
     const db = client.db('Ottogi_Family');
-    const usreNickname = request.body.userNickname;
-    
+
     let familyInfo = await db.collection('FamilyRoom').findOne({
-      member : userNickname
-    });
+      member : req.user.userNickname
+    })
 
     // console.log(familyInfo.member)
     client.close();
+    
     res.json(familyInfo.member); 
+
   } catch (error) {
     console.log('Error:', error);
     res.status(500).json({ error: 'Internal Server Error' });
   }
 });
+
 
 // BMI 전달
 app.get('/getBMI', async (req, res) => {
@@ -119,7 +116,6 @@ app.get('/getBMI', async (req, res) => {
       // console.log(result.bmi)
       bmi.push(result.healthStatus)
       // console.log(bmi)
-
     }
 
     client.close();
@@ -158,6 +154,195 @@ app.get('/getGender', async (req, res) => {
   }
 });
 
+// sleeptime 전달
+app.get('/getSleepTime', async (req, res) => {
+  let sleeptime = [];
+  try {
+    const client = await MongoClient.connect(url);
+    const db = client.db('Ottogi_Family');
+
+    let userInfo = await db.collection('FamilyRoom').findOne({
+      member : req.user.userNickname
+    })
+
+    for(let i=0; i<userInfo.member.length; i++){
+      let result = await db.collection('user_info').findOne({
+        userNickname : userInfo.member[i]
+      })
+      sleeptime.push(result.sleeptime)
+    }
+
+    client.close();
+    res.json(sleeptime); 
+
+  } catch (error) {
+    console.log('Error:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
+// RDA 전달
+app.get('/getRDA', async (req, res) => {
+  let RDA = [];
+  try {
+    const client = await MongoClient.connect(url);
+    const db = client.db('Ottogi_Family');
+
+    let userInfo = await db.collection('FamilyRoom').findOne({
+      member : req.user.userNickname
+    })
+
+    for(let i=0; i<userInfo.member.length; i++){
+      let result = await db.collection('user_info').findOne({
+        userNickname : userInfo.member[i]
+      })
+      RDA.push(result.RDA)
+    }
+    client.close();
+    // console.log(RDA);
+    res.json(RDA); 
+
+  } catch (error) {
+    console.log('Error:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
+// intake 전달
+app.get('/getIntake', async (req, res) => {
+  let intake = [];
+
+  // 현재 날짜를 YYYY-MM-DD 형식으로 설정
+  var today = new Date();
+  var year = today.getFullYear();
+  var month = ('0' + (today.getMonth() + 1)).slice(-2);
+  var day = ('0' + today.getDate()).slice(-2);
+  var dateString = year + '-' + month + '-' + day;
+
+  try {
+    const client = await MongoClient.connect(url);
+    const db = client.db('Ottogi_Family');
+
+    let userInfo = await db.collection('FamilyRoom').findOne({
+      member : req.user.userNickname
+    })
+
+    for(let i=0; i<userInfo.member.length; i++){
+      let result = await db.collection('user_info').findOne({
+        userNickname : userInfo.member[i],
+        date : dateString
+      })
+      intake.push(result.intake)
+    }
+
+    client.close();
+    res.json(intake); 
+
+  } catch (error) {
+    console.log('Error:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
+// burned 전달
+app.get('/getBurned', async (req, res) => {
+  let burned = [];
+
+    // 현재 날짜를 YYYY-MM-DD 형식으로 설정
+    var today = new Date();
+    var year = today.getFullYear();
+    var month = ('0' + (today.getMonth() + 1)).slice(-2);
+    var day = ('0' + today.getDate()).slice(-2);
+    var dateString = year + '-' + month + '-' + day;
+
+  try {
+    const client = await MongoClient.connect(url);
+    const db = client.db('Ottogi_Family');
+
+    let userInfo = await db.collection('FamilyRoom').findOne({
+      member : req.user.userNickname
+    })
+
+    for(let i=0; i<userInfo.member.length; i++){
+      let result = await db.collection('user_info').findOne({
+        userNickname : userInfo.member[i],
+        date : dateString
+      })
+      burned.push(result.burned)
+    }
+
+    client.close();
+    res.json(burned); 
+
+  } catch (error) {
+    console.log('Error:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
+// ResultCalorie 전달
+app.get('/getResultCalorie', async (req, res) => {
+  let ResultCalorie = [];
+
+  // 현재 날짜를 YYYY-MM-DD 형식으로 설정
+  var today = new Date();
+  var year = today.getFullYear();
+  var month = ('0' + (today.getMonth() + 1)).slice(-2);
+  var day = ('0' + today.getDate()).slice(-2);
+  var dateString = year + '-' + month + '-' + day;
+
+  try {
+    const client = await MongoClient.connect(url);
+    const db = client.db('Ottogi_Family');
+
+    let userInfo = await db.collection('FamilyRoom').findOne({
+      member : req.user.userNickname
+    })
+
+    for(let i=0; i<userInfo.member.length; i++){
+      let result = await db.collection('user_info').findOne({
+        userNickname : userInfo.member[i],
+        date : dateString
+      })
+      ResultCalorie.push(result.calorieDelta)
+    }
+
+    client.close();
+    res.json(ResultCalorie); 
+
+  } catch (error) {
+    console.log('Error:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
+// age 전달
+app.get('/getAge', async (req, res) => {
+  let age = [];
+  try {
+    const client = await MongoClient.connect(url);
+    const db = client.db('Ottogi_Family');
+
+    let userInfo = await db.collection('FamilyRoom').findOne({
+      member : req.user.userNickname
+    })
+
+    for(let i=0; i<userInfo.member.length; i++){
+      let result = await db.collection('user_info').findOne({
+        userNickname : userInfo.member[i]
+      })
+      age.push(result.age)
+    }
+
+    client.close();
+    res.json(age); 
+
+  } catch (error) {
+    console.log('Error:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
 
 
 app.get('/register', (request, response) => {
@@ -185,119 +370,35 @@ app.post('/register', async (request, response) => {
   request.session.userNickname = request.body.userNickname;
   // console.log(request.session.userNickname)
   
-  // 회원가입 성공 시 /addFamily페이지로 리다이렉션
-  response.redirect('/addFamily');
+   // 회원가입 성공 시 /firstlogin 페이지로 리다이렉션
+  response.redirect('/firstlogin');
 } catch (error) {
   console.log('Error:', error);
   response.status(500).json({ error: 'Internal Server Error' });
 }
 });
 
-// 닉네임 중복 확인 라우터 추가
-app.get('/checkNickname', async (req, res) => {
-  try {
-    const userNickname = req.query.userNickname;
-    const existingUser = await db.collection('user_info').findOne({ userNickname: userNickname });
 
-    if (existingUser) {
-      return res.status(200).json({ exists: true });
-    } else {
-      return res.status(200).json({ exists: false });
-    }
-  } catch (error) {
-    console.log('Error:', error);
-    res.status(500).json({ error: 'Internal Server Error' });
-  }
+app.get('/firstlogin', async(request, response) => {
+  response.render('firstlogin.ejs');
 });
 
-//아이디 중복 확인 라우터 추가 
-app.get('/checkUsername', async (req, res) => {
-  try {
-    const username = req.query.username;
-    const existingUser = await db.collection('user_info').findOne({ username: username });
 
-    if (existingUser) {
-      return res.status(200).json({ exists: true });
-    } else {
-      return res.status(200).json({ exists: false });
-    }
-  } catch (error) {
-    console.log('Error:', error);
-    res.status(500).json({ error: 'Internal Server Error' });
-  }
-});
+// /register-> /firstlogin -> /addFamily -> /setting -> /daiy-record  
+app.post('/firstlogin', async (request, response, next) => {
 
-// 그룹 추가하는 페이지 
-app.get('/addFamily', (request, response) => {
-  response.render('addFamily.ejs', { userNickname: request.session.userNickname });
+  passport.authenticate('local', (error, user, info) => {
+    if (error) return response.status(500).json(error)
+      if (!user) return response.status(401).json(info.message)
+      //일치할 경우 
+    request.logIn(user, (err) => {
+      //로그인 완료시 실행할 코드
+      if (err) return next(err);
+      response.render('addFamily.ejs')
+    });
+  })(request, response, next);
 
-});
-
-// 회원가입 후 가족 추가하는 페이지
-app.post('/addFamily', async(request, response) => {
-  // 1. 이미 가족이 존재하는 경우
-  // 2. 새롭게 가족을 추가할 경우 
-  const Member = request.body.Member; // 로그인한 사용자의 닉네임
-  const NewMember = request.body.NewMember; // 새로 추가할 멤버 정보
-  const userNickname = request.session.userNickname;
-  
-  //console.log(Member, NewMember, userNickname);
- 
-  // 이미 가족이 존재하는 경우
-   if(Member) {
-     try {
-       const existingFamily = await db.collection('FamilyRoom').findOne({member:{$in:[Member]}});
-       
-       if(existingFamily) {
-        if(existingFamily.member.length < 4) {
-        await db.collection('FamilyRoom').updateOne(
-          {member: {$in: [Member]}}, 
-          {$addToSet: {member: userNickname}}
-        );
-        response.redirect('/setting');
-       }
-      }
-       // 가족 이름 틀림 
-       else {
-         console.log("속하지 않음`");
-       }
-     }
-     catch(err) {
-       console.error(err);
-       response.status(500).send('기존 가족 추가 과정에서 오류가 발생했습니다.');
-     }
-   }
-
-   // 새롭게 가족을 추가하는 경우
-   else if(NewMember) {
-     try {
-      const existingFamily = await db.collection('FamilyRoom').findOne({member:{$in:[userNickname]}});
-       if(existingFamily) {
-        if(existingFamily.member.length < 4) {
-       await db.collection('FamilyRoom').updateOne(
-        {member: {$in: [userNickname]}}, 
-        {$addToSet: {member: NewMember}}
-       );
-       response.redirect('/setting');
-     }
-    }
-     else {
-      await db.collection('FamilyRoom').insertOne(
-        { member:[userNickname,NewMember] });
-        response.redirect('/setting');
-     } 
-    }
-     catch(err) {
-       console.error(err);
-       response.status(500).send('새로운 가족 생성 과정에서 오류가 발생했습니다.');
-     }
-   }
-   else {
-     response.status(400).send('필요한 정보가 충분하지 않습니다.');
-   }
-
-});
-
+})
 
 // 아이디/비번이 DB와 일치하는지 검증하는 로직 짜는 공간 (앞으로 유저가 제출한 아이디 비번이 DB랑 맞는지 검증하고 싶을때 이것만 실행하면 됨)
 passport.use(
@@ -353,51 +454,189 @@ app.post('/login', async (request, response, next) => {
     });
   })(request, response, next);
 
-}) 
+})
 
+// 닉네임 중복 확인 라우터 추가
+app.get('/checkNickname', async (req, res) => {
+  try {
+    const userNickname = req.query.userNickname;
+    const existingUser = await db.collection('user_info').findOne({ userNickname: userNickname });
+
+    if (existingUser) {
+      return res.status(200).json({ exists: true });
+    } else {
+      return res.status(200).json({ exists: false });
+    }
+  } catch (error) {
+    console.log('Error:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
+//아이디 중복 확인 라우터 추가 
+app.get('/checkUsername', async (req, res) => {
+  try {
+    const username = req.query.username;
+    const existingUser = await db.collection('user_info').findOne({ username: username });
+
+    if (existingUser) {
+      return res.status(200).json({ exists: true });
+    } else {
+      return res.status(200).json({ exists: false });
+    }
+  } catch (error) {
+    console.log('Error:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
+// 그룹 추가하는 페이지 
+app.get('/addFamily', (request, response) => {
+  response.render('addFamily.ejs', { userNickname: request.session.userNickname });
+
+});
+
+// 회원가입 후 가족 추가하는 페이지
+app.post('/addFamily', async(request, response) => {
+  // 1. 이미 가족이 존재하는 경우
+  // 2. 새롭게 가족을 추가할 경우 
+  const Member = request.body.Member; // 로그인한 사용자의 닉네임
+  const NewMember = request.body.NewMember; // 새로 추가할 멤버 정보
+  const userNickname = request.session.userNickname;
+  const NotFamily = request.body.NotFamily; // 체크박스 값
+
+  //console.log(Member, NewMember, userNickname);
+ 
+  // 이미 가족이 존재하는 경우
+   if(Member) {
+     try {
+       const existingFamily = await db.collection('FamilyRoom').findOne({member:{$in:[Member]}});
+       
+       if(existingFamily) {
+        if(existingFamily.member.length < 4) {
+        await db.collection('FamilyRoom').updateOne(
+          {member: {$in: [Member]}}, 
+          {$addToSet: {member: userNickname}}
+        );
+        response.redirect('/setting');
+       }
+      }
+       // 가족 이름 틀림 
+       else {
+         console.log("속하지 않음`");
+       }
+     }
+     catch(err) {
+       console.error(err);
+       response.status(500).send('기존 가족 추가 과정에서 오류가 발생했습니다.');
+     }
+   }
+   else if(NotFamily === 'yes') {
+    await db.collection('FamilyRoom').insertOne(
+      { member: [request.user.userNickname] }
+    );
+    response.redirect('/setting');
+   }
+   else {
+     response.status(400).send('필요한 정보가 충분하지 않습니다.');
+   }
+});
 
 // 달력 페이지 
-app.get('/calendar', async (request,response)=>{
-  const family = await db.collection('FamilyRoom').find({ member: request.user.userNickname }).toArray();
+app.get('/calendar', async (req, res)=>{
+  try {
+    let users = []
+    const client = await MongoClient.connect(url);
+    const db = client.db('Ottogi_Family');
 
-  // familyRoom 컬렉션에서 일치하는 닉네임의 유저 정보들 저장
-  const users = await db.collection('user_info').find({
-    userNickname: { $in: family[0].member }
-  }).toArray();
-  const today = new Date();
-  const timestamp = today.toISOString().slice(0, 10);
-  console.log(timestamp); 
+    // FamilyRoom 컬렉션에서 현재 로그인된 user가 member로 들어있는 document 찾기
+    let userInfo = await db.collection('FamilyRoom').findOne({
+      member : req.user.userNickname
+    })
 
-  
-  console.log(family[0].member);
-  if (family[0].member.length > 0) {
-    response.render('calendar.ejs',{family : family[0].member, users, timestamp});
-  } 
-  
+    // users 배열에 가족 user들의 nickName 삽입
+    for(let i=0; i<userInfo.member.length; i++){
+      let result = await db.collection('user_info').findOne({
+        userNickname : userInfo.member[i]
+      })
+      users.push(result.userNickname)
+    }
+
+    // 현재 날짜를 timestamp 변수에 집어넣음
+    const today = new Date();
+    const timestamp = today.toISOString().slice(0, 10);
+    // console.log(timestamp); 
+
+    // console.log(userInfo.member)
+
+    // calendar.ejs render
+    res.render('calendar.ejs',{family : userInfo.member, users, timestamp});
+
+  } catch (error) {
+    console.log('Error:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+
 })
+
 
 // calendar.js에서 timestamp 추출
 // 그 날에 해당하는 헬뚜기그룹들을 보여주는 페이지 
 app.get('/calendar/:timestamp', async (request,response)=>{
   // 달력에서 클릭한 날짜의 사용자 정보 가져오기
-  console.log(request.params.timestamp);
-  const users = await db.collection('user_info').find(
-    { timestamp: request.params.timestamp },
-    { userNickname: request.user.userNickname}).toArray();
+  try {
+    let users = []
 
-  // FamilyRoom 컬렉션에서 사용자들의 닉네임 가져오기 - members에 저장 
-  const family = await db.collection('FamilyRoom').find({ member: request.user.userNickname }).toArray();
-  const timestamp = request.params.timestamp;
-  console.log(users.length);
-  //console.log(members);
-  //console.log(users);
-  console.log(family[0].member);
-  if (family[0].member.length > 0) {
-    // 데이터가 있을 경우, EJS 템플릿에 데이터 전달
-    response.render('calendar.ejs',{users,family:family[0].member, timestamp});
-    // console.log(users[0]);
-  } 
+    // FamilyRoom 컬렉션에서 현재 로그인된 user가 member로 들어있는 document 찾기
+    let userInfo = await db.collection('FamilyRoom').findOne({
+      member : request.user.userNickname,
+    })
+
+    // 해당 날짜에 기록을 한 가족 users들의 nickName을 users 배열에 삽입
+    for(let i=0; i<userInfo.member.length; i++){
+      let result = await db.collection('user_info').findOne({
+        userNickname : userInfo.member[i],
+        date : request.params.timestamp
+      })
+      if(result.userNickname != null) users.push(result.userNickname);
+    }
+
+  // calendar.ejs render
+  if(users.length > 0){
+    response.render('calendar.ejs',{family : userInfo.member, users : users, timestamp : request.params.timestamp});
+  } else {
+    response.send("이 날 기록한 유저가 없습니다.")
+  }
+
+
+  } catch (error) {
+    console.log('Error:', error);
+    response.status(500).json({ error: 'Internal Server Error' });
+  }
 })
+
+// timestamp 날짜에 기록한 member 전달
+app.get('/getMember/:timestamp', async (req, res) => {
+  try {
+    const client = await MongoClient.connect(url);
+    const db = client.db('Ottogi_Family');
+
+    let familyInfo = await db.collection('FamilyRoom').findOne({
+      member : req.user.userNickname,
+      date : request.params.timestamp
+    })
+
+    // console.log(familyInfo.member)
+    client.close();
+    
+    res.json(familyInfo.member); 
+
+  } catch (error) {
+    console.log('Error:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
 
 app.get('/', (request, response) => {
   response.sendFile(__dirname + '/InitialScreen.html');
@@ -502,16 +741,6 @@ app.post('/addUser', async (request, response) => {
 
 });
 
-// 웹소켓 연결 확인   
-io.on('connection', (socket) => {
-  socket.on('ask-join', (data)=> {
-    socket.join(data)
-  })
-  socket.on('message-send', (data)=> {
-    console.log(data)
-  })
-})
-
 app.get('/daily-record', async (req, res) => {
   try {
     const userNickname = req.user.userNickname;
@@ -523,7 +752,7 @@ app.get('/daily-record', async (req, res) => {
     var day = ('0' + today.getDate()).slice(-2);
     var dateString = year + '-' + month + '-' + day;
 
-    console.log(dateString);
+    //console.log(dateString);
 
     // 날짜를 기준으로 데이터를 필터링하는 함수
     const isToday = (timestamp) => {
@@ -548,13 +777,41 @@ app.get('/daily-record', async (req, res) => {
 
     const calorieDelta = intake - burned;
 
+    const userData = await db.collection('user_info').findOne({ userNickname: userNickname });
+    const weight = userData ? userData.weight : null;
+    const height = userData ? userData.height : null;
+    const gender = userData ? userData.gender : null;
+    const age = userData ? userData.age : null;
+    const sleeptime = userData ? userData.sleeptime : null;
+    const activity = userData ? userData.activity : null;
+    const activityindex = userData ? userData.activityindex : null;
+    const healthStatus = userData ? userData.healthStatus : null;
+    const bmi = userData ? userData.bmi : null;
+    const BMR = userData ? userData.BMR : null;
+    const RDA = userData ? userData.RDA : null;
+
+    //console.log(userst);
     const userInfo = {
       userNickname: userNickname,
-      Timestamp: dateString,
+      date: dateString,
       burned: burned,
       intake: intake,
-      calorieDelta: calorieDelta
-    };
+      calorieDelta: calorieDelta,
+      sleepHour: userst.length > 0 ? userst[0].sleepHour : null,
+      sleepMinute: userst.length > 0 ? userst[0].sleepMinute : null,
+      gender: gender,
+      height: height,
+      weight: weight,
+      age: age,
+      sleeptime: sleeptime,
+      activity: activity,
+      activityindex: activityindex,
+      healthStatus: healthStatus,
+      bmi: bmi,
+      BMR: BMR,
+      RDA: RDA
+    };    
+    
 
     await db.collection('user_info').updateOne(
       { userNickname: userNickname, date: dateString },
@@ -568,6 +825,9 @@ app.get('/daily-record', async (req, res) => {
       dinner: userdn
     };
 
+    // console.log(userlc);
+    // console.log(intake);
+    
     res.render('daily-record', {
       sleepTime: userst.length > 0 ? userst[0] : null,
       useres: useres,
@@ -713,16 +973,19 @@ console.log(dateString);
 });
 
 
+
 app.post('/dailyrecordsleeptime', async (req, res) => {
   const sleepHour = req.body.sleepHour;
   const sleepMinute = req.body.sleepMinute;
   const userNickname = req.user.userNickname;
   
   var today = new Date();
-  var year = today.getFullYear();
-  var month = ('0' + (today.getMonth() + 1)).slice(-2);
-  var day = ('0' + today.getDate()).slice(-2);
-  var dateString = year + '-' + month  + '-' + day;
+
+var year = today.getFullYear();
+var month = ('0' + (today.getMonth() + 1)).slice(-2);
+var day = ('0' + today.getDate()).slice(-2);
+
+var dateString = year + '-' + month  + '-' + day;
 
   const data = {
     userNickname: userNickname,
@@ -730,15 +993,8 @@ app.post('/dailyrecordsleeptime', async (req, res) => {
     sleepMinute: sleepMinute,
     timestamp: dateString
   };
-
-  await db.collection('DRsleeptime').updateOne(
-    { userNickname: userNickname, timestamp: dateString },
-    { $set: data },
-    { upsert: true }
-  );
+  await db.collection('DRsleeptime').insertOne(data);
 });
-
-
 
 app.post('/setting', async (req, res) => {
   const userNickname = req.user.userNickname;

@@ -8,11 +8,10 @@
 <body>
   <form class="form-box" action="/addFamily" method="POST">
     <!-- 기존 가족 추가 -->
-    <%= userNickname %>님의 가족 추가 
-    <input name="Member" placeholder="기존 가족 연결" >
+    <input name="Member" placeholder="기존 가족과 연결" >
     <!-- 새로운 가족 추가 -->
-    <input name="NewMember" placeholder="새로운 가족 연결" >
-    <button type="submit"> 가족 추가</button>
+    <input name="NotFamily" type="checkbox" value="yes"> 가족 추가 안함<br>
+    <button type="submit"> 다음 </button>
   </form>
 </body>
 </html>
