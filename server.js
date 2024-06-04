@@ -752,7 +752,7 @@ app.get('/daily-record', async (req, res) => {
     var day = ('0' + today.getDate()).slice(-2);
     var dateString = year + '-' + month + '-' + day;
 
-    console.log(dateString);
+    //console.log(dateString);
 
     // 날짜를 기준으로 데이터를 필터링하는 함수
     const isToday = (timestamp) => {
@@ -779,16 +779,37 @@ app.get('/daily-record', async (req, res) => {
 
     const userData = await db.collection('user_info').findOne({ userNickname: userNickname });
     const weight = userData ? userData.weight : null;
+    const height = userData ? userData.height : null;
+    const gender = userData ? userData.gender : null;
+    const age = userData ? userData.age : null;
+    const sleeptime = userData ? userData.sleeptime : null;
+    const activity = userData ? userData.activity : null;
+    const activityindex = userData ? userData.activityindex : null;
+    const healthStatus = userData ? userData.healthStatus : null;
+    const bmi = userData ? userData.bmi : null;
+    const BMR = userData ? userData.BMR : null;
+    const RDA = userData ? userData.RDA : null;
 
     //console.log(userst);
     const userInfo = {
       userNickname: userNickname,
+      date: dateString,
       burned: burned,
       intake: intake,
       calorieDelta: calorieDelta,
       sleepHour: userst.length > 0 ? userst[0].sleepHour : null,
       sleepMinute: userst.length > 0 ? userst[0].sleepMinute : null,
-      weight: weight
+      gender: gender,
+      height: height,
+      weight: weight,
+      age: age,
+      sleeptime: sleeptime,
+      activity: activity,
+      activityindex: activityindex,
+      healthStatus: healthStatus,
+      bmi: bmi,
+      BMR: BMR,
+      RDA: RDA
     };    
     
 
