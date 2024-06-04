@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <!-- 친구추가 폼-->
+  <form class="form-box" action="/addUser" method="POST">
+  <input name="Member" placeholder="기존 가족 그룹과 연결" >
+    <!-- 새로운 가족 추가 -->
+    <input name="NewMember" placeholder="새로운 가족 내 그룹에 초대" >
+    <button type="submit"> 가족 추가</button>
+  </form>
+  
+  <!-- socket.io 라이브러리 설치 -->
+  <script src="https://cdn.jsdelivr.net/npm/socket.io@4.7.2/client-dist/socket.io.min.js"></script>
+  <script>
+
+    const socket = io()
+
+    // document.querySelector('.chat-button').addEventListener('click', function() {
+    //   let userNickname = document.querySelector('.chat-input').value;
+    //   // 닉네임을 서버로 전송
+    //   socket.emit('addUser', userNickname);
+    //   // 서버로부터 응답 수신
+    //   socket.on('name', (data) => {
+    //     console.log(data);
+    //   });
+    // });
+  </script>
+</body>
+</html>

@@ -4,6 +4,21 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>식단 기록</title>
+    <!-- <style>
+        body {
+            background-image: url('/dailyrecord.JPG');
+            background-size: cover; /* 배경 이미지가 화면 전체를 덮도록 설정 */
+            background-position: center; /* 배경 이미지의 위치를 중앙으로 설정 */
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            height: 100vh; /* 화면 전체 높이만큼 설정 */
+        }
+        .container {
+            height: 100%; /* 부모 요소인 body에 대해 상대적으로 높이를 100% 설정 */
+            padding-bottom: 0; /* 하단 공백 제거 */
+        }
+    </style>   -->
 </head>
 <body>
     <div class="container">
@@ -21,6 +36,7 @@
             <label for="calories">칼로리:</label>
             <input type="number" id="calories" name="calories">
             <button onclick="addMenu()">추가</button>
+            <button onclick="saveMenu()">저장</button> <!-- 저장 버튼 추가 -->
         </div>
     </div>
 
@@ -75,6 +91,12 @@
             .catch((error) => {
                 console.error('Error:', error);
             });
+        }
+        function saveMenu() {
+            alert("식단이 저장되었습니다!");
+            setTimeout(function() {
+                window.location.href = "/daily-record"; // 1초 후에 리다이렉션
+            }, 1000); // 1초 후에 리다이렉션
         }
     </script>
 </body>
