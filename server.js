@@ -552,6 +552,7 @@ app.get('/daily-record', async (req, res) => {
     //console.log(userst);
     const userInfo = {
       userNickname: userNickname,
+      date: dateString,
       burned: burned,
       intake: intake,
       calorieDelta: calorieDelta,
