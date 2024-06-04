@@ -11,15 +11,18 @@
 <form class="form-box" action="/addFamily" method="POST">
   <!-- 가족 추가 -->
   <div class="input-container">
-  <input name="Member" placeholder="들어가고싶은 가족의 닉네임을 입력하세요" oninput="toggleInputs()">
+  <img src="\img\AddFamily명함.png" alt="card" id="card">
+  <!-- user의 닉네임 -->
+  <span id="userNicknameDisplay" class="user-nickname"><%= userNickname %></span>
+  <!-- Member 연결 -->
+  <input name="Member" placeholder="기존가족과 연결(닉네임 입력)" oninput="toggleInputs()" class="connect">
+  <!-- 체크박스 -->
   <input name="NotFamily" type="checkbox" va
   lue="yes" onclick="toggleInputs()"  id="notFamilyCheckbox"> 
   <label for="notFamilyCheckbox" class="notFamilyLabel">기존 가족 없음</label>
-  <img src="\img\AddFamily명함.png" alt="card" id="card">
-  </div>
-  <button type="submit">다음</button>
+  <button type="submit" id="next-btn">다음</button>
 </form>
-
+</div>
 <script>
   function toggleInputs() {
     const memberInput = document.querySelector('input[name="Member"]');
@@ -37,7 +40,6 @@
     }
   }
 </script>
-
 </body>
 </html>
 

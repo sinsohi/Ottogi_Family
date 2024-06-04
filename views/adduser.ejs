@@ -4,16 +4,18 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Document</title>
+  <link rel="stylesheet" type="text/css" href="\adduser.css">
 </head>
 <body>
   <!-- 친구추가 폼-->
   <form class="form-box" action="/addUser" method="POST">
-  <input name="Member" placeholder="기존 가족 그룹과 연결" >
-    <!-- 새로운 가족 추가 -->
-    <input name="NewMember" placeholder="새로운 가족 내 그룹에 초대" >
-    <button type="submit"> 가족 추가</button>
-  </form>
-  
+  <div class="input-container">
+    <img src="\img\AddFamily명함.png" alt="card" id="card">
+    <span id="userNicknameDisplay" class="user-nickname"><%= userNickname %></span>
+    <input name="Member" placeholder="가족연결" class="Member">
+    <button type="submit" id="plus-btn"> 확인 </button>
+    </form>
+  </div>
   <!-- socket.io 라이브러리 설치 -->
   <script src="https://cdn.jsdelivr.net/npm/socket.io@4.7.2/client-dist/socket.io.min.js"></script>
   <script>

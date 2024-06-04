@@ -378,12 +378,6 @@ app.post('/register', async (request, response) => {
 }
 });
 
-// 그룹 추가하는 페이지 
-app.get('/addFamily', (request, response) => {
-  response.render('addFamily.ejs', { userNickname: request.session.userNickname });
-
-});
-
 // intake 전달
 app.get('/getIntake', async (req, res) => {
   let intake = [];
@@ -567,10 +561,11 @@ app.post('/firstlogin', async (request, response, next) => {
     if (error) return response.status(500).json(error)
       if (!user) return response.status(401).json(info.message)
       //일치할 경우 
+    let userNickname = request.user.userNickname;
     request.logIn(user, (err) => {
       //로그인 완료시 실행할 코드
       if (err) return next(err);
-      response.render('addFamily.ejs')
+      response.redirect('/addFamily')
     });
   })(request, response, next);
 
@@ -667,9 +662,9 @@ app.get('/checkUsername', async (req, res) => {
 });
 
 // 그룹 추가하는 페이지 
-app.get('/addFamily', (request, response) => {
-  response.render('addFamily.ejs');
-
+app.get('/addFamily', async(request, response) => {
+  const userNickname = request.user.userNickname;
+  response.render('addFamily.ejs', {userNickname});
 });
 
 // 회원가입 후 가족 추가하는 페이지
@@ -678,12 +673,13 @@ app.post('/addFamily', async(request, response) => {
   const userNickname = request.user.userNickname;
   const NotFamily = request.body.NotFamily; // 체크박스 값
 
-  console.log(Member, userNickname);
+  console.log(Member, userNickname, NotFamily);
   
   if(Member && NotFamily === 'yes') {
     return response.status(400).send("한 번에 하나의 선택만 가능합니다. ")
   }
-  // 이미 가족이 존재하는 경우
+
+  // 체크박스가 선택된 경우
   if (Member) {
     try {
       const existingFamily = await db.collection('FamilyRoom').findOne({ member: { $in: [Member] } });
@@ -694,7 +690,7 @@ app.post('/addFamily', async(request, response) => {
             { member: { $in: [Member] } },
             { $addToSet: { member: userNickname } }
           );
-          return response.redirect('/first-setting');
+          return response.redirect('/setting');
         } else {
           return response.status(400).send('가족 구성원이 최대 수에 도달했습니다.');
         }
@@ -706,12 +702,12 @@ app.post('/addFamily', async(request, response) => {
       console.error(err);
       return response.status(500).send('기존 가족 추가 과정에서 오류가 발생했습니다.');
     }
-  } else if (NotFamily === 'yes') {
+  } else if (NotFamily === 'on') {
     try {
       await db.collection('FamilyRoom').insertOne(
         { member: [userNickname] }
       );
-      return response.redirect('/first-setting');
+      return response.redirect('/setting');
     } catch (err) {
       console.error(err);
       return response.status(500).send('새 가족 추가 과정에서 오류가 발생했습니다.');
@@ -824,14 +820,13 @@ app.get('/calendardetail/:timestamp/:Nickname', async (request,response)=>{
 app.get('/addUser', async (request,response)=>{
 
   let users = await db.collection('FamilyRoom').find({}).toArray();
-  response.render('addUser.ejs');
+  response.render('addUser.ejs', {userNickname: request.user.userNickname});
 })
 
 //FamilyRoom 데이터에 저장 
 app.post('/addUser', async (request, response) => {
   const userNickname = request.user.userNickname; // 로그인한 사용자의 닉네임
-  const NewMember = request.body.NewMember; // 새로 추가할 멤버 정보
-  const Member = request.body.Member // 기존의 멤버 
+  const Member = request.body.Member // 연결할 멤버 
 
   //console.log(userNickname)
   // 기존 가족과 연결
@@ -872,32 +867,8 @@ app.post('/addUser', async (request, response) => {
       console.error(err);
       response.status(500).send('기존 가족 추가 과정에서 오류가 발생했습니다.');
     }
-  } else if (NewMember) {
-    try {
-      const existingFamily = await db.collection('FamilyRoom').findOne({ member: { $in: [userNickname] } });
-      
-      if (existingFamily) {
-        if (existingFamily.member.length < 4) {
-          await db.collection('FamilyRoom').updateOne(
-            { _id: existingFamily._id },
-            { $addToSet: { member: NewMember } }
-          );
-          response.redirect('/homepage');
-        } else {
-          response.status(400).send('가족 구성원이 4명을 초과할 수 없습니다.');
-        }
-      } else {
-        await db.collection('FamilyRoom').insertOne(
-          { member: [userNickname, NewMember] }
-        );
-        response.redirect('/homepage');
-      }
-    } catch (err) {
-      console.error(err);
-      response.status(500).send('새로운 가족 생성 과정에서 오류가 발생했습니다.');
-    }
   } else {
-    response.status(400).send('필요한 정보가 충분하지 않습니다.');
+    response.status(400).send('닉네임이 존재하지 않습니다.');
   }
   
 

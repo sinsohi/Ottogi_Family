@@ -1,0 +1,73 @@
+/* html과 css의 기본 마진과 패딩 제거 */
+html, body {
+  margin: 0;
+  padding:0;
+  overflow: hidden;
+}
+
+/*전체 사이트 배경*/
+body {
+  height: 100vh;
+  width: 100vw;
+  margin:0;
+  padding:0;
+  background-image: url('./img/AddFamily배경화면.png');
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
+}
+
+.input-container {
+  position: relative;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
+#card {
+  position: absolute;
+  width: 600px;   
+  height: 350px;   
+  margin-top: 100px; /* 이미지 주위에 20픽셀의 여백 추가 */
+  margin-left: 500px;
+  z-index: 1; /* z-index 추가 */
+}
+
+/* 가족 연결 placeholder 설정 */
+.Member::placeholder {
+  font-size: 17px; /* Placeholder 글씨 크기 조절 */
+  color: #534f4f; /* Placeholder 글씨 색상 조절 */
+}
+
+/* 가족 연결 placeholder 설정 */
+.NewMember::placeholder {
+  font-size: 17px; /* Placeholder 글씨 크기 조절 */
+  color: #534f4f; /* Placeholder 글씨 색상 조절 */
+}
+
+/* userNickname 꾸미기 */
+.user-nickname {
+  position: absolute;
+  color: rgb(2, 2, 2);
+  font-weight: bold;
+  font-size: 40px;
+  left: 900px;
+  top: 200px;
+  z-index: 2;
+}
+
+#plus-btn {
+  position: absolute;
+  top: 470px;
+  left: 760px;
+  background-color: #a2ab91; /* 버튼 배경색 */
+  border: none; /* 테두리 제거 */
+  color: white; /* 버튼 텍스트 색상 */
+  padding: 10px 20px; /* 버튼 내부 여백 */
+  text-align: center; /* 버튼 텍스트 정렬 */
+  text-decoration: none; /* 텍스트 장식 제거 */
+  display: inline-block; /* 인라인 블록 형태로 표시 */
+  font-size: 16px; /* 버튼 텍스트 크기 */
+  margin: 4px 2px; /* 버튼 외부 여백 */
+  z-index: 2;
+  font-weight: bold;
+}

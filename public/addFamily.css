@@ -1,3 +1,10 @@
+/* html과 css의 기본 마진과 패딩 제거 */
+html, body {
+  margin: 0;
+  padding:0;
+  overflow: hidden;
+}
+
 /*전체 사이트 배경*/
 body {
   height: 100vh;
@@ -11,23 +18,25 @@ body {
 
 .input-container {
   position: relative;
-
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
 }
 
 #card {
   position: absolute;
-  width: 700px; /* 이미지의 너비를 200픽셀로 설정 */
-  height: 400px; /* 높이는 자동으로 조절 */
+  width: 600px;   
+  height: 350px;   
   margin-top: 100px; /* 이미지 주위에 20픽셀의 여백 추가 */
-  margin-left: 300px;
+  margin-left: 500px;
   z-index: 1; /* z-index 추가 */
 }
 
 /* 체크 박스 스타일 */
 #notFamilyCheckbox {
   position: absolute;
-  top: 170px; /* 이미지 위에 위치 조정 */
-  left: 1050px; /* 이미지 왼쪽에 위치 조정 */
+  top: 115px; /* 이미지 위에 위치 조정 */
+  left: 990px; /* 이미지 왼쪽에 위치 조정 */
   width: 50px; /* 체크박스 크기 조정 */
   height: 500px; /* 체크박스 크기 조정 */
   z-index: 2; /* 체크박스가 이미지보다 앞에 오도록 z-index 추가 */
@@ -38,15 +47,65 @@ body {
   display: inline-block;
   position: absolute;
   white-space: nowrap;
-  top: 400px; 
-  left: 850px;
+  top: 350px; 
+  left: 820px;
   width: 50px;
   height: 500px; 
   z-index: 2;
   font-size: 25px;
+  font-weight: bold;
 }
 
-/* 체크박스가 체크되었을 때의 스타일 변경 */
-.notFamilyCheckbox:checked {
-  background-color: #4CAF50; /* 체크 색상 변경 */
+/* 기존 가족 연결 */
+.connect {
+  position: absolute;
+  top: 273px; 
+  left: 810px;
+  width: 230px;
+  height: 45px; 
+  z-index: 2;
+  font-size: 22px;
+  text-align: center;
+  font-weight: bold;
 }
+
+/* 가족 연결 placeholder 설정 */
+.connect::placeholder {
+  font-size: 17px; /* Placeholder 글씨 크기 조절 */
+  color: #534f4f; /* Placeholder 글씨 색상 조절 */
+}
+
+
+#notFamilyCheckbox:checked {
+  background-color: #4CAF50 !important; /* 체크 색상 변경 */
+}
+
+/* userNickname 꾸미기 */
+.user-nickname {
+  position: absolute;
+  color: rgb(2, 2, 2);
+  font-weight: bold;
+  font-size: 40px;
+  left: 55%;
+  top: 200px;
+  z-index: 2;
+  text-align: center;
+}
+
+#next-btn {
+  position: absolute;
+  top: 470px;
+  left: 760px;
+  background-color: #a2ab91; /* 버튼 배경색 */
+  border: none; /* 테두리 제거 */
+  color: white; /* 버튼 텍스트 색상 */
+  padding: 10px 20px; /* 버튼 내부 여백 */
+  text-align: center; /* 버튼 텍스트 정렬 */
+  text-decoration: none; /* 텍스트 장식 제거 */
+  display: inline-block; /* 인라인 블록 형태로 표시 */
+  font-size: 16px; /* 버튼 텍스트 크기 */
+  margin: 4px 2px; /* 버튼 외부 여백 */
+  z-index: 2;
+  font-weight: bold;
+}
+
