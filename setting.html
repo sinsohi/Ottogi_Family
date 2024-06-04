@@ -5,16 +5,40 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>세팅 페이지</title>
     <link href="setting.css" rel="stylesheet">
+    <style>
+        .gender-container {
+            display: flex;
+            align-items: center;
+        }
+        .gender-container input[type="radio"] {
+            display: none;
+        }
+        .gender-container label {
+            cursor: pointer;
+            margin-right: 10px;
+        }
+        .gender-container label img {
+            width: 50px; /* 이미지 크기 조절 가능 */
+            height: 50px;
+        }
+        .gender-container input[type="radio"]:checked + label img {
+            border: 2px solid blue; /* 선택된 이미지에 테두리 추가 */
+        }
+    </style>
 </head>
 <body>
     <div class="container">
-        <h1 style="text-align: left;">00님의 정보 입력</h1>
+        <h1 style="text-align: left;">정보 입력</h1>
         <form id="settingForm" action="/setting" method="POST" onsubmit="showPopup(event)">
             <div class="row">
                 <div class="col">
                     <h2>성별</h2>
-                    <label><input type="radio" id="male" name="gender" value="male">남자</label>
-                    <label><input type="radio" id="female" name="gender" value="female">여자</label>
+                    <div class="gender-container">
+                        <input type="radio" id="male" name="gender" value="male">
+                        <label for="male"><img src="./img/남자기호.png"></label>
+                        <input type="radio" id="female" name="gender" value="female">
+                        <label for="female"><img src="./img/여자기호.png"></label>
+                    </div>
                 </div>
                 <div class="col">
                     <h2>나이</h2>
@@ -48,7 +72,8 @@
                     <label><input type="radio" id="active" name="activity" value="활동적">활동적</label>
                     <label><input type="radio" id="very_active" name="activity" value="매우활동적">매우활동적</label>
                 </div>
-            </div>
+            
+<div id="selected-symbol"></div>
 
             <input type="hidden" id="bmi" name="bmi">
 
@@ -62,7 +87,7 @@
 
             var heightInMeter = height / 100; // 미터 변환
             var bmi = weight / (heightInMeter * heightInMeter);
-            document.getElementById('bmi').value = bmi;
+            document.getElementById('bmi').value = bmi.toFixed(2); // 소수점 두 자리로 제한
         }
 
         function showPopup(event) {
@@ -74,6 +99,19 @@
                 window.location.href = "/homePage"; // 리다이렉션
             }, 1000); // 1초 후에 리다이렉션
         }
+
+        function showSelectedSymbol() {
+    var maleRadio = document.getElementById("male");
+    var selectedImage = document.querySelector(".gender-container img");
+
+    // 선택된 성별 이미지로 변경합니다.
+    if (maleRadio.checked) {
+        selectedImage.src = "./img/남자체크선택됨.png";
+    } else {
+        selectedImage.src = "./img/여자체크선택됨.png";
+    }
+}
+
     </script>
 </body>
 </html>
