@@ -1,0 +1,52 @@
+/*전체 사이트 배경*/
+body {
+  height: 100vh;
+  width: 100vw;
+  margin:0;
+  padding:0;
+  background-image: url('./img/AddFamily배경화면.png');
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
+}
+
+.input-container {
+  position: relative;
+
+}
+
+#card {
+  position: absolute;
+  width: 700px; /* 이미지의 너비를 200픽셀로 설정 */
+  height: 400px; /* 높이는 자동으로 조절 */
+  margin-top: 100px; /* 이미지 주위에 20픽셀의 여백 추가 */
+  margin-left: 300px;
+  z-index: 1; /* z-index 추가 */
+}
+
+/* 체크 박스 스타일 */
+#notFamilyCheckbox {
+  position: absolute;
+  top: 170px; /* 이미지 위에 위치 조정 */
+  left: 1050px; /* 이미지 왼쪽에 위치 조정 */
+  width: 50px; /* 체크박스 크기 조정 */
+  height: 500px; /* 체크박스 크기 조정 */
+  z-index: 2; /* 체크박스가 이미지보다 앞에 오도록 z-index 추가 */
+}
+
+/* "가족 추가 안함" 글자 */
+.notFamilyLabel {
+  display: inline-block;
+  position: absolute;
+  white-space: nowrap;
+  top: 400px; 
+  left: 850px;
+  width: 50px;
+  height: 500px; 
+  z-index: 2;
+  font-size: 25px;
+}
+
+/* 체크박스가 체크되었을 때의 스타일 변경 */
+.notFamilyCheckbox:checked {
+  background-color: #4CAF50; /* 체크 색상 변경 */
+}

@@ -694,7 +694,7 @@ app.post('/addFamily', async(request, response) => {
             { member: { $in: [Member] } },
             { $addToSet: { member: userNickname } }
           );
-          return response.redirect('/setting');
+          return response.redirect('/first-setting');
         } else {
           return response.status(400).send('가족 구성원이 최대 수에 도달했습니다.');
         }
@@ -711,7 +711,7 @@ app.post('/addFamily', async(request, response) => {
       await db.collection('FamilyRoom').insertOne(
         { member: [userNickname] }
       );
-      return response.redirect('/setting');
+      return response.redirect('/first-setting');
     } catch (err) {
       console.error(err);
       return response.status(500).send('새 가족 추가 과정에서 오류가 발생했습니다.');
@@ -1058,6 +1058,10 @@ app.get('/setting', (req, res) => {
   res.sendFile(__dirname + '/setting.html');
 }); // 세팅
 
+app.get('/first-setting', (req, res) => {
+  res.sendFile(__dirname + '/first-setting.html');
+}); // 세팅
+
 app.post('/submit-form', (req, res) => {
   const meal = req.body.meal;
   res.send(`<script>window.location.href = "/dailyrecordmeal?meal=${meal}";</script>`);
@@ -1249,3 +1253,93 @@ app.post('/setting', async (req, res) => {
   }
 });
 
+app.post('/first-setting', async (req, res) => {
+  const userNickname = req.user.userNickname;
+  const gender = req.body.gender;
+  const height = req.body.height;
+  const weight = req.body.weight;
+  const age = req.body.age;
+  const sleeptime = req.body.sleeptime;
+  const activity = req.body.activity;
+  const bmi = req.body.bmi;
+
+  // // 현재 날짜와 시간 가져오기 (UTC)
+  // const currentDate = new Date();
+
+  // // UTC 시간을 한국 시간으로 변환
+  // const koreanTimeOffset = 9 * 60; // 한국 시간은 UTC+9
+  // const koreanTime = new Date(currentDate.getTime() + koreanTimeOffset * 60000);
+
+  let healthStatus = '';
+  if (bmi < 18.5) {
+    healthStatus = '저체중';
+  } else if (bmi >= 18.5 && bmi < 23) {
+    healthStatus = '정상';
+  } else if (bmi >= 23 && bmi < 25) {
+    healthStatus = '비만전단계';
+  } else if (bmi >= 25 && bmi < 30) {
+    healthStatus = '1단계비만';
+  } else if (bmi >= 30 && bmi < 35) {
+    healthStatus = '2단계비만';
+  } else if (bmi >= 36) {
+    healthStatus = '3단계비만';
+  }
+
+  let activityindex;
+  if (gender == "male" && activity == "비활동적") {
+    activityindex = 1;
+  } else if (gender == "male" && activity == "저활동적") {
+    activityindex = 1.11;
+  } else if (gender == "male" && activity == "활동적") {
+    activityindex = 1.25;
+  } else if (gender == "male" && activity == "매우활동적") {
+    activityindex = 1.48;
+  } else if (gender == "female" && activity == "비활동적") {
+    activityindex = 1.0;
+  } else if (gender == "female" && activity == "저활동적") {
+    activityindex = 1.12;
+  } else if (gender == "female" && activity == "활동적") {
+    activityindex = 1.27;
+  } else if (gender == "female" && activity == "매우활동적") {
+    activityindex = 1.45;
+  }  
+
+  let BMR; //기초대사량 = basal metabolic rate = BMR
+  if (gender == "male") {
+    BMR = (6.25 * height) + (10 * weight) - (5 * age) + 5;
+  } else if(gender == "female"){
+    BMR = (6.25 * height) + (10 * weight) - (5 * age) - 161; 
+  }
+
+  let RDA; //하루권장섭취량 = Recommended Daily Allowance = RDA
+  RDA = BMR * activityindex;
+
+  const data = {
+    userNickname: userNickname,
+    gender: gender,
+    height: height,
+    weight: weight,
+    age: age,
+    sleeptime: sleeptime,
+    activity: activity,
+    bmi: bmi, //bmi 값
+    healthStatus: healthStatus, // bmi 결과
+    //timestamp: koreanTime,
+    activityindex: activityindex,
+    BMR: BMR,
+    RDA: RDA
+  };
+
+  //db.collection('user_info').insertOne(data);
+  try {
+    await db.collection('user_info').updateOne(
+      { userNickname: userNickname },
+      { $set: data },
+      { upsert: true }
+    );
+
+  } catch (err) {
+    console.error('Error updating user info:', err);
+    res.status(500).send('Internal Server Error');
+  }
+});
