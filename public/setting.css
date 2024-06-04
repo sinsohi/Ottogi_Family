@@ -1,75 +1,76 @@
 body {
-    font-family: Arial, sans-serif;
-    background-image: url('dailyrecord.JPG');
-    background-size: cover;
-    background-repeat: no-repeat;
-    background-attachment: fixed;
+    font-family: Arial, sans-serif; /* 본문 폰트 설정 */
+    background-image: url('dailyrecord.JPG'); /* 배경 이미지 설정 */
+    background-size: cover; /* 배경 이미지가 요소를 완전히 덮도록 설정 */
+    background-repeat: no-repeat; /* 배경 이미지 반복 금지 */
+    background-attachment: fixed; /* 배경 이미지 고정 */
 }
 
 h2 {
-    margin-top: 20px;
+    margin-top: 20px; /* 제목의 상단 마진 */
     font-size: 24px; /* 글자 크기 증가 */
 }
 
 .activity-level {
-    margin-bottom: 20px; /* 간격 증가 */
+    margin-bottom: 20px; /* 활동량 선택 항목의 하단 마진 증가 */
 }
 
 input[type="text"],
 input[type="radio"],
 button {
-    margin: 10px 0; /* 간격 증가 */
-    padding: 10px; /* 패딩 증가 */
+    margin: 10px 0; /* 각 입력 필드 및 버튼의 상하 마진 */
+    padding: 10px; /* 입력 필드 및 버튼의 패딩 */
     font-size: 20px; /* 글자 크기 증가 */
 }
 
 button {
-    background-color: #007bff;
-    color: white;
-    border: none;
-    cursor: pointer;
+    background-color: #007bff; /* 버튼 배경색 설정 */
+    color: white; /* 버튼 글자색 설정 */
+    border: none; /* 버튼 테두리 제거 */
+    cursor: pointer; /* 버튼에 커서 포인터 모양 설정 */
 }
 
 button:hover {
-    background-color: #0056b3;
+    background-color: #0056b3; /* 버튼 호버 시 배경색 변경 */
 }
 
 .container {
-    max-width: 600px;
-    margin: 0;
-    margin-left: 20px; /* 원하는 값으로 설정합니다 */
+    max-width: 600px; /* 컨테이너 최대 너비 설정 */
+    margin: 0; /* 기본 마진 제거 */
+    margin-left: 20px; /* 컨테이너의 왼쪽 마진 설정 */
 }
 
 .row {
-    display: flex;
-    flex-wrap: nowrap; /* 줄바꿈을 막습니다. */
-    justify-content: space-between; /* 왼쪽과 오른쪽 사이의 간격을 늘립니다. */
-    margin-bottom: 20px; /* 간격 증가 */
+    display: flex; /* 플렉스 박스 설정 */
+    flex-wrap: nowrap; /* 줄바꿈 방지 */
+    justify-content: space-between; /* 각 자식 요소 사이의 간격을 동일하게 설정 */
+    margin-bottom: 5px; /* 행의 하단 마진 원래 20임******/ 
 }
 
 .col {
-    flex: 1;
+    flex: 1; /* 각 열을 동일한 비율로 확장 */
 }
 
 .col:not(:last-child) {
-    margin-right: 30px; /* 오른쪽 간격을 늘립니다. */
+    margin-right: 30px; /* 마지막 열을 제외한 각 열의 오른쪽 마진 */
 }
 
+/* 성별과 나이, 신장과 체중 사이의 간격 설정 */
 .col:nth-child(2),
 .col:nth-child(3) {
-    margin-right: -800px; /* 성별과 나이, 신장과 체중 사이의 간격을 넓힙니다. */
-    margin-bottom: 0; /* 세로 간격을 없앱니다. */
+    margin-right: -800px; /* 특정 열들의 오른쪽 마진 조정 */
+    margin-bottom: 0; /* 특정 열들의 하단 마진 제거 */
 }
 
+/* 신장과 체중 사이의 간격 설정 */
 .col:nth-child(3),
 .col:nth-child(4) {
-    margin-right: -800px; /* 신장과 체중 사이의 간격을 더 벌립니다. */
-    margin-bottom: 0; /* 세로 간격을 없앱니다. */
+    margin-right: -800px; /* 특정 열들의 오른쪽 마진 조정 */
+    margin-bottom: 0; /* 특정 열들의 하단 마진 제거 */
 }
-
 
 @media screen and (max-width: 768px) {
     .container {
-        padding: 0 10px;
+        padding: 0 10px; /* 모바일 화면에서 컨테이너의 좌우 패딩 설정 */
     }
 }
