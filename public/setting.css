@@ -122,3 +122,7 @@ input[type="radio"] {
 input[type="radio"]:checked + .activity-label img {
     border: 2px solid black;
 }
+
+input[type="text"] {
+    border-radius: 8px; /* 테두리의 둥글기 정도를 조절합니다. */
+}
