@@ -38,10 +38,17 @@ body {
   color: #534f4f; /* Placeholder 글씨 색상 조절 */
 }
 
-/* 가족 연결 placeholder 설정 */
-.NewMember::placeholder {
-  font-size: 17px; /* Placeholder 글씨 크기 조절 */
-  color: #534f4f; /* Placeholder 글씨 색상 조절 */
+/* 기존 가족 연결 */
+.Member {
+  position: absolute;
+  top: 273px; 
+  left: 810px;
+  width: 230px;
+  height: 45px; 
+  z-index: 2;
+  font-size: 22px;
+  text-align: center;
+  font-weight: bold;
 }
 
 /* userNickname 꾸미기 */
@@ -50,9 +57,10 @@ body {
   color: rgb(2, 2, 2);
   font-weight: bold;
   font-size: 40px;
-  left: 900px;
-  top: 200px;
+  left: 870px;
+  top: 170px;
   z-index: 2;
+  text-align: center;
 }
 
 #plus-btn {

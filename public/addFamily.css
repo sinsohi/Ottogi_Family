@@ -86,8 +86,8 @@ body {
   color: rgb(2, 2, 2);
   font-weight: bold;
   font-size: 40px;
-  left: 55%;
-  top: 200px;
+  left: 870px;
+  top: 170px;
   z-index: 2;
   text-align: center;
 }
@@ -99,12 +99,7 @@ body {
   background-color: #a2ab91; /* 버튼 배경색 */
   border: none; /* 테두리 제거 */
   color: white; /* 버튼 텍스트 색상 */
-  padding: 10px 20px; /* 버튼 내부 여백 */
-  text-align: center; /* 버튼 텍스트 정렬 */
-  text-decoration: none; /* 텍스트 장식 제거 */
   display: inline-block; /* 인라인 블록 형태로 표시 */
-  font-size: 16px; /* 버튼 텍스트 크기 */
-  margin: 4px 2px; /* 버튼 외부 여백 */
   z-index: 2;
   font-weight: bold;
 }

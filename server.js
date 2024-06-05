@@ -690,7 +690,7 @@ app.post('/addFamily', async(request, response) => {
             { member: { $in: [Member] } },
             { $addToSet: { member: userNickname } }
           );
-          return response.redirect('/setting');
+          return response.redirect('/first-setting');
         } else {
           return response.status(400).send('가족 구성원이 최대 수에 도달했습니다.');
         }
@@ -707,7 +707,7 @@ app.post('/addFamily', async(request, response) => {
       await db.collection('FamilyRoom').insertOne(
         { member: [userNickname] }
       );
-      return response.redirect('/setting');
+      return response.redirect('/first-setting');
     } catch (err) {
       console.error(err);
       return response.status(500).send('새 가족 추가 과정에서 오류가 발생했습니다.');
