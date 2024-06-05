@@ -1,6 +1,7 @@
 # Health-ttogi Family
 
 Health-ttogi Family는 가족 구성원의 건강 상태를 실시간으로 반영하는 3D 헬뚝이 캐릭터를 통해 건강 관리 정보를 제공하는 웹 서비스입니다. 
+
 사용자는 성별, 신장, 몸무게를 입력하여 BMI를 계산하고, 이를 기반으로 캐릭터의 상태를 시각화할 수 있습니다.
 
 ## Team
@@ -11,19 +12,18 @@ Health-ttogi Family는 가족 구성원의 건강 상태를 실시간으로 반�
 
 
 
-## 설치 가이드
+## 설치 및 실행
 
-### 사전 준비
+1. **프로젝트 클론**
+    ```sh
+    git clone https://github.com/sinsohi/Ottogi_Family.git
+    ```
+
 
 1. **Node.js 설치**
     - [Node.js LTS 버전 다운로드](https://nodejs.org/)
     - Node.js를 설치하면 npm(Node Package Manager)도 함께 설치됩니다.
 
-### 설치 및 실행
-1. **프로젝트 클론**
-    ```sh
-    git clone https://github.com/sinsohi/Ottogi_Family.git
-    ```
 
 2. **프로젝트 초기화 및 필수 패키지 설치**
     ```sh
@@ -37,14 +37,10 @@ Health-ttogi Family는 가족 구성원의 건강 상태를 실시간으로 반�
     npm install express-session passport passport-local
     ```
 
-3. **서버 실행**
-    ```sh
-    node server.js
-    ```
-
-### .env 파일 설정
+3. .env 파일 설정
 
 `.env` 파일은 환경 변수 파일로, 데이터베이스 연결 정보 등 중요한 설정 값을 포함합니다.
+
 `git clone`을 통해 프로젝트를 받아온 후, `.env` 파일을 다음과 같이 설정하세요:
 
 #### .env
@@ -52,6 +48,13 @@ Health-ttogi Family는 가족 구성원의 건강 상태를 실시간으로 반�
   MONGODB_URI=your_mongodb_connection_string
   PORT=8080
   ```
+
+4. **서버 실행**
+    ```sh
+    node server.js
+    ```
+
+
 
 ## 의존성
 
@@ -72,15 +75,21 @@ dotenv: ^10.0.0
 gsap: ^3.7.1
 
 
+
+
 ## 사용 방법
 
 필요한 모든 패키지들이 설치되어 있는지 확인합니다.
 프로젝트 루트에 .env 파일을 설정합니다.
 터미널에서 다음 명령을 실행하여 서버를 시작합니다:
-    ```sh
-    node server.js
-    ```
+
+```sh
+node server.js
+```
+
 브라우저에서 http://localhost:8080으로 접속하여 웹을 실행합니다.
+
+
 
 ## 라이선스
 
