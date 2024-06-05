@@ -6,9 +6,7 @@ Health-ttogi Family는 가족 구성원의 건강 상태를 실시간으로 반�
 ## Team
 ----
 | **신소희** | **김채은** | **김예영** |
-|:---:|:---:|:---:|:---:|
-| ![sinsohi](https://github.com/sinsohi.png) | ![CoCo-1223](https://github.com/CoCo-1223.png) | ![KimYeYoung125](https://github.com/KimYeYoung125.png) |
-| <a href="mailto:sinsohi4280@gmail.com"><img src="https://img.shields.io/badge/EMAIL-F0F0F0?style=flat-square&logo=Gmail&logoColor=orange&link=mailto:sinsohi4280@gmail.com"/></a> | <a href="mailto:kimco2104@naver.com"><img src="https://img.shields.io/badge/EMAIL-F0F0F0?style=flat-square&logo=Gmail&logoColor=orange&link=mailto:kimco2104@naver.com"/></a> | <a href="mailto:pindoll76@naver.com"><img src="https://img.shields.io/badge/EMAIL-F0F0F0?style=flat-square&logo=Gmail&logoColor=orange&=flat-square&logo=Gmail&logoColor=orange&link=mailto:pindoll76@naver.com"/></a> |
+
 
 
 ## 설치 가이드
