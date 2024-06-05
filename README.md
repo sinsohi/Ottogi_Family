@@ -7,7 +7,7 @@ Health-ttogi Family는 가족 구성원의 건강 상태를 실시간으로 반�
 | **신소희**                              | **김채은**                               | **김예영**                               |
 |:--------------------------------------:|:---------------------------------------:|:---------------------------------------:|
 | ![sinsohi](https://github.com/sinsohi.png) | ![CoCo-1223](https://github.com/CoCo-1223.png) | ![KimYeYoung125](https://github.com/KimYeYoung125.png) |
-| <a href="mailto:sinsohi4280@gmail.com"><img src="https://img.shields.io/badge/EMAIL-F0F0F0?style=flat-square&logo=Gmail&logoColor=orange&link=mailto:sinsohi4280@gmail.com"/></a> | <a href="mailto:kimco2104@naver.com"><img src="https://img.shields.io/badge/EMAIL-F0F0F0?style=flat-square&logo=Gmail&logoColor=orange&link=mailto:kimco2104@naver.com"/></a> | <a href="mailto:pindoll76@naver.com"><img src="https://img.shields.io/badge/EMAIL-F0F0F0?style=flat-square&logo=Gmail&logoColor=orange&=flat-square&logo=Gmail&logoColor=orange&link=mailto:pindoll76@naver.com"/></a> |
+| <a href="mailto:sinsohi4280@gmail.com"><img src="https://img.shields.io/badge/EMAIL-F0F0F0?style=flat-square&logo=Gmail&logoColor=orange&link=mailto:sinsohi4280@gmail.com"/></a> | <a href="mailto:kimco2104@naver.com"><img src="https://img.shields.io/badge/EMAIL-F0F0F0?style=flat-square&logo=Gmail&logoColor=orange&link=mailto:kimco2104@naver.com"/></a> | <a href="mailto:pindoll76@naver.com"><img src="https://img.shields.io/badge/EMAIL-F0F0F0?style=flat-square&logo=Gmail&logoColor=orange&link=mailto:pindoll76@naver.com"/></a> |
 
 
 
@@ -47,7 +47,7 @@ Health-ttogi Family는 가족 구성원의 건강 상태를 실시간으로 반�
 `.env` 파일은 환경 변수 파일로, 데이터베이스 연결 정보 등 중요한 설정 값을 포함합니다.
 `git clone`을 통해 프로젝트를 받아온 후, `.env` 파일을 다음과 같이 설정하세요:
 
-# .env
+#### .env
   ```sh
   MONGODB_URI=your_mongodb_connection_string
   PORT=8080
