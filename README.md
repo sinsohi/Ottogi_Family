@@ -1,11 +1,13 @@
 # Health-ttogi Family
----
+
 Health-ttogi Family는 가족 구성원의 건강 상태를 실시간으로 반영하는 3D 헬뚝이 캐릭터를 통해 건강 관리 정보를 제공하는 웹 서비스입니다. 
 사용자는 성별, 신장, 몸무게를 입력하여 BMI를 계산하고, 이를 기반으로 캐릭터의 상태를 시각화할 수 있습니다.
 
 ## Team
-----
-| **신소희** | **김채은** | **김예영** |
+| **신소희**                              | **김채은**                               | **김예영**                               |
+|:--------------------------------------:|:---------------------------------------:|:---------------------------------------:|
+| ![sinsohi](https://github.com/sinsohi.png) | ![CoCo-1223](https://github.com/CoCo-1223.png) | ![KimYeYoung125](https://github.com/KimYeYoung125.png) |
+| <a href="mailto:sinsohi4280@gmail.com"><img src="https://img.shields.io/badge/EMAIL-F0F0F0?style=flat-square&logo=Gmail&logoColor=orange&link=mailto:sinsohi4280@gmail.com"/></a> | <a href="mailto:kimco2104@naver.com"><img src="https://img.shields.io/badge/EMAIL-F0F0F0?style=flat-square&logo=Gmail&logoColor=orange&link=mailto:kimco2104@naver.com"/></a> | <a href="mailto:pindoll76@naver.com"><img src="https://img.shields.io/badge/EMAIL-F0F0F0?style=flat-square&logo=Gmail&logoColor=orange&=flat-square&logo=Gmail&logoColor=orange&link=mailto:pindoll76@naver.com"/></a> |
 
 
 
@@ -18,7 +20,6 @@ Health-ttogi Family는 가족 구성원의 건강 상태를 실시간으로 반�
     - Node.js를 설치하면 npm(Node Package Manager)도 함께 설치됩니다.
 
 ### 설치 및 실행
----
 1. **프로젝트 클론**
     ```sh
     git clone https://github.com/sinsohi/Ottogi_Family.git
@@ -53,7 +54,7 @@ Health-ttogi Family는 가족 구성원의 건강 상태를 실시간으로 반�
   ```
 
 ## 의존성
----
+
 이 프로젝트는 다음과 같은 환경 및 라이브러리 의존성이 있습니다:
 
 운영 체제 (OS)
@@ -72,7 +73,7 @@ gsap: ^3.7.1
 
 
 ## 사용 방법
----
+
 필요한 모든 패키지들이 설치되어 있는지 확인합니다.
 프로젝트 루트에 .env 파일을 설정합니다.
 터미널에서 다음 명령을 실행하여 서버를 시작합니다:
@@ -82,10 +83,11 @@ gsap: ^3.7.1
 브라우저에서 http://localhost:8080으로 접속하여 웹을 실행합니다.
 
 ## 라이선스
----
+
 MIT License
 
 Copyright (c) 2024 sinsohi
+
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
 in the Software without restriction, including without limitation the rights
