@@ -196,7 +196,7 @@ app.get('/getRDA', async (req, res) => {
       let result = await db.collection('user_info').findOne({
         userNickname : userInfo.member[i]
       })
-      RDA.push(result.RDA)
+      RDA.push(Math.ceil(result.RDA))
     }
     client.close();
     // console.log(RDA);
@@ -232,6 +232,7 @@ app.get('/getIntake', async (req, res) => {
         userNickname : userInfo.member[i],
         date : dateString
       })
+      if(!result) result = 0;
       intake.push(result.intake)
     }
 
@@ -268,6 +269,7 @@ app.get('/getBurned', async (req, res) => {
         userNickname : userInfo.member[i],
         date : dateString
       })
+      if(!result) result = 0;
       burned.push(result.burned)
     }
 
@@ -304,6 +306,7 @@ app.get('/getResultCalorie', async (req, res) => {
         userNickname : userInfo.member[i],
         date : dateString
       })
+      if(!result) result = 0;
       ResultCalorie.push(result.calorieDelta)
     }
 
@@ -626,7 +629,7 @@ app.post('/login', async (request, response, next) => {
     request.logIn(user, (err) => {
       //로그인 완료시 실행할 코드
       if (err) return next(err);
-      response.render('homePage.ejs')
+      response.redirect('homePage')
     });
   })(request, response, next);
 

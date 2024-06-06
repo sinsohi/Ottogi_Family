@@ -61,7 +61,7 @@ export default async function ottogi_module2 (){
         const response = await fetch('/getSleepTime');
         const sleepInfo = await response.json();
 
-        // console.log(sleepInfo);
+        console.log(sleepInfo);
         sleeptime = sleepInfo;
 
       } catch (error) {
@@ -379,6 +379,12 @@ export default async function ottogi_module2 (){
 
         // 섭취 & 소모 칼로리 알림 메시지 생성
         createInfoMessage(intake, burned){
+          if (intake == null) {
+            intake = 0;
+          }
+          if (burned == null) {
+            burned = 0;
+          }
             const infoMessage = document.createElement('nav');
             infoMessage.innerHTML = `오늘 ${intake}kcal만큼 섭취하시고, <br> 
             ${burned}kcal만큼 소모하셨어요.`;
@@ -435,7 +441,7 @@ export default async function ottogi_module2 (){
             ${RDA-resultcalorie}kcal 남았습니다.`;
         }
         else {
-            calorieMessage.innerHTML = `${Math.abs(RDA-resultcalorie)}kcl만큼 더 섭취하셨어요.<br>
+            calorieMessage.innerHTML = `${Math.abs(RDA-resultcalorie)}kcal만큼 더 섭취하셨어요.<br>
             그만 드시고 운동하세요!`;
             calorieMessage.style.backgroundColor = 'rgba(255, 0, 0, 0.8)';
             calorieMessage.style.color = 'white';
