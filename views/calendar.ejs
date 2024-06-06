@@ -78,10 +78,13 @@
   <div class="CalendarContainer">
     <img src="\img\캘린더컨테이너.png" alt="">
     <div class="CalendarUser">
-      <div class="UserContent1"></div>
-      <div class="UserContent2"></div>
-      <div class="UserContent3"></div>
-      <div class="UserContent4"></div>
+      <% for(let i = 0; i < 4; i++) { %>
+        <div class="UserContent<%= i+1 %>" <% if(i >= users.length) { %>hidden<% } %>>
+          <% if(i < users.length) { %>
+            <a href="/calendardetail/<%= timestamp %>/<%= family[i] %>"><%= family[i] %></a>
+          <% } %>
+        </div>
+      <% } %>  
     </div>
   </div>
 

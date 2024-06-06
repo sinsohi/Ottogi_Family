@@ -144,24 +144,34 @@ body {
   display : inline-block;
   position: absolute; /* 추가 */
   top: 140px;
+  display: flex; /* 추가 */
+  justify-content: space-around; /* 요소 간격을 균등하게 */
 }
 
 .UserContent1{
   background-color: blue;
   display : inline-block;
+  width: 200px; /* 원하는 너비로 조정 */
+  height: 150px; /* 원하는 높이로 조정 */
 }
 
 .UserContent2{
   background-color: blue;
   display : inline-block;
+  width: 200px; /* 원하는 너비로 조정 */
+  height: 150px; /* 원하는 높이로 조정 */
 }
 
 .UserContent3{
   background-color: blue;
   display : inline-block;
+  width: 200px; /* 원하는 너비로 조정 */
+  height: 150px; /* 원하는 높이로 조정 */
 }
 
 .UserContent4{
   background-color: blue;
   display : inline-block;
+  width: 200px; /* 원하는 너비로 조정 */
+  height: 150px; /* 원하는 높이로 조정 */
 }
