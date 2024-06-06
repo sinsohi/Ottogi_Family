@@ -77,26 +77,22 @@
   
   <div class="CalendarContainer">
     <img src="\img\캘린더컨테이너.png" alt="">
+    <div class="CalendarDate">
+      <%= timestamp %> 의 기록
+    </div>
     <div class="CalendarUser">
       <% for(let i = 0; i < 4; i++) { %>
         <div class="UserContent<%= i+1 %>" <% if(i >= users.length) { %>hidden<% } %>>
           <% if(i < users.length) { %>
+            <img src="/img/img<%= i+1 %>.png" alt="User <%= i+1 %> Image">
             <a href="/calendardetail/<%= timestamp %>/<%= family[i] %>"><%= family[i] %></a>
           <% } %>
         </div>
-      <% } %>  
+      <% } %>
     </div>
   </div>
 
 
-
-  <!-- members는 member가 들은 배열 -->
-  <!-- users는 member이 있는 각각의 배열 -->
-  <% for(let i = 0; i < users.length ; i++) { %>
-    <div class="person">
-      <h4><a href="/calendardetail/<%= timestamp %>/<%= family[i] %>"><%= family[i] %></a></h4>
-    </div>
-  <% } %>
   
 
 

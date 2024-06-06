@@ -175,3 +175,34 @@ body {
   width: 200px; /* 원하는 너비로 조정 */
   height: 150px; /* 원하는 높이로 조정 */
 }
+
+.CalendarDate{
+  text-align: left;
+  margin : 0px;
+  padding : 0px;
+  background-color: yellow;
+  width: 1100px;
+  height: 30px;
+  display : inline-block;
+  position: absolute; /* 추가 */
+  top: 100px;
+  display: flex; /* 추가 */
+}
+
+.UserContent1,
+.UserContent2,
+.UserContent3,
+.UserContent4 {
+position: relative;
+}
+.UserContent1 img,
+.UserContent2 img,
+.UserContent3 img,
+.UserContent4 img {
+position: absolute;
+top: 50%;
+left: 50%;
+transform: translate(-50%, -50%);
+max-width: 100%;
+max-height: 100%;
+}
