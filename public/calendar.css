@@ -9,11 +9,12 @@ table {
 
 /* 월별 캘린더 글자 */
 .calendar-title {
-  text-align: left;
-  margin-left: 0px; 
-  margin-bottom: 20px; 
-  /* 밑줄과 글자가 겹치지 않게 */
-  text-decoration-color: #a2ab91;
+ padding: 0px;
+}
+
+.calendar-title img {
+  width: 200px; 
+  height: auto; 
 }
 
 /* 셀 스타일 */
@@ -115,4 +116,52 @@ body {
 
 .text {
   text-align: center;
+}
+
+.userContainer{
+  margin-top : 20px
+}
+
+.CalendarContainer{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative; /* 추가 */
+}
+
+.CalendarContainer>img{
+  position: relative;
+  top : -30px;
+  width: 1200px;
+  height: auto;
+  display : inline-block
+}
+
+.CalendarUser{
+  background-color: red;
+  width: 1100px;
+  height: 180px;
+  display : inline-block;
+  position: absolute; /* 추가 */
+  top: 140px;
+}
+
+.UserContent1{
+  background-color: blue;
+  display : inline-block;
+}
+
+.UserContent2{
+  background-color: blue;
+  display : inline-block;
+}
+
+.UserContent3{
+  background-color: blue;
+  display : inline-block;
+}
+
+.UserContent4{
+  background-color: blue;
+  display : inline-block;
 }
