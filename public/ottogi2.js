@@ -63,7 +63,7 @@ export default async function ottogi_module2 (){
 
         console.log(sleepInfo);
         sleeptime = sleepInfo;
-
+        
       } catch (error) {
         console.log('Error:', error);
       }
@@ -123,36 +123,38 @@ export default async function ottogi_module2 (){
         const ageInfo = await response.json();
 
 
-        // console.log(ageInfo);
+        console.log(ageInfo);
         age = ageInfo;
 
       } catch (error) {
         console.log('Error:', error);
       }
 
-      // 연령별 적정 수면 시간 비교하여 다크써클 단계 설정
-      for(let i=0; i<familyInfo.length; i++){
-        // 6 ~ 13세 
-        if(age[i] >=6 && age[i]<=13){
-            if(sleeptime[i]>7 && sleeptime[i]<=8) darkCircleStages.push(1) // 7~8시간 수면 시 다크써클 1단계
-            if(sleeptime[i]>6 && sleeptime[i]<=7) darkCircleStages.push(2) // 6~7시간 수면 시 다크써클 2단계
-            if(sleeptime[i]>=0 && sleeptime[i]<=6) darkCircleStages.push(3) // 0~6시간 수면 시 다크써클 3단계
-        }
+        // 연령별 적정 수면 시간 비교하여 다크써클 단계 설정
+    for (let i = 0; i < familyInfo.length; i++) {
+      let stage = 0; // 기본값은 0
 
-        // 14 ~ 17세 
-        if(age[i] >=14 && age[i]<=17){
-            if(sleeptime[i]>6 && sleeptime[i]<=7) darkCircleStages.push(1) // 6~7시간 수면 시 다크써클 1단계
-            if(sleeptime[i]>5 && sleeptime[i]<=6) darkCircleStages.push(2) // 5~6시간 수면 시 다크써클 2단계
-            if(sleeptime[i]>=0 && sleeptime[i]<=5) darkCircleStages.push(3) // 0~5시간 수면 시 다크써클 3단계
-        }
-        
-        // 18세 이상
-        if(age[i] >=18){
-            if(sleeptime[i]>5 && sleeptime[i]<=6) darkCircleStages.push(1) // 5~6시간 수면 시 다크써클 1단계
-            if(sleeptime[i]>4 && sleeptime[i]<=5) darkCircleStages.push(2) // 4~5시간 수면 시 다크써클 2단계
-            if(sleeptime[i]>=0 && sleeptime[i]<=4) darkCircleStages.push(3) // 0~4시간 수면 시 다크써클 3단계
-        }
-    }
+      // 6 ~ 13세
+      if (age[i] >= 6 && age[i] <= 13) {
+          if (sleeptime[i] > 7 && sleeptime[i] <= 8) stage = 1;
+          else if (sleeptime[i] > 6 && sleeptime[i] <= 7) stage = 2;
+          else if (sleeptime[i] >= 0 && sleeptime[i] <= 6) stage = 3;
+      }
+      // 14 ~ 17세
+      else if (age[i] >= 14 && age[i] <= 17) {
+          if (sleeptime[i] > 6 && sleeptime[i] <= 7) stage = 1;
+          else if (sleeptime[i] > 5 && sleeptime[i] <= 6) stage = 2;
+          else if (sleeptime[i] >= 0 && sleeptime[i] <= 5) stage = 3;
+      }
+      // 18세 이상
+      else if (age[i] >= 18) {
+          if (sleeptime[i] > 5 && sleeptime[i] <= 6) stage = 1;
+          else if (sleeptime[i] > 4 && sleeptime[i] <= 5) stage = 2;
+          else if (sleeptime[i] >= 0 && sleeptime[i] <= 4) stage = 3;
+      }
+
+      darkCircleStages.push(stage);
+  }
 
 
 
@@ -307,10 +309,12 @@ export default async function ottogi_module2 (){
 
             // 다크써클 생성 함수 호출
             this.createDarkCircles(darkCircleStages[this.darkCircleIndex]);
+            console.log(darkCircleStages[this.darkCircleIndex])
         }
 
         // 다크써클 생성 함수
         createDarkCircles(stage) {
+          // console.log(stage)
             const darkCircles = new THREE.Group();
             const material = new THREE.MeshBasicMaterial({ color: 0x000000 });
         

@@ -157,19 +157,29 @@ app.get('/getGender', async (req, res) => {
 // sleeptime 전달
 app.get('/getSleepTime', async (req, res) => {
   let sleeptime = [];
+
+  // 현재 날짜를 YYYY-MM-DD 형식으로 설정
+  var today = new Date();
+  var year = today.getFullYear();
+  var month = ('0' + (today.getMonth() + 1)).slice(-2);
+  var day = ('0' + today.getDate()).slice(-2);
+  var dateString = year + '-' + month + '-' + day;
+
   try {
     const client = await MongoClient.connect(url);
     const db = client.db('Ottogi_Family');
 
     let userInfo = await db.collection('FamilyRoom').findOne({
-      member : req.user.userNickname
+      member : req.user.userNickname,
     })
 
     for(let i=0; i<userInfo.member.length; i++){
       let result = await db.collection('user_info').findOne({
-        userNickname : userInfo.member[i]
+        userNickname : userInfo.member[i],
+        date : dateString
       })
-      sleeptime.push(result.sleeptime)
+      if(!result) sleeptime.push(0)
+      else sleeptime.push(result.sleepHour)
     }
 
     client.close();
@@ -1146,19 +1156,31 @@ app.post('/dailyrecordsleeptime', async (req, res) => {
   
   var today = new Date();
 
-var year = today.getFullYear();
-var month = ('0' + (today.getMonth() + 1)).slice(-2);
-var day = ('0' + today.getDate()).slice(-2);
+  var year = today.getFullYear();
+  var month = ('0' + (today.getMonth() + 1)).slice(-2);
+  var day = ('0' + today.getDate()).slice(-2);
 
-var dateString = year + '-' + month  + '-' + day;
+  var dateString = year + '-' + month  + '-' + day;
 
-  const data = {
-    userNickname: userNickname,
-    sleepHour: sleepHour,
-    sleepMinute: sleepMinute,
-    timestamp: dateString
-  };
-  await db.collection('DRsleeptime').insertOne(data);
+  // 기존 데이터가 있는지 확인
+  const existingData = await db.collection('DRsleeptime').findOne({ userNickname, timestamp: dateString });
+
+  if (existingData) {
+    // 기존 데이터가 있으면 업데이트
+    await db.collection('DRsleeptime').updateOne(
+      { userNickname, timestamp: dateString },
+      { $set: { sleepHour, sleepMinute } }
+    );
+  } else {
+    // 기존 데이터가 없으면 새로운 데이터 삽입
+    const data = {
+      userNickname: userNickname,
+      sleepHour: sleepHour,
+      sleepMinute: sleepMinute,
+      timestamp: dateString
+    };
+    await db.collection('DRsleeptime').insertOne(data);
+  }
 });
 
 app.post('/setting', async (req, res) => {

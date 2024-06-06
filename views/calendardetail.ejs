@@ -22,32 +22,39 @@
   <div class="weight-container">
     <img src="\img\캘린더디테일요소.png" alt="weight image">
     <div class = "text">몸무게</div>
-    <%= users.weight %>
+    <p><%= users.weight %>kg</p>
   </div>
   <!--수면시간-->
   <div class="sleep-container">
     <img src="\img\캘린더디테일요소.png" alt="sleep image">
     <div class = "text">수면시간</div>
-    <%= users.sleeptime %>
-  </div>
+    <p><%= users.sleepHour %> 시간 <%= users.sleepMinute %> 분</p>
+    </div>
   <!--섭취칼로리-->
   <div class="intake-calorie-container">
     <img src="\img\캘린더디테일요소.png" alt="intake calorie image">
     <div class = "text">섭취칼로리</div>
-    <%= users.intake %>
+    <p><%= users.intake %>kcal</p>
   </div>
   <!--소모칼로리-->
   <div class="burn-calorie-container">
     <img src="\img\캘린더디테일요소.png" alt="burn calorie image">
     <div class = "text">소모칼로리</div>
-    <%= users.burned %>
+    <p><%= users.burned %>kcal</p>
   </div>
   <!--총기록-->
   <div class="total-record-container">
     <img src="\img\캘린더디테일요소.png" alt="total record image">
-    <div class = "text">총기록</div>
-    <%= users.calorieDelta %>  
-  </div>
+    <div class = "container">
+      <div class = "text">총기록</div>
+      <div class="container">
+        <div></div>
+        <%= Math.ceil(users.calorieDelta) %>kcal &#x2F; <%= Math.ceil(users.RDA) %>kcal<br>
+      </div>
+      (섭취칼로리 - 소모칼로리) / (일일 권장 칼로리)
+      </div>
+    </div>
+ 
 
 <!--유저의 정보 출력-->
 <div>

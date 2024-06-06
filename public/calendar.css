@@ -97,5 +97,15 @@ body {
   color: #000000;
 }
 
+.container{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh; /* 페이지 높이에 맞게 조절 */
+  width: 500px;
+}
 
+.text {
+  text-align: center;
 
+}
