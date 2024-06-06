@@ -242,8 +242,8 @@ app.get('/getIntake', async (req, res) => {
         userNickname : userInfo.member[i],
         date : dateString
       })
-      if(!result) result = 0;
-      intake.push(result.intake)
+      if(!result) intake.push(0)
+        else intake.push(result.intake)
     }
 
     client.close();
@@ -279,8 +279,8 @@ app.get('/getBurned', async (req, res) => {
         userNickname : userInfo.member[i],
         date : dateString
       })
-      if(!result) result = 0;
-      burned.push(result.burned)
+      if(!result) burned.push(0)
+      else burned.push(result.burned)
     }
 
     client.close();
@@ -316,8 +316,8 @@ app.get('/getResultCalorie', async (req, res) => {
         userNickname : userInfo.member[i],
         date : dateString
       })
-      if(!result) result = 0;
-      ResultCalorie.push(result.calorieDelta)
+      if(!result) ResultCalorie.push(0)
+        else ResultCalorie.push(result.calorieDelta)
     }
 
     client.close();
@@ -395,141 +395,6 @@ app.post('/register', async (request, response) => {
 app.get('/addFamily', (request, response) => {
   response.render('addFamily.ejs', { userNickname: request.session.userNickname });
 
-});
-
-// intake 전달
-app.get('/getIntake', async (req, res) => {
-  let intake = [];
-
-  // 현재 날짜를 YYYY-MM-DD 형식으로 설정
-  var today = new Date();
-  var year = today.getFullYear();
-  var month = ('0' + (today.getMonth() + 1)).slice(-2);
-  var day = ('0' + today.getDate()).slice(-2);
-  var dateString = year + '-' + month + '-' + day;
-
-  try {
-    const client = await MongoClient.connect(url);
-    const db = client.db('Ottogi_Family');
-
-    let userInfo = await db.collection('FamilyRoom').findOne({
-      member : req.user.userNickname
-    })
-
-    for(let i=0; i<userInfo.member.length; i++){
-      let result = await db.collection('user_info').findOne({
-        userNickname : userInfo.member[i],
-        date : dateString
-      })
-      intake.push(result.intake)
-    }
-
-    client.close();
-    res.json(intake); 
-
-  } catch (error) {
-    console.log('Error:', error);
-    res.status(500).json({ error: 'Internal Server Error' });
-  }
-});
-
-// burned 전달
-app.get('/getBurned', async (req, res) => {
-  let burned = [];
-
-    // 현재 날짜를 YYYY-MM-DD 형식으로 설정
-    var today = new Date();
-    var year = today.getFullYear();
-    var month = ('0' + (today.getMonth() + 1)).slice(-2);
-    var day = ('0' + today.getDate()).slice(-2);
-    var dateString = year + '-' + month + '-' + day;
-
-  try {
-    const client = await MongoClient.connect(url);
-    const db = client.db('Ottogi_Family');
-
-    let userInfo = await db.collection('FamilyRoom').findOne({
-      member : req.user.userNickname
-    })
-
-    for(let i=0; i<userInfo.member.length; i++){
-      let result = await db.collection('user_info').findOne({
-        userNickname : userInfo.member[i],
-        date : dateString
-      })
-      burned.push(result.burned)
-    }
-
-    client.close();
-    res.json(burned); 
-
-  } catch (error) {
-    console.log('Error:', error);
-    res.status(500).json({ error: 'Internal Server Error' });
-  }
-});
-
-// ResultCalorie 전달
-app.get('/getResultCalorie', async (req, res) => {
-  let ResultCalorie = [];
-
-  // 현재 날짜를 YYYY-MM-DD 형식으로 설정
-  var today = new Date();
-  var year = today.getFullYear();
-  var month = ('0' + (today.getMonth() + 1)).slice(-2);
-  var day = ('0' + today.getDate()).slice(-2);
-  var dateString = year + '-' + month + '-' + day;
-
-  try {
-    const client = await MongoClient.connect(url);
-    const db = client.db('Ottogi_Family');
-
-    let userInfo = await db.collection('FamilyRoom').findOne({
-      member : req.user.userNickname
-    })
-
-    for(let i=0; i<userInfo.member.length; i++){
-      let result = await db.collection('user_info').findOne({
-        userNickname : userInfo.member[i],
-        date : dateString
-      })
-      ResultCalorie.push(result.calorieDelta)
-    }
-
-    client.close();
-    res.json(ResultCalorie); 
-
-  } catch (error) {
-    console.log('Error:', error);
-    res.status(500).json({ error: 'Internal Server Error' });
-  }
-});
-
-// age 전달
-app.get('/getAge', async (req, res) => {
-  let age = [];
-  try {
-    const client = await MongoClient.connect(url);
-    const db = client.db('Ottogi_Family');
-
-    let userInfo = await db.collection('FamilyRoom').findOne({
-      member : req.user.userNickname
-    })
-
-    for(let i=0; i<userInfo.member.length; i++){
-      let result = await db.collection('user_info').findOne({
-        userNickname : userInfo.member[i]
-      })
-      age.push(result.age)
-    }
-
-    client.close();
-    res.json(age); 
-
-  } catch (error) {
-    console.log('Error:', error);
-    res.status(500).json({ error: 'Internal Server Error' });
-  }
 });
 
 
