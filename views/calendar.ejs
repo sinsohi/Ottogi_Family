@@ -75,6 +75,7 @@
 
  
   
+ 
   <div class="CalendarContainer">
     <img src="\img\캘린더컨테이너.png" alt="">
     <div class="CalendarDate">
@@ -84,13 +85,12 @@
       <% for(let i = 0; i < 4; i++) { %>
         <div class="UserContent<%= i+1 %>" <% if(i >= users.length) { %>hidden<% } %>>
           <% if(i < users.length) { %>
-            <img src="/img/img<%= i+1 %>.png" alt="User <%= i+1 %> Image">
+            <img src="/img/img<%= i+1 %>.png" alt="<%= family[i] %>">
             <a href="/calendardetail/<%= timestamp %>/<%= family[i] %>"><%= family[i] %></a>
           <% } %>
         </div>
       <% } %>
     </div>
-  </div>
 
 
   
