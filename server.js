@@ -27,6 +27,15 @@ app.use(
   ))
 );
 
+
+app.use(express.static('public', {
+  setHeaders: (res, path) => {
+    if (path.endsWith('.js')) {
+      res.setHeader('Content-Type', 'application/javascript');
+    }
+  }
+}));
+
 // body-parser 미들웨어 사용 설정
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());

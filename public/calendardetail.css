@@ -5,6 +5,10 @@ html, body {
   overflow: hidden;
 }
 
+a{
+  text-decoration: none;
+}
+
 /* 배경화면 설정 */
 body {
   height: 100vh;

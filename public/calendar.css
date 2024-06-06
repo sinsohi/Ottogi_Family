@@ -59,6 +59,14 @@ td:hover {
   padding: 10px;
 }
 
+a {
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
 /*전체 사이트 배경*/
 body {
   height: 100vh;
@@ -107,5 +115,4 @@ body {
 
 .text {
   text-align: center;
-
 }
