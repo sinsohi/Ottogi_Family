@@ -702,8 +702,14 @@ app.get('/calendardetail/:timestamp/:Nickname', async (request,response)=>{
   const timestamp = request.params.timestamp;
   console.log(users);
 
+  let UserForWeight = await db.collection('user_info').findOne({
+    userNickname : request.params.Nickname
+  })
+
+  console.log(UserForWeight)
+
   const Nickname = request.params.Nickname;
-  response.render('calendardetail.ejs', {Nickname : Nickname ,users : users, timestamp : timestamp})
+  response.render('calendardetail.ejs', {Nickname : Nickname ,users : users, timestamp : timestamp, weight : UserForWeight.weight})
    
   })
 
