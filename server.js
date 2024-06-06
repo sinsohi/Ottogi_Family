@@ -981,20 +981,33 @@ app.post('/dailyrecordsleeptime', async (req, res) => {
   
   var today = new Date();
 
-var year = today.getFullYear();
-var month = ('0' + (today.getMonth() + 1)).slice(-2);
-var day = ('0' + today.getDate()).slice(-2);
+  var year = today.getFullYear();
+  var month = ('0' + (today.getMonth() + 1)).slice(-2);
+  var day = ('0' + today.getDate()).slice(-2);
 
-var dateString = year + '-' + month  + '-' + day;
+  var dateString = year + '-' + month  + '-' + day;
 
-  const data = {
-    userNickname: userNickname,
-    sleepHour: sleepHour,
-    sleepMinute: sleepMinute,
-    timestamp: dateString
-  };
-  await db.collection('DRsleeptime').insertOne(data);
+  // 기존 데이터가 있는지 확인
+  const existingData = await db.collection('DRsleeptime').findOne({ userNickname, timestamp: dateString });
+
+  if (existingData) {
+    // 기존 데이터가 있으면 업데이트
+    await db.collection('DRsleeptime').updateOne(
+      { userNickname, timestamp: dateString },
+      { $set: { sleepHour, sleepMinute } }
+    );
+  } else {
+    // 기존 데이터가 없으면 새로운 데이터 삽입
+    const data = {
+      userNickname: userNickname,
+      sleepHour: sleepHour,
+      sleepMinute: sleepMinute,
+      timestamp: dateString
+    };
+    await db.collection('DRsleeptime').insertOne(data);
+  }
 });
+
 
 app.post('/setting', async (req, res) => {
   const userNickname = req.user.userNickname;
