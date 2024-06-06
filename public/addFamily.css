@@ -33,14 +33,30 @@ body {
   z-index: 1; /* z-index 추가 */
 }
 
-/* 체크 박스 스타일 */
-#notFamilyCheckbox {
+/* 기본 체크박스를 숨깁니다 */
+.custom-checkbox {
+  display: none;
+}
+
+/* 커스텀 체크박스 스타일 */
+.custom-checkbox-label {
+  display: inline-block;
+  width: 24px;
+  height: 24px;
+  border: 2px solid #000;
+  cursor: pointer;
+  position: relative;
+}
+
+/* 체크 상태일 때 X 모양을 표시합니다 */
+.custom-checkbox:checked + .custom-checkbox-label::before {
+  content: 'X';
   position: absolute;
-  top: 115px; /* 이미지 위에 위치 조정 */
-  left: 990px; /* 이미지 왼쪽에 위치 조정 */
-  width: 50px; /* 체크박스 크기 조정 */
-  height: 500px; /* 체크박스 크기 조정 */
-  z-index: 2; /* 체크박스가 이미지보다 앞에 오도록 z-index 추가 */
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 18px;
+  color: #000;
 }
 
 /* "가족 추가 안함" 글자 */
