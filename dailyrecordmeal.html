@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>식단 기록</title>
+    <link href="/dailyrecordmeal.css" rel="stylesheet">
     <!-- <style>
         body {
             background-image: url('/dailyrecord.JPG');
@@ -21,12 +22,12 @@
     </style>   -->
 </head>
 <body>
-    <div class="container">
-        <h2>매일 기록 - 식단</h2>
-        <div id="mealContent">
-            
-        </div>
+    <div class="top-letters">
+        <h2>< 매일 기록 - 식단 ></h2>
+        <div id="mealContent"></div>
     </div>
+    
+    <img src=".\img\recordbox.png" alt="recorbox" id="recordbox">
 
     <div class="container">
         <h2>메뉴 직접 추가</h2>
@@ -47,11 +48,14 @@
             
             let mealContent = '';
             if (meal === 'breakfast') {
-                mealContent = '<h3>아침 식단</h3><p>아침 메뉴 내용</p>';
+                mealContent = `
+                <h3>아침 식단</h3>
+                <img src="./img/sun.png" id="sun"/>
+                `;
             } else if (meal === 'lunch') {
-                mealContent = '<h3>점심 식단</h3><p>점심 메뉴 내용</p>';
+                mealContent = '<h3>점심 식단</h3><p><먹은 것>></p>';
             } else if (meal === 'dinner') {
-                mealContent = '<h3>저녁 식단</h3><p>저녁 메뉴 내용</p>';
+                mealContent = '<h3>저녁 식단</h3><p><먹은 것></p>';
             } 
             const mealContentElement = document.getElementById('mealContent');
             mealContentElement.innerHTML = mealContent;

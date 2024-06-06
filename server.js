@@ -561,7 +561,7 @@ app.post('/firstlogin', async (request, response, next) => {
     if (error) return response.status(500).json(error)
       if (!user) return response.status(401).json(info.message)
       //일치할 경우 
-    let userNickname = request.user.userNickname;
+    let userNickname = request.body.userNickname;
     request.logIn(user, (err) => {
       //로그인 완료시 실행할 코드
       if (err) return next(err);
