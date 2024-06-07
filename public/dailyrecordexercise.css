@@ -1,0 +1,214 @@
+/* html과 css의 기본 마진과 패딩 제거 */
+html, body {
+    margin: 0;
+    padding:0;
+    overflow: hidden;
+  }
+
+body {
+    background-image: url('./img/dailyrecord.JPG');
+    background-size: cover; /* 배경 이미지가 화면 전체를 덮도록 설정 */
+    background-position: center; /* 배경 이미지의 위치를 중앙으로 설정 */
+    font-family: Arial, sans-serif;
+    margin: 0;
+    height: 100vh; /* 화면 전체 높이만큼 설정 */
+    display: flex;
+    flex-direction: column; /* 요소 수직 정렬 */
+    justify-content: center;
+    align-items: center;
+    background-repeat: no-repeat;
+    background-size: 100% 100%;
+}
+
+/* 박스 */
+#recordbox {
+    position: relative; 
+    top: -65px;
+    width: 500px;
+    height: 500px;
+    z-index: 1;
+}
+
+/*전체 박스*/
+.container {
+    text-align: center; /* 텍스트 중앙 정렬 */
+    position: absolute;
+    z-index: 2;
+    top : 300px;
+}
+
+/* 아침, 점심, 저녁 식단*/
+.top-letters {
+    position: fixed;
+    font-weight: bold;
+    text-align: center;
+    top: 0px;
+    z-index:2;
+    display: inline-block; /* inline-block을 사용하여 float 속성과 호환되도록 합니다. */
+}
+
+/* sun 사진  */ 
+#sun{
+    position: relative;
+    width: 35px;
+    top: -53px;
+    right: 10px;
+    float: right;
+    margin-right: 10px; /* 이미지와 텍스트 사이에 간격을 추가 */
+}
+
+
+/* 아침, 점심, 저녁 식단 */
+#mealContent {
+    position: relative;
+    font-weight: bold;
+    text-align: center;
+    top: -100px;
+    font-size:18px;
+}
+
+/* 메뉴 추가 */
+.plus-menu-letter {
+    position: relative;
+    top : -130px;
+    font-weight: bold;
+    font-size: 18px;
+    width: 100%;
+    text-align: center;
+}
+
+/* 오늘 먹은 것 추가 박스 */
+#addMenu {
+    width: 100%; /* 너비를 100%로 설정하여 부모 요소의 전체 너비를 차지하도록 합니다. */
+    display: flex; /* Flexbox 모델 적용 */
+    /*flex-direction: column; /* 아이템들을 수직으로 정렬 */
+    justify-content: space-between; /* 아이템들을 좌우로 정렬 */
+    align-items: center; /* 중앙 정렬 */
+}
+
+.food {
+    width: 50%;
+    align-items: center;
+}
+
+.calorie {
+    width: 50%;
+    align-items: center;
+}
+
+.foodname {
+    position: relative;
+    top: -30px;
+}
+
+/* 메뉴 추가 텍스트 */
+#menuName {
+    position: relative;
+    top: -30px;
+    left: 10px;
+    width: 70%;
+    height: 30px;
+}
+
+/* 음식 입력 텍스트 */
+.food-letter {
+    position: absolute; /* 절대 위치 지정 */
+    top: 15px; /* input 상자 위로 이동 */
+    left: 110px;
+    font-size: 15px;
+}
+
+/* 칼로리 입력 텍스트 */
+.calorie-letter {
+    position: absolute; /* 절대 위치 지정 */
+    top: 15px; /* input 상자 위로 이동 */
+    right: 110px;
+    font-size: 15px;
+}
+
+/* 음식 및 칼로리 입력 필드를 포함하는 div에 대한 스타일 추가 */
+.food, .calorie {
+    position: relative; /* 자식 요소의 절대 위치 기준점 */
+    margin-bottom: 30px; /* 다음 필드와의 간격 조정 */
+}
+
+/* 칼로리 입력 칸 */
+#calories, #menuName{
+    position: relative;
+    top: -10px;
+    width: 50%;
+    height: 40px;
+    left: -10px;
+    font-size: 20px;
+    border: solid 1px #a2ab91;
+    border-radius: 5px; /* 모서리 둥글기 */
+}
+#menuName{
+    position: relative;
+    top: -10px;
+    left: 10px;
+    width: 50%;
+    height: 40px;
+    font-size: 20px;
+    border: solid 1px #a2ab91;
+    border-radius: 5px; /* 모서리 둥글기 */
+}
+
+.plusbutton {
+    position: relative;
+    top: 5px;
+    left: 41px;
+    width: 30px;
+
+}
+
+.button button {
+    width: 100px; /* 버튼의 너비 */
+    height: 50px; /* 버튼의 높이 */
+    font-size: 20px; /* 버튼 내 텍스트의 크기 */
+    font-weight: bold;
+    padding: 5px; /* 버튼 내부의 여백 */
+    margin-left: 40px; /* 버튼 외부의 여백 */
+    margin-right: 80px; /* 버튼 외부의 여백 */
+    margin-bottom: -300px;
+    border-radius: 5px; /* 버튼의 모서리 둥글기 */
+    color: #000000;
+    background-color:#a2ab91;
+    border: #f6f5f1;
+}
+
+.runningIMG{
+    position: relative;
+    top:-130px
+}
+
+.form-label{
+    margin : 10px;
+}
+
+input{
+    width: 190px;
+    height: 30px;
+}
+
+.mb-3{
+    position : relative;
+    top : -30px;
+}
+
+ .btn{
+    background-color: #a2ab91;
+    padding : 10px;
+    width: 80px;
+    border-radius: 5px;
+    font-weight: bold;
+    border: none; /* 테두리 제거 */
+}
+
+.btns {
+    position : relative;
+    top : -20px;
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+}

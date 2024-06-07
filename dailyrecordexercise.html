@@ -4,7 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>운동 기록</title>
-    <style>
+
+    <link rel="stylesheet" href="dailyrecordexercise.css">
+ <style>
         body {
             background-image: url('/dailyrecord.JPG');
             background-size: cover; /* 배경 이미지가 화면 전체를 덮도록 설정 */
@@ -18,24 +20,42 @@
             height: 100%; /* 부모 요소인 body에 대해 상대적으로 높이를 100% 설정 */
             padding-bottom: 0; /* 하단 공백 제거 */
         }
-    </style>  
+    </style>
+
 </head>
 <body>
+
+    <div class="top-letters">
+        <h2>< 매일 기록 - 운동 ></h2>
+        <div id="mealContent"></div>
+    </div>
+
+    <img src=".\img\recordbox.png" alt="recorbox" id="recordbox">
+
     <div class="container">
-        <h2>운동 기록</h2>
-        <form action="/dailyrecordexercise" method="POST" onsubmit="return addExercise()">
+        <h2 class="plus-menu-letter">운동 기록</h2>
+        <div class="runningIMG">
+            <img src=".\img\runningPeople.png" alt="" width="100px">
+        </div>
+        <div id="mealContent">
+        <form action="/dailyrecordexercise" method="POST" onsubmit="return addExercise()" >
             <div class="mb-3">
-                <label for="exerciseName" class="form-label">운동 이름</label>
+                <div for="exerciseName" class="form-label">운동 이름</div>
                 <input type="text" name="exerciseName" class="form-control" id="exerciseName" placeholder="운동 이름 입력" required>
             </div>
             <div class="mb-3">
-                <label for="caloriesBurned" class="form-label">소모 칼로리</label>
+                <div for="caloriesBurned" class="form-label">소모 칼로리</div>
                 <input type="number" name="caloriesBurned" class="form-control" id="caloriesBurned" placeholder="운동으로 소모한 칼로리 입력" required>
             </div>
-            <button type="submit" class="btn btn-primary">추가</button>
+            <div class="btns">
+                <button type="submit" class="btn btn-primary">추가</button>
+                <button onclick="showPopup()" class="btn btn-primary saveMenu">저장</button> <!-- 저장 버튼 추가 -->
+            </div>
+
+
         </form>
         <div id="exerciseList"></div>
-        <button onclick="showPopup()" class="btn btn-primary">저장</button> <!-- 저장 버튼 추가 -->
+    </div>
     </div>
 
     <script>
