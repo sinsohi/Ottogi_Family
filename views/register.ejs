@@ -11,12 +11,16 @@
    <form id="registrationForm" class="form-box" action="/register" method="POST"> 
     <h4>가입</h4>
     <input name="userNickname" id="userNickname" placeholder="Nickname" required>
+    <div class="input-group">
     <span id="nicknameError" style="display: none;">닉네임이 이미 사용 중입니다.</span>
+    </div>  
 
-    <input name="username" id="username" placeholder="ID"required>
+    <div class="input-group">
+    <input name="username" id="username" placeholder="ID" required>
     <span id="IDError" style="display: none;">아이디가 이미 사용 중입니다.</span>
+    </div> 
     
-    <input name="password" placeholder="Password"type="password" required>
+    <input name="password" id ="password" placeholder="Password"type="password" required>
     <button type="submit" id="submitBtn">NEXT</button>
   </form>
 
