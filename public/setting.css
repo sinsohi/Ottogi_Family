@@ -23,19 +23,18 @@ button {
     font-size: 20px; /* 글자 크기 증가 */
 }
 
-button:hover {
-    background-color: #0056b3; /* 버튼 호버 시 배경색 변경 */
-}
-
 button {
     position: fixed; /* 버튼을 고정 위치로 설정합니다. */
     bottom: 20px; /* 아래 여백을 조정합니다. */
     right: 20px; /* 오른쪽 여백을 조정합니다. */
-    /* 기존 버튼 스타일 유지 */
-    background-color: #007bff;
-    color: white;
     border: none;
     cursor: pointer;
+    background-color: transparent; 
+}
+
+button img {
+    width: 200px; /* 이미지의 너비를 조절합니다. */
+    height: auto; /* 이미지의 높이를 자동으로 설정합니다. */
 }
 
 .container {
@@ -89,3 +88,41 @@ button {
     margin-right: 50px; /* 라벨 사이 간격 조정*/
     white-space: nowrap;/*줄바꿈강제로막음*/
 } 
+
+.activity-label {
+    display: inline-block;
+    margin-right: 10px;
+}
+
+.activity-icon {
+    width: 30px;
+    height: 30px;
+    vertical-align: middle;
+}
+
+input[type="radio"] {
+    display: none;
+}
+
+.activity-label {
+    display: inline-block;
+    margin-right: 10px;
+}
+
+.activity-icon {
+    width: 30px;
+    height: 30px;
+    vertical-align: middle;
+}
+
+input[type="radio"] {
+    display: none;
+}
+
+input[type="radio"]:checked + .activity-label img {
+    border: 2px solid black;
+}
+
+input[type="text"] {
+    border-radius: 8px; /* 테두리의 둥글기 정도를 조절합니다. */
+}
