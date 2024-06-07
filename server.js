@@ -1056,6 +1056,7 @@ app.post('/dailyrecordsleeptime', async (req, res) => {
   }
 });
 
+
 app.post('/setting', async (req, res) => {
   const userNickname = req.user.userNickname;
   const gender = req.body.gender;
