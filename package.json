@@ -8,6 +8,19 @@
     "dev": "vite",
     "build": "vite build"
   },
+  "nyc": {
+    "include": [
+      "test/**/*.js"
+    ],
+    "exclude": [
+      "OTTOGI_FANILY/*.js"
+    ],
+    "reporter": [
+      "text",
+      "html"
+    ],
+    "all": true
+  },
   "keywords": [],
   "author": "",
   "license": "ISC",
@@ -25,6 +38,7 @@
     "nodemon": "^3.1.0",
     "passport": "^0.7.0",
     "passport-local": "^1.0.0",
+    "sion": "^0.0.1",
     "socket.io": "^4.7.5",
     "three": "^0.163.0",
     "vite": "^5.2.8"

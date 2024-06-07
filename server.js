@@ -454,10 +454,11 @@ app.post('/firstlogin', async (request, response, next) => {
     if (error) return response.status(500).json(error)
       if (!user) return response.status(401).json(info.message)
       //일치할 경우 
+    let userNickname = request.body.userNickname;
     request.logIn(user, (err) => {
       //로그인 완료시 실행할 코드
       if (err) return next(err);
-      response.render('addFamily.ejs')
+      response.redirect('/addFamily')
     });
   })(request, response, next);
 
@@ -554,9 +555,9 @@ app.get('/checkUsername', async (req, res) => {
 });
 
 // 그룹 추가하는 페이지 
-app.get('/addFamily', (request, response) => {
-  response.render('addFamily.ejs');
-
+app.get('/addFamily', async(request, response) => {
+  const userNickname = request.user.userNickname;
+  response.render('addFamily.ejs', {userNickname});
 });
 
 // 회원가입 후 가족 추가하는 페이지
@@ -565,12 +566,13 @@ app.post('/addFamily', async(request, response) => {
   const userNickname = request.user.userNickname;
   const NotFamily = request.body.NotFamily; // 체크박스 값
 
-  console.log(Member, userNickname);
+  console.log(Member, userNickname, NotFamily);
   
   if(Member && NotFamily === 'yes') {
     return response.status(400).send("한 번에 하나의 선택만 가능합니다. ")
   }
-  // 이미 가족이 존재하는 경우
+
+  // 체크박스가 선택된 경우
   if (Member) {
     try {
       const existingFamily = await db.collection('FamilyRoom').findOne({ member: { $in: [Member] } });
@@ -581,7 +583,7 @@ app.post('/addFamily', async(request, response) => {
             { member: { $in: [Member] } },
             { $addToSet: { member: userNickname } }
           );
-          return response.redirect('/setting');
+          return response.redirect('/first-setting');
         } else {
           return response.status(400).send('가족 구성원이 최대 수에 도달했습니다.');
         }
@@ -593,12 +595,12 @@ app.post('/addFamily', async(request, response) => {
       console.error(err);
       return response.status(500).send('기존 가족 추가 과정에서 오류가 발생했습니다.');
     }
-  } else if (NotFamily === 'yes') {
+  } else if (NotFamily === 'on') {
     try {
       await db.collection('FamilyRoom').insertOne(
         { member: [userNickname] }
       );
-      return response.redirect('/setting');
+      return response.redirect('/first-setting');
     } catch (err) {
       console.error(err);
       return response.status(500).send('새 가족 추가 과정에서 오류가 발생했습니다.');
@@ -717,14 +719,18 @@ app.get('/calendardetail/:timestamp/:Nickname', async (request,response)=>{
 app.get('/addUser', async (request,response)=>{
 
   let users = await db.collection('FamilyRoom').find({}).toArray();
-  response.render('addUser.ejs');
+  response.render('addUser.ejs', {userNickname: request.user.userNickname});
 })
 
 //FamilyRoom 데이터에 저장 
 app.post('/addUser', async (request, response) => {
   const userNickname = request.user.userNickname; // 로그인한 사용자의 닉네임
-  const NewMember = request.body.NewMember; // 새로 추가할 멤버 정보
-  const Member = request.body.Member // 기존의 멤버 
+  const Member = request.body.Member // 연결할 멤버 
+  const NotFamily = request.body.NotFamily; // 체크박스 값
+
+  if(Member && NotFamily === 'yes') {
+    return response.status(400).send("한 번에 하나의 선택만 가능합니다. ")
+  }
 
   //console.log(userNickname)
   // 기존 가족과 연결
@@ -765,35 +771,18 @@ app.post('/addUser', async (request, response) => {
       console.error(err);
       response.status(500).send('기존 가족 추가 과정에서 오류가 발생했습니다.');
     }
-  } else if (NewMember) {
+  } 
+  else if (NotFamily === 'on') {
     try {
-      const existingFamily = await db.collection('FamilyRoom').findOne({ member: { $in: [userNickname] } });
-      
-      if (existingFamily) {
-        if (existingFamily.member.length < 4) {
-          await db.collection('FamilyRoom').updateOne(
-            { _id: existingFamily._id },
-            { $addToSet: { member: NewMember } }
-          );
-          response.redirect('/homepage');
-        } else {
-          response.status(400).send('가족 구성원이 4명을 초과할 수 없습니다.');
-        }
-      } else {
-        await db.collection('FamilyRoom').insertOne(
-          { member: [userNickname, NewMember] }
-        );
-        response.redirect('/homepage');
-      }
+      return response.redirect('/homePage');
     } catch (err) {
       console.error(err);
-      response.status(500).send('새로운 가족 생성 과정에서 오류가 발생했습니다.');
+      return response.status(500).send('새 가족 추가 과정에서 오류가 발생했습니다.');
     }
-  } else {
-    response.status(400).send('필요한 정보가 충분하지 않습니다.');
   }
-  
-
+  else {
+    response.status(400).send('닉네임이 존재하지 않습니다.');
+  }
 });
 
 app.get('/daily-record', async (req, res) => {
@@ -949,6 +938,10 @@ app.post('/delete-item', async (req, res) => {
 
 app.get('/setting', (req, res) => {
   res.sendFile(__dirname + '/setting.html');
+}); // 세팅
+
+app.get('/first-setting', (req, res) => {
+  res.sendFile(__dirname + '/first-setting.html');
 }); // 세팅
 
 app.post('/submit-form', (req, res) => {
@@ -1155,3 +1148,93 @@ app.post('/setting', async (req, res) => {
   }
 });
 
+app.post('/first-setting', async (req, res) => {
+  const userNickname = req.user.userNickname;
+  const gender = req.body.gender;
+  const height = req.body.height;
+  const weight = req.body.weight;
+  const age = req.body.age;
+  const sleeptime = req.body.sleeptime;
+  const activity = req.body.activity;
+  const bmi = req.body.bmi;
+
+  // // 현재 날짜와 시간 가져오기 (UTC)
+  // const currentDate = new Date();
+
+  // // UTC 시간을 한국 시간으로 변환
+  // const koreanTimeOffset = 9 * 60; // 한국 시간은 UTC+9
+  // const koreanTime = new Date(currentDate.getTime() + koreanTimeOffset * 60000);
+
+  let healthStatus = '';
+  if (bmi < 18.5) {
+    healthStatus = '저체중';
+  } else if (bmi >= 18.5 && bmi < 23) {
+    healthStatus = '정상';
+  } else if (bmi >= 23 && bmi < 25) {
+    healthStatus = '비만전단계';
+  } else if (bmi >= 25 && bmi < 30) {
+    healthStatus = '1단계비만';
+  } else if (bmi >= 30 && bmi < 35) {
+    healthStatus = '2단계비만';
+  } else if (bmi >= 36) {
+    healthStatus = '3단계비만';
+  }
+
+  let activityindex;
+  if (gender == "male" && activity == "비활동적") {
+    activityindex = 1;
+  } else if (gender == "male" && activity == "저활동적") {
+    activityindex = 1.11;
+  } else if (gender == "male" && activity == "활동적") {
+    activityindex = 1.25;
+  } else if (gender == "male" && activity == "매우활동적") {
+    activityindex = 1.48;
+  } else if (gender == "female" && activity == "비활동적") {
+    activityindex = 1.0;
+  } else if (gender == "female" && activity == "저활동적") {
+    activityindex = 1.12;
+  } else if (gender == "female" && activity == "활동적") {
+    activityindex = 1.27;
+  } else if (gender == "female" && activity == "매우활동적") {
+    activityindex = 1.45;
+  }  
+
+  let BMR; //기초대사량 = basal metabolic rate = BMR
+  if (gender == "male") {
+    BMR = (6.25 * height) + (10 * weight) - (5 * age) + 5;
+  } else if(gender == "female"){
+    BMR = (6.25 * height) + (10 * weight) - (5 * age) - 161; 
+  }
+
+  let RDA; //하루권장섭취량 = Recommended Daily Allowance = RDA
+  RDA = BMR * activityindex;
+
+  const data = {
+    userNickname: userNickname,
+    gender: gender,
+    height: height,
+    weight: weight,
+    age: age,
+    sleeptime: sleeptime,
+    activity: activity,
+    bmi: bmi, //bmi 값
+    healthStatus: healthStatus, // bmi 결과
+    //timestamp: koreanTime,
+    activityindex: activityindex,
+    BMR: BMR,
+    RDA: RDA
+  };
+
+  //db.collection('user_info').insertOne(data);
+  try {
+    await db.collection('user_info').updateOne(
+      { userNickname: userNickname },
+      { $set: data },
+      { upsert: true }
+    );
+
+  } catch (err) {
+    console.error('Error updating user info:', err);
+    res.status(500).send('Internal Server Error');
+  }
+});
