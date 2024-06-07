@@ -20,13 +20,13 @@ Health-ttogi Family는 가족 구성원의 건강 상태를 실시간으로 반�
 
 
 
-1. **Node.js 설치**
+2. **Node.js 설치**
     - [Node.js LTS 버전 다운로드](https://nodejs.org/)
     - Node.js를 설치하면 npm(Node Package Manager)도 함께 설치됩니다.
 
 
 
-2. **프로젝트 초기화 및 필수 패키지 설치**
+3. **프로젝트 초기화 및 필수 패키지 설치**
     ```sh
     npm init -y
     npm install express
@@ -39,14 +39,13 @@ Health-ttogi Family는 가족 구성원의 건강 상태를 실시간으로 반�
     ```
 
 
-
-3. .env 파일 설정
+4. **.env 파일 설정정**
 
 `.env` 파일은 환경 변수 파일로, 데이터베이스 연결 정보 등 중요한 설정 값을 포함합니다.
 
 프로젝트 루트에 .env 파일을 생성하고, `.env` 파일을 다음과 같이 설정하세요:
 
-#### .env
+.env
   ```sh
   MONGODB_URI=your_mongodb_connection_string
   PORT=8080
@@ -54,13 +53,10 @@ Health-ttogi Family는 가족 구성원의 건강 상태를 실시간으로 반�
 
 
 
-4. **서버 실행**
+5. **서버 실행**
     ```sh
     node server.js
     ```
-
-
-
 
 ## 의존성
 
@@ -81,9 +77,6 @@ dotenv: ^10.0.0
 gsap: ^3.7.1
 
 
-
-
-
 ## 사용 방법
 
 필요한 모든 패키지들이 설치되어 있는지 확인합니다.
@@ -95,9 +88,6 @@ node server.js
 ```
 
 브라우저에서 http://localhost:8080으로 접속하여 웹을 실행합니다.
-
-
-
 
 
 ## 라이선스
