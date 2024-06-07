@@ -7,18 +7,18 @@
 </head>
 <body>
     <div class="container">
-        <h2 class ="record-sleeptime">수면 기록</h2>
+        <h2 class ="record-sleeptime">< 수면 기록 ></h2>
         
         <form id="sleepForm" action="/dailyrecordsleeptime" method="POST" onsubmit="showPopup()">
             <img src=".\img\recordbox.png" alt="recorbox" id="recordbox">
             <!-- 수면 시간(시) -->
             <div class="mb-3">
-                <label for="sleepHour" class="form-label">HOUR</label>
+                <label for="sleepHour" class="HOUR-label">HOUR</label>
                 <input type="number" name="sleepHour" class="form-control" id="sleepHour" placeholder="시" min="0" max="23" required>
             </div>
             <!-- 수면 시간(분) -->
             <div class="mb-3">
-                <label for="sleepMinute" class="form-label">MINUTE</label>
+                <label for="sleepMinute" class="MINUTE-label">MINUTE</label>
                 <input type="number" name="sleepMinute" class="form-control" id="sleepMinute" placeholder="분" min="0" max="59" required>
             </div>
 

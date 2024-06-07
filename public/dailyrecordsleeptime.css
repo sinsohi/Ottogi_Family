@@ -9,7 +9,6 @@ body {
   background-image: url('./img/dailyrecord.JPG');
   background-size: cover; /* 배경 이미지가 화면 전체를 덮도록 설정 */
   background-position: center; /* 배경 이미지의 위치를 중앙으로 설정 */
-  font-family: Arial, sans-serif;
   margin: 0;
   height: 100vh; /* 화면 전체 높이만큼 설정 */
   display: flex;
@@ -36,7 +35,58 @@ body {
   z-index: 2;
 }
 
-.button button {
+.record-sleeptime {
+  position: relative;
+  z-index: 2;
+  top: 20px;
+}
+
+.mb-3 {
+  z-index: 2;
+  position: relative;
+}
+
+/* HOUR */
+.HOUR-label {
+  position: relative;
+  z-index: 2;
+  top : -400px;
+  left : -10px;
+  font-size: 20px;
+}
+
+/* MINUTE */
+.MINUTE-label {
+  position: relative;
+  z-index: 2;
+  top : -350px;
+  left : -10px;
+  font-size: 20px;
+}
+
+#sleepHour {
+  position: relative;
+  z-index: 2;
+  top : -400px;
+  width: 100px;
+  height: 50px;
+  font-size: 20px;
+}
+
+#sleepMinute {
+  position: relative;
+  z-index: 2;
+  top : -350px;
+  width: 100px;
+  height: 50px;
+  font-size: 20px;
+}
+
+/* 기록하기 */
+.button {
+  position: relative;
+  top: -180px;
+  left: 10px;
   width: 100px; /* 버튼의 너비 */
   height: 50px; /* 버튼의 높이 */
   font-size: 20px; /* 버튼 내 텍스트의 크기 */
@@ -45,7 +95,7 @@ body {
   margin-left: 40px; /* 버튼 외부의 여백 */
   margin-right: 80px; /* 버튼 외부의 여백 */
   margin-bottom: -300px;
-  border-radius: 5px; /* 버튼의 모서리 둥글기 */
+  border-radius: 10px; /* 버튼의 모서리 둥글기 */
   color: #000000;
   background-color:#a2ab91;
   border: #f6f5f1;
