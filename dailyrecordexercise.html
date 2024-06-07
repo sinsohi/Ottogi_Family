@@ -49,11 +49,9 @@
             </div>
             <div class="btns">
                 <button type="submit" class="btn btn-primary">추가</button>
-                <button onclick="showPopup()" class="btn btn-primary saveMenu">저장</button> <!-- 저장 버튼 추가 -->
             </div>
-
-
         </form>
+        <button onclick="showPopup()" class="btn saveMenu">저장</button> <!-- 저장 버튼 추가 -->
         <div id="exerciseList"></div>
     </div>
     </div>
@@ -69,8 +67,8 @@
             newExerciseEntry.innerText = `${exerciseName}: ${caloriesBurned} 칼로리`;
             exerciseListElement.appendChild(newExerciseEntry);
 
-            return true; // 기본 동작인 폼 제출을 유지
-        }
+            return true; 
+            }
 
         function showPopup() {
             alert("운동 기록이 저장되었습니다!");
