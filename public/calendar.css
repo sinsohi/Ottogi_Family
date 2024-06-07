@@ -209,3 +209,7 @@ body {
   top: 100px;
   display: flex; /* 추가 */
 }
+
+.calendar-title{
+  margin : 15px;
+}

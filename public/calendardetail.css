@@ -37,9 +37,31 @@ body {
   height: 100%;
 }
 
+
+.Nametext {
+  position: absolute;
+  font-weight: bold;
+  top: 123px;
+  left: 280px;
+  transform: translate(-50%, -50%); /* 정확한 중앙 정렬을 위해 */
+  font-size: 30px; /* 글자 크기 설정 */
+  margin-bottom:10px;
+}
+
 .text {
   position: absolute;
-  top: 50%;
+  font-weight: bold;
+  top: 80px;
+  left: 50%;
+  transform: translate(-50%, -50%); /* 정확한 중앙 정렬을 위해 */
+  font-size: 30px; /* 글자 크기 설정 */
+  margin-bottom:10px;
+}
+
+p {
+  position: absolute;
+  font-weight: bold;
+  top: 120px;
   left: 50%;
   transform: translate(-50%, -50%); /* 정확한 중앙 정렬을 위해 */
   font-size: 30px; /* 글자 크기 설정 */
@@ -57,18 +79,18 @@ body {
 }
 
 .intake-calorie-container {
-  top: 90px;
+  top: 150px;
   left: 20px;
 }
 
 .burn-calorie-container {
-  top: -90px;
+  top: -30px;
   left: 500px;
 }
 
 .total-record-container {
-  top: -350px;
-  left: 900px;
+  top: -300px;
+  left: 920px;
 }
 /* 요소 크기 설정 */
 .image{
@@ -76,5 +98,29 @@ body {
   vertical-align: middle;
 }
 
+.CalendarDate{
+  font-size: 25px;
+  font-weight: bold;
+  text-align: left;
+  margin : 8px;
+  padding : 30px;
+  position: absolute; 
+  display: flex; 
+}
 
 
+.container {
+  text-align: center;
+}
+
+.container h4 {
+  position : relative;
+  top : -80px;
+  text-align: center;
+  font-size: 30px;
+}
+
+.BigContainer{
+  position : relative;
+  left : 10%;
+}

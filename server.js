@@ -673,7 +673,7 @@ app.get('/calendar/:timestamp', async (request,response)=>{
     response.render('calendar.ejs',{family : userInfo.member, users : users, timestamp : request.params.timestamp});
 
   } else {
-    response.send("이 날 기록한 유저가 없습니다.")
+    response.render('Nouser.ejs')
   }
 
 
