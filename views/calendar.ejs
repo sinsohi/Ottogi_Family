@@ -7,12 +7,15 @@
   <title>Calendar</title>
   <!-- 달력 스타일을 위한 css파일(절대경로 설정)-->
   <link rel="stylesheet" type="text/css" href="\calendar.css">
+  <link rel="stylesheet" href="\main.css">
 
 </head>
 
 <body>
 
-  <h5 class="calendar-title">월별 캘린더</h5>
+  <div class="calendar-title">
+    <img src="\img\우리들의캘린더.png" alt="">
+  </div>
 
   <!-- 이전/다음달로 이동하는 버튼을 제공하는 컨트롤 영역-->
   <div id="calendarControls">
@@ -70,13 +73,26 @@
     </tbody>
   </table>
 
-  <!-- members는 member가 들은 배열 -->
-  <!-- users는 member이 있는 각각의 배열 -->
-  <% for(let i = 0; i < users.length ; i++) { %>
-    <div class="person">
-      <h4><a href="/calendardetail/<%= timestamp %>/<%= family[i] %>"><%= family[i] %></a></h4>
+ 
+  
+ 
+  <div class="CalendarContainer">
+    <img src="\img\캘린더컨테이너.png" alt="">
+    <div class="CalendarDate">
+      <%= timestamp %> 의 기록
     </div>
-  <% } %>
+    <div class="CalendarUser">
+      <% for(let i = 0; i < 4; i++) { %>
+        <div class="UserContent<%= i+1 %>" <% if(i >= users.length) { %>hidden<% } %>>
+          <% if(i < users.length) { %>
+            <img src="/img/img<%= i+1 %>.png" alt="<%= family[i] %>">
+            <a href="/calendardetail/<%= timestamp %>/<%= family[i] %>"><%= family[i] %></a>
+          <% } %>
+        </div>
+      <% } %>
+    </div>
+
+
   
 
   <!-- 웹소켓 연결 -->

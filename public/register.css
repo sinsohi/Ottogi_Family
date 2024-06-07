@@ -1,5 +1,4 @@
-input,
-div {
+input,div {
   box-sizing: border-box;
 }
 
@@ -43,18 +42,7 @@ div {
   display: block;
   margin-top: 10px;
 }
-/*
-#errorMessages {
-  span {
-    position: absolute;
-    color: red;
-    font-size: 14px;
-    display: none;
-    top: 50px;
-    left: 0;
-  }
-}
-*/
+
 /*전체 사이트 배경*/
 body {
   height: 100vh;
@@ -64,4 +52,41 @@ body {
   background-image: url('./img/Register_배경화면.png');
   background-repeat: no-repeat;
   background-size: 100% 100%;
+}
+
+.input-group {
+  position: relative;
+  margin-bottom: 10px; /* 각 input 박스 사이의 간격 */
+}
+
+.input-group span {
+  position: absolute;
+  top: -20px; /* 오류 메시지를 input 박스 위로 이동 */
+  left: 20px; /* input 박스와 동일한 좌측 여백 */
+  color: red;
+  font-size: 15px;
+  display: none; /* 기본적으로 숨김 */
+}
+
+#nicknameError {
+  position: absolute;
+  top: -20px; /* 오류 메시지를 input 박스 위로 이동 */
+  left: 20px; /* input 박스와 동일한 좌측 여백 */
+  color: red;
+  font-size: 15px;
+  display: none; /* 기본적으로 숨김 */
+}
+
+#IDError {
+  position: absolute;
+  top: 40px; /* 오류 메시지를 input 박스 위로 이동 */
+  left: 20px; /* input 박스와 동일한 좌측 여백 */
+  color: red;
+  font-size: 15px;
+  display: none; /* 기본적으로 숨김 */
+}
+
+#userNickname, #username, #password{
+  width: 330px;
+  height: 50px;
 }

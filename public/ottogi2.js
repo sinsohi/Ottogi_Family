@@ -61,9 +61,9 @@ export default async function ottogi_module2 (){
         const response = await fetch('/getSleepTime');
         const sleepInfo = await response.json();
 
-        // console.log(sleepInfo);
+        console.log(sleepInfo);
         sleeptime = sleepInfo;
-
+        
       } catch (error) {
         console.log('Error:', error);
       }
@@ -123,36 +123,38 @@ export default async function ottogi_module2 (){
         const ageInfo = await response.json();
 
 
-        // console.log(ageInfo);
+        console.log(ageInfo);
         age = ageInfo;
 
       } catch (error) {
         console.log('Error:', error);
       }
 
-      // 연령별 적정 수면 시간 비교하여 다크써클 단계 설정
-      for(let i=0; i<familyInfo.length; i++){
-        // 6 ~ 13세 
-        if(age[i] >=6 && age[i]<=13){
-            if(sleeptime[i]>7 && sleeptime[i]<=8) darkCircleStages.push(1) // 7~8시간 수면 시 다크써클 1단계
-            if(sleeptime[i]>6 && sleeptime[i]<=7) darkCircleStages.push(2) // 6~7시간 수면 시 다크써클 2단계
-            if(sleeptime[i]>=0 && sleeptime[i]<=6) darkCircleStages.push(3) // 0~6시간 수면 시 다크써클 3단계
-        }
+        // 연령별 적정 수면 시간 비교하여 다크써클 단계 설정
+    for (let i = 0; i < familyInfo.length; i++) {
+      let stage = 0; // 기본값은 0
 
-        // 14 ~ 17세 
-        if(age[i] >=14 && age[i]<=17){
-            if(sleeptime[i]>6 && sleeptime[i]<=7) darkCircleStages.push(1) // 6~7시간 수면 시 다크써클 1단계
-            if(sleeptime[i]>5 && sleeptime[i]<=6) darkCircleStages.push(2) // 5~6시간 수면 시 다크써클 2단계
-            if(sleeptime[i]>=0 && sleeptime[i]<=5) darkCircleStages.push(3) // 0~5시간 수면 시 다크써클 3단계
-        }
-        
-        // 18세 이상
-        if(age[i] >=18){
-            if(sleeptime[i]>5 && sleeptime[i]<=6) darkCircleStages.push(1) // 5~6시간 수면 시 다크써클 1단계
-            if(sleeptime[i]>4 && sleeptime[i]<=5) darkCircleStages.push(2) // 4~5시간 수면 시 다크써클 2단계
-            if(sleeptime[i]>=0 && sleeptime[i]<=4) darkCircleStages.push(3) // 0~4시간 수면 시 다크써클 3단계
-        }
-    }
+      // 6 ~ 13세
+      if (age[i] >= 6 && age[i] <= 13) {
+          if (sleeptime[i] > 7 && sleeptime[i] <= 8) stage = 1;
+          else if (sleeptime[i] > 6 && sleeptime[i] <= 7) stage = 2;
+          else if (sleeptime[i] >= 0 && sleeptime[i] <= 6) stage = 3;
+      }
+      // 14 ~ 17세
+      else if (age[i] >= 14 && age[i] <= 17) {
+          if (sleeptime[i] > 6 && sleeptime[i] <= 7) stage = 1;
+          else if (sleeptime[i] > 5 && sleeptime[i] <= 6) stage = 2;
+          else if (sleeptime[i] >= 0 && sleeptime[i] <= 5) stage = 3;
+      }
+      // 18세 이상
+      else if (age[i] >= 18) {
+          if (sleeptime[i] > 5 && sleeptime[i] <= 6) stage = 1;
+          else if (sleeptime[i] > 4 && sleeptime[i] <= 5) stage = 2;
+          else if (sleeptime[i] >= 0 && sleeptime[i] <= 4) stage = 3;
+      }
+
+      darkCircleStages.push(stage);
+  }
 
 
 
@@ -162,12 +164,12 @@ export default async function ottogi_module2 (){
         scene.background = texture;
     });
 
-	// 각도를 라디언으로 바꿔주는 함수
+   // 각도를 라디언으로 바꿔주는 함수
     const degreesToRadians = (degrees) => {
         return degrees * (Math.PI / 180)
     }
 
-	// 화면 크기 설정
+   // 화면 크기 설정
     const sizes = {
         width: window.innerWidth,
         height: window.innerHeight
@@ -194,7 +196,7 @@ export default async function ottogi_module2 (){
     camera.position.z = 8
     scene.add(camera)
 
-	// 창 크기가 바뀔 때마다 카메라 비율 재조정
+   // 창 크기가 바뀔 때마다 카메라 비율 재조정
     window.addEventListener('resize', () =>
     {
         sizes.width = window.innerWidth
@@ -224,7 +226,7 @@ export default async function ottogi_module2 (){
                 y: -2,
                 z: 0,
                 rz: 0,
-				ry:0,
+            ry:0,
                 ...params
             };
 
@@ -247,7 +249,7 @@ export default async function ottogi_module2 (){
         }
         
         
-		// 몸통
+      // 몸통
         createBody(bmi, gender) {
             const waistSize = bmi;
             
@@ -270,7 +272,7 @@ export default async function ottogi_module2 (){
             this.group.add(this.body)
         }
         
-		// 머리 생성
+      // 머리 생성
         createHead(position) {
             this.head = new THREE.Group()
             const geometry = new THREE.SphereGeometry(0.8, 32, 16)
@@ -286,7 +288,7 @@ export default async function ottogi_module2 (){
             this.createEyes()
         }
         
-		// 눈 생성
+      // 눈 생성
         createEyes() {
             const eyes = new THREE.Group()
             const geometry = new THREE.SphereGeometry(0.07, 12, 8)
@@ -307,10 +309,12 @@ export default async function ottogi_module2 (){
 
             // 다크써클 생성 함수 호출
             this.createDarkCircles(darkCircleStages[this.darkCircleIndex]);
+            console.log(darkCircleStages[this.darkCircleIndex])
         }
 
         // 다크써클 생성 함수
         createDarkCircles(stage) {
+          // console.log(stage)
             const darkCircles = new THREE.Group();
             const material = new THREE.MeshBasicMaterial({ color: 0x000000 });
         
@@ -379,6 +383,12 @@ export default async function ottogi_module2 (){
 
         // 섭취 & 소모 칼로리 알림 메시지 생성
         createInfoMessage(intake, burned){
+          if (intake == null) {
+            intake = 0;
+          }
+          if (burned == null) {
+            burned = 0;
+          }
             const infoMessage = document.createElement('nav');
             infoMessage.innerHTML = `오늘 ${intake}kcal만큼 섭취하시고, <br> 
             ${burned}kcal만큼 소모하셨어요.`;
@@ -435,7 +445,7 @@ export default async function ottogi_module2 (){
             ${RDA-resultcalorie}kcal 남았습니다.`;
         }
         else {
-            calorieMessage.innerHTML = `${Math.abs(RDA-resultcalorie)}kcl만큼 더 섭취하셨어요.<br>
+            calorieMessage.innerHTML = `${Math.abs(RDA-resultcalorie)}kcal만큼 더 섭취하셨어요.<br>
             그만 드시고 운동하세요!`;
             calorieMessage.style.backgroundColor = 'rgba(255, 0, 0, 0.8)';
             calorieMessage.style.color = 'white';
@@ -465,7 +475,7 @@ export default async function ottogi_module2 (){
         init(waistSize, headPosition, gender, intake, burned) {
             this.createBody(waistSize, gender)
             this.createHead(headPosition)
-			this.group.rotation.y = this.params.ry // 모든 헬뚝이가 정면 바라보도록 수정
+         this.group.rotation.y = this.params.ry // 모든 헬뚝이가 정면 바라보도록 수정
         }
     }
 
@@ -484,7 +494,7 @@ export default async function ottogi_module2 (){
             darkCircleIndex : i // 다크써클 인덱스 추가
         });
 
-        // bmi 단계에 따라 waistSize 변경=
+        // bmi 단계에 따라 waistSize 변경
         if (bmi[i] === '저체중') waistSize = 0.6;
         else if (bmi[i] === '정상') waistSize = 1;
         else if (bmi[i] === '비만전단계') waistSize = 1.3;

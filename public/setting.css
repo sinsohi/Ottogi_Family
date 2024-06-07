@@ -1,0 +1,128 @@
+body {
+    background-image: url('dailyrecord.JPG');
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-position: center bottom; /* 배경 이미지를 가운데 정렬하고 하단에 배치합니다. */
+}
+
+h2 {
+    margin-top: 20px; /* 제목의 상단 마진 */
+    font-size: 24px; /* 글자 크기 증가 */
+}
+
+.activity-level {
+    margin-bottom: 20px; /* 활동량 선택 항목의 하단 마진 증가 */
+}
+
+input[type="text"],
+input[type="radio"],
+button {
+    margin: 10px 0; /* 각 입력 필드 및 버튼의 상하 마진 */
+    padding: 10px; /* 입력 필드 및 버튼의 패딩 */
+    font-size: 20px; /* 글자 크기 증가 */
+}
+
+button {
+    position: fixed; /* 버튼을 고정 위치로 설정합니다. */
+    bottom: 20px; /* 아래 여백을 조정합니다. */
+    right: 20px; /* 오른쪽 여백을 조정합니다. */
+    border: none;
+    cursor: pointer;
+    background-color: transparent; 
+}
+
+button img {
+    width: 200px; /* 이미지의 너비를 조절합니다. */
+    height: auto; /* 이미지의 높이를 자동으로 설정합니다. */
+}
+
+.container {
+    max-width: 600px; /* 컨테이너 최대 너비 설정 */
+    margin: 0; /* 기본 마진 제거 */
+    margin-left: 20px; /* 컨테이너의 왼쪽 마진 설정 */
+}
+
+.row {
+    display: flex;
+    flex-wrap: nowrap;
+    justify-content: space-between;
+    margin-bottom: 5px; /* 행의 하단. 초기값 20이었음 */
+}
+
+.col {
+    flex: 1; /* 각 열을 동일한 비율로 확장 */
+}
+
+.col:not(:last-child) {
+    margin-right: 30px; /* 마지막 열을 제외한 각 열의 오른쪽 마진 */
+}
+
+/* 성별과 나이, 신장과 체중 사이의 간격 설정 */
+.col:nth-child(2),
+.col:nth-child(3) {
+    margin-right: -800px; /* 특정 열들의 오른쪽 마진 조정 */
+    margin-bottom: 0; /* 특정 열들의 하단 마진 제거 */
+}
+
+/* 신장과 체중 사이의 간격 설정 */
+.col:nth-child(3),
+.col:nth-child(4) {
+    margin-right: -800px; /* 특정 열들의 오른쪽 마진 조정 */
+    margin-bottom: 0; /* 특정 열들의 하단 마진 제거 */
+}
+
+@media screen and (max-width: 768px) {
+    .container {
+        padding: 0 10px; /* 모바일 화면에서 컨테이너의 좌우 패딩 설정 */
+    }
+}
+
+.col:nth-child(2),
+.col:nth-child(3),
+.col:nth-child(4) {
+    margin-bottom: 15px; /* 신장, 체중, 평소 활동량 사이 간격 넓힘 */
+}
+
+.col label {
+    margin-right: 50px; /* 라벨 사이 간격 조정*/
+    white-space: nowrap;/*줄바꿈강제로막음*/
+} 
+
+.activity-label {
+    display: inline-block;
+    margin-right: 10px;
+}
+
+.activity-icon {
+    width: 30px;
+    height: 30px;
+    vertical-align: middle;
+}
+
+input[type="radio"] {
+    display: none;
+}
+
+.activity-label {
+    display: inline-block;
+    margin-right: 10px;
+}
+
+.activity-icon {
+    width: 30px;
+    height: 30px;
+    vertical-align: middle;
+}
+
+input[type="radio"] {
+    display: none;
+}
+
+input[type="radio"]:checked + .activity-label img {
+    border: 2px solid black;
+}
+
+input[type="text"] {
+    border-radius: 8px; /* 테두리의 둥글기 정도를 조절합니다. */
+}
