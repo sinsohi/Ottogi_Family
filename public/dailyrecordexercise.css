@@ -212,3 +212,8 @@ input{
     justify-content: space-between;
     margin-top: 20px;
 }
+
+#exerciseList{
+    position : relative;
+    top : 8px;
+}
