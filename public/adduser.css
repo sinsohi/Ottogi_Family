@@ -17,6 +17,16 @@ body {
   font-family: Arial, sans-serif;
 }
 
+
+#card {
+  position: absolute;
+  width: 600px;   
+  height: 350px;   
+  margin-top: 100px; /* 이미지 주위에 20픽셀의 여백 추가 */
+  margin-left: 500px;
+  z-index: 1; /* z-index 추가 */
+}
+
 /* 기본 체크박스를 숨깁니다 */
 .custom-checkbox {
   display: none;
@@ -85,7 +95,7 @@ body {
 .connect-text {
   position: relative;
   top: -50px;
-  left: 20px;
+  left: 70px;
   text-align: center;
   font-weight: bold;
   font-size: 18px;
@@ -105,7 +115,7 @@ body {
   text-align: center;
 }
 
-.plus-btn {
+.next-btn {
   position: relative;
   top : 70px;
   left: -140px;

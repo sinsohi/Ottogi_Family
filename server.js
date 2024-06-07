@@ -827,6 +827,11 @@ app.get('/addUser', async (request,response)=>{
 app.post('/addUser', async (request, response) => {
   const userNickname = request.user.userNickname; // 로그인한 사용자의 닉네임
   const Member = request.body.Member // 연결할 멤버 
+  const NotFamily = request.body.NotFamily; // 체크박스 값
+
+  if(Member && NotFamily === 'yes') {
+    return response.status(400).send("한 번에 하나의 선택만 가능합니다. ")
+  }
 
   //console.log(userNickname)
   // 기존 가족과 연결
@@ -867,11 +872,18 @@ app.post('/addUser', async (request, response) => {
       console.error(err);
       response.status(500).send('기존 가족 추가 과정에서 오류가 발생했습니다.');
     }
-  } else {
+  } 
+  else if (NotFamily === 'on') {
+    try {
+      return response.redirect('/homePage');
+    } catch (err) {
+      console.error(err);
+      return response.status(500).send('새 가족 추가 과정에서 오류가 발생했습니다.');
+    }
+  }
+  else {
     response.status(400).send('닉네임이 존재하지 않습니다.');
   }
-  
-
 });
 
 app.get('/daily-record', async (req, res) => {
