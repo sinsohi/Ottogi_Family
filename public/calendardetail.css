@@ -122,5 +122,17 @@ p {
 
 .BigContainer{
   position : relative;
+  top : -280px;
   left : 10%;
+}
+
+.OttogiImg{
+  position : relative;
+  top : 40px;
+  left: 83vh;
+}
+
+.OttogiImg img{
+ width: 250px;
+ height: auto;
 }
