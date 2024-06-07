@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>세팅 페이지</title>
-    <link href="setting.css" rel="stylesheet">
+    <link href="first-setting.css" rel="stylesheet">
     <style>
         .gender-container {
             display: flex;
@@ -48,7 +48,7 @@
 <body>
     <div class="container">
         <h1 style="text-align: left;">정보 입력</h1>
-        <form id="settingForm" action="/setting" method="POST" onsubmit="showPopup(event)">
+        <form id="settingForm" action="/first-setting" method="POST" onsubmit="showPopup(event)">
             <div class="row">
                 <div class="col">
                     <h2>성별</h2>
@@ -122,7 +122,7 @@
             alert("저장되었습니다.");
             document.getElementById('settingForm').submit(); // 폼 제출
             setTimeout(function() {
-                window.location.href = "/homePage"; // 리다이렉션
+                window.location.href = "/daily-record"; // 리다이렉션
             }, 1000); // 1초 후에 리다이렉션
         }
 

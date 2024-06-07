@@ -1,5 +1,5 @@
 body {
-    background-image: url('dailyrecord.JPG');
+    background-image: url('./img/dailyrecord.JPG');
     background-size: cover;
     background-repeat: no-repeat;
     background-attachment: fixed;
