@@ -17,66 +17,105 @@ body {
   font-family: Arial, sans-serif;
 }
 
-.input-container {
+/* 기본 체크박스를 숨깁니다 */
+.custom-checkbox {
+  display: none;
+}
+
+/* 커스텀 체크박스 스타일 */
+.custom-checkbox-label {
   position: relative;
-  flex-direction: column;
-  align-items: center;
-  gap: 10px;
+  left: 100px;
+  display: inline-block;
+  width: 40px;
+  height: 40px;
+  border: 2px solid #a2ab91;
+  border-radius: 4px;
+  cursor: pointer;
+  position: relative;
 }
 
-#card {
+/* 체크 상태일 때 X 모양을 표시합니다 */
+.custom-checkbox:checked + .custom-checkbox-label::before {
+  content: 'X';
   position: absolute;
-  width: 600px;   
-  height: 350px;   
-  margin-top: 100px; /* 이미지 주위에 20픽셀의 여백 추가 */
-  margin-left: 500px;
-  z-index: 1; /* z-index 추가 */
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 30px;
+  font-weight: bold;
+  color: #a2ab91;
 }
 
-/* 가족 연결 placeholder 설정 */
-.Member::placeholder {
-  font-size: 17px; /* Placeholder 글씨 크기 조절 */
-  color: #534f4f; /* Placeholder 글씨 색상 조절 */
+/* "가족 추가 안함" 글자 */
+.notFamilyLabel {
+  display: inline-block;
+  position: absolute;
+  white-space: nowrap;
+  top: 350px; 
+  left: 840px;
+  width: 50px;
+  height: 500px; 
+  z-index: 2;
+  font-size: 25px;
+  font-weight: bold;
+}
+
+.input-container {
+  position: relative; /* .connect의 부모 요소에 relative를 설정 */
+  height: 100vh; /* 전체 화면 높이 */
+  display: flex;
+  justify-content: center; /* 가로 중앙 정렬 */
+  align-items: center; /* 세로 중앙 정렬 */
 }
 
 /* 기존 가족 연결 */
-.Member {
+.connect {
   position: absolute;
-  top: 273px; 
-  left: 810px;
-  width: 230px;
-  height: 45px; 
-  z-index: 2;
-  font-size: 22px;
-  text-align: center;
-  font-weight: bold;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 18px;
+  border: solid 2px #a2ab91;
+  border-radius: 10px;
+  width: 300px;
+  height: 50px;
 }
 
-/* userNickname 꾸미기 */
+.connect-text {
+  position: relative;
+  top: -50px;
+  left: 20px;
+  text-align: center;
+  font-weight: bold;
+  font-size: 18px;
+}
+
+#notFamilyCheckbox:checked {
+  background-color: #4CAF50 !important; /* 체크 색상 변경 */
+}
+
+/* userNickname 의 가족추가 텍스트 */
 .user-nickname {
-  position: absolute;
-  color: rgb(2, 2, 2);
+  position: fixed;
+  color: #94a289;
   font-weight: bold;
-  font-size: 40px;
-  left: 870px;
-  top: 170px;
-  z-index: 2;
+  font-size: 38px;
+  top: 20px;
   text-align: center;
 }
 
-#plus-btn {
-  position: absolute;
-  top: 470px;
-  left: 760px;
+.plus-btn {
+  position: relative;
+  top : 70px;
+  left: -140px;
+  width: 100px;
+  height: 50px;
   background-color: #a2ab91; /* 버튼 배경색 */
   border: none; /* 테두리 제거 */
-  color: white; /* 버튼 텍스트 색상 */
-  padding: 10px 20px; /* 버튼 내부 여백 */
-  text-align: center; /* 버튼 텍스트 정렬 */
-  text-decoration: none; /* 텍스트 장식 제거 */
+  border-radius: 10px;
   display: inline-block; /* 인라인 블록 형태로 표시 */
-  font-size: 16px; /* 버튼 텍스트 크기 */
-  margin: 4px 2px; /* 버튼 외부 여백 */
-  z-index: 2;
   font-weight: bold;
+  font-size: 20px;
 }
+

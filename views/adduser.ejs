@@ -9,11 +9,12 @@
 <body>
   <!-- 친구추가 폼-->
   <form class="form-box" action="/addUser" method="POST">
-  <div class="input-container">
-    <img src="\img\AddFamily명함.png" alt="card" id="card">
-    <span id="userNicknameDisplay" class="user-nickname"><p><%= userNickname %>님</p></span>
-    <input name="Member" placeholder="닉네임 입력" class="Member">
-    <button type="submit" id="plus-btn"> 확인 </button>
+    <div class="input-container">
+
+      <span id="userNicknameDisplay" class="user-nickname"><p><%= userNickname %>님</p></span>
+      <p class="connect-text">연결하고 싶은 가족의 닉네임입력</p>
+      <input name="Member" placeholder="닉네임 입력" class="connect">
+      <button type="submit" id="plus-btn"> 확인 </button>
     </form>
   </div>
   <!-- socket.io 라이브러리 설치 -->

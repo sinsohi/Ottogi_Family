@@ -128,7 +128,7 @@ body {
 /* 음식 및 칼로리 입력 필드를 포함하는 div에 대한 스타일 추가 */
 .food, .calorie {
     position: relative; /* 자식 요소의 절대 위치 기준점 */
-    margin-bottom: 40px; /* 다음 필드와의 간격 조정 */
+    margin-bottom: 30px; /* 다음 필드와의 간격 조정 */
 }
 
 /* 칼로리 입력 칸 */
@@ -137,15 +137,26 @@ body {
     top: -10px;
     width: 50%;
     height: 40px;
+    left: -10px;
     font-size: 20px;
-    border: solid 1px #000000;
+    border: solid 1px #a2ab91;
+    border-radius: 5px; /* 모서리 둥글기 */
+}
+#menuName{
+    position: relative;
+    top: -10px;
+    left: 10px;
+    width: 50%;
+    height: 40px;
+    font-size: 20px;
+    border: solid 1px #a2ab91;
     border-radius: 5px; /* 모서리 둥글기 */
 }
 
 .plusbutton {
     position: relative;
-    top: 10px;
-    left: 30px;
+    top: 5px;
+    left: 41px;
     width: 30px;
 
 }
