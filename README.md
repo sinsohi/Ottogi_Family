@@ -55,6 +55,7 @@ Health-ttogi Family는 가족 구성원의 건강 상태를 실시간으로 반�
     - 터미널에서 다음 명령을 실행하여 서버를 시작합니다:
 
     ```sh
+    cd Ottogi_Family
     node server.js 또는 nodemon server.js
     ```
 
