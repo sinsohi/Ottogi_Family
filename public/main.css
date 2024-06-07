@@ -74,6 +74,9 @@ h1 {
     flex-wrap : wrap;  
   }
 
+  a{
+    text-decoration: none;
+  }
 
 .image-button {
     display: flex;
