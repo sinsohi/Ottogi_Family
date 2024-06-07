@@ -33,7 +33,7 @@
 
         <div class="right-panel">
             <h2>오늘의 수면 시간</h2>
-            <p>
+            <p class="centered">
                 <% if (sleepTime) { %>
                     <%= sleepTime.sleepHour %>시간 <%= sleepTime.sleepMinute %>분
                 <% } else { %>
@@ -45,7 +45,7 @@
                 <% if (useres.length > 0) { %>
                     <ul id="exerciseList">
                         <% useres.forEach(function(exercise, index) { %>
-                            <li>
+                            <li class="centered">
                                 <%= exercise.exerciseName %> (소모 칼로리: <%= exercise.caloriesBurned %>kcal)
                                 <button class="deleteButton exercise" data-id="<%= exercise._id %>">삭제</button>
                             </li>
@@ -55,10 +55,10 @@
                     운동 기록이 없습니다.
                 <% } %>    
             </p>
-            <p>오늘 소모한 칼로리: <%= parseInt(burned) %>kcal</p>
+            <p class="centered-kcal">오늘 소모한 칼로리: <%= parseInt(burned) %>kcal</p>
 
             <h2>오늘의 아침</h2>
-            <ul>
+            <ul class="centered">
                 <% userbf.forEach(function(item) { %>
                     <li><%= item.menuName %> (칼로리: <%= item.calories %>kcal)
                         <button class="deleteButton breakfast" data-id="<%= item._id %>">삭제</button>
@@ -67,7 +67,7 @@
             </ul>
 
             <h2>오늘의 점심</h2>
-            <ul>
+            <ul class="centered">
                 <% userlc.forEach(function(item) { %>
                     <li><%= item.menuName %> (칼로리: <%= item.calories %>kcal)
                         <button class="deleteButton lunch" data-id="<%= item._id %>">삭제</button>
@@ -76,14 +76,14 @@
             </ul>
 
             <h2>오늘의 저녁</h2>
-            <ul>
+            <ul class="centered">
                 <% userdn.forEach(function(item) { %>
                     <li><%= item.menuName %> (칼로리: <%= item.calories %>kcal)
                         <button class="deleteButton dinner" data-id="<%= item._id %>">삭제</button>
                     </li>
                 <% }); %>
             </ul>
-            <p>오늘 섭취한 칼로리: <%= intake %>kcal</p>
+            <p class="centered">오늘 섭취한 칼로리: <%= intake %>kcal</p>
             <button id="redirectButton" class="btn btn-primary">홈페이지로 이동</button>
         </div>
     </div>

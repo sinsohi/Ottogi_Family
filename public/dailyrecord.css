@@ -2,7 +2,7 @@
 html, body {
     margin: 0;
     padding:0;
-    overflow: hidden;
+    overflow: auto;
   }
 
 body {
@@ -11,19 +11,17 @@ body {
     background-position: center; /* 배경 이미지의 위치를 중앙으로 설정 */
     font-family: Arial, sans-serif;
     margin: 0;
-    height: 100vh; /* 화면 전체 높이만큼 설정 */
     display: flex;
     justify-content: center;
-    align-items: center;
-    background-repeat: no-repeat;
     background-size: 100% 100%;
+    overflow-y: auto; /* 세로 스크롤이 가능하도록 설정 */
 }
 
 .container {
     display: flex;
     justify-content: space-between;
     width: 90%;
-    max-width: 1200px;
+    height: 80%;
     background-color: rgba(255, 255, 255, 0.8); /* 배경색을 반투명 흰색으로 설정 */
     border-radius: 10px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
@@ -31,32 +29,48 @@ body {
     text-align: center;
 }
 
+#exerciseList {
+    position: relative;
+    top: -20px;
+}
+
 .left-panel, .right-panel {
     width: 48%;
+    text-align: center;
 }
 
 .left-panel {
     margin-right: 2%;
+    text-align: center;
 }
 
 .right-panel {
-    margin-left: 2%;
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* 수직 중앙 정렬 */
+    justify-content: flex-start; /* 콘텐츠를 위쪽 정렬 (필요에 따라 조정 가능) */
 }
 
 h2 {
-    margin-top: 0;
+    margin-top:-5px;
 }
 
+.centered {
+    position: relative;
+    text-align: center;
+    top: -20px;
+}
 .mb-3 {
     margin-bottom: 1rem;
 }
 
 .form-label {
     display: block;
-    margin-bottom: .5rem;
+    margin-bottom: 1px;
 }
 
 .btn {
+    position: relative;
     background-color: #7dbcff;
     border: none;
     color: white;
@@ -70,23 +84,34 @@ h2 {
     border-radius: 4px;
 }
 
+#redirectButton {
+    position: relative;
+    top: -20px;
+}
 .btn:hover {
     background-color: #0056b3;
 }
 
 ul {
     list-style-type: none;
-    padding: 0;
+    padding: 0px;
+    margin: 0px;
 }
 
 li {
     background-color: rgba(255, 255, 255, 0.8);
-    margin: 10px 0;
-    padding: 10px;
+    margin: 0px;
+    padding: 0px;
     border-radius: 4px;
     display: flex;
     justify-content: space-between;
     align-items: center;
+}
+
+.centered-kcal {
+    position: relative;
+    text-align: center;
+    top: -50px;
 }
 
 .deleteButton {
@@ -101,6 +126,7 @@ li {
     margin: 4px 2px;
     cursor: pointer;
     border-radius: 4px;
+    margin-left: 15px;
 }
 
 .deleteButton:hover {
