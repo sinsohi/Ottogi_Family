@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>식단 기록</title>
+    <link href="/dailyrecordmeal.css" rel="stylesheet">
     <!-- <style>
         body {
             background-image: url('/dailyrecord.JPG');
@@ -21,23 +22,33 @@
     </style>   -->
 </head>
 <body>
-    <div class="container">
-        <h2>매일 기록 - 식단</h2>
-        <div id="mealContent">
-            
-        </div>
+    <div class="top-letters">
+        <h2>< 매일 기록 - 식단 ></h2>
+        <div id="mealContent"></div>
     </div>
+    
+    <img src=".\img\recordbox.png" alt="recorbox" id="recordbox">
 
     <div class="container">
-        <h2>메뉴 직접 추가</h2>
+        <h2 class="plus-menu-letter">< 메뉴 추가 ></h2>
         <div id="addMenu">
-            <label for="menuName">음식 이름:</label>
+        <!-- 음식 입력  -->
+        <div class="input-container">    
+            <label for="menuName" class="food-letter">음식입력</label>
             <input type="text" id="menuName" name="menuName">
-            <label for="calories">칼로리:</label>
+        </div>    
+        <!-- 칼로리 입력  -->
+        <div class="input-container">
+            <label for="calories" class="calorie-letter">칼로리입력</label>
             <input type="number" id="calories" name="calories">
-            <button onclick="addMenu()">추가</button>
-            <button onclick="saveMenu()">저장</button> <!-- 저장 버튼 추가 -->
         </div>
+    </div>
+    <!-- 버튼 -->
+    <div class="button">
+        <img src='./img/plusbutton.png' class="plusbutton">
+        <button onclick="addMenu()" class="addMenu">추가</button>
+        <button onclick="saveMenu()" class="saveMenu">저장</button> 
+    </div>
     </div>
 
     <script>
@@ -47,11 +58,18 @@
             
             let mealContent = '';
             if (meal === 'breakfast') {
-                mealContent = '<h3>아침 식단</h3><p>아침 메뉴 내용</p>';
+                mealContent = `
+                <h3>아침 식단</h3>
+                <img src="./img/sun.png" id="sun"/>
+                `;
             } else if (meal === 'lunch') {
-                mealContent = '<h3>점심 식단</h3><p>점심 메뉴 내용</p>';
+                mealContent = `
+                <h3>점심 식단</h3>
+                
+                `;
             } else if (meal === 'dinner') {
-                mealContent = '<h3>저녁 식단</h3><p>저녁 메뉴 내용</p>';
+                mealContent = `
+                <h3>저녁 식단</h3>`;
             } 
             const mealContentElement = document.getElementById('mealContent');
             mealContentElement.innerHTML = mealContent;

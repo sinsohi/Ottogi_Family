@@ -1,3 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <link rel="stylesheet" type="text/css" href="\addFamily.css">
+</head>
+
+<body>
+<form class="form-box" action="/addFamily" method="POST">
+
+  <!-- 가족 추가 -->
+  <div class="input-container">
+
+    <!-- user의 닉네임 -->
+    <span id="userNicknameDisplay" class="user-nickname"><p><%= userNickname %>님의 가족 추가</p></span>
+
+    <!-- Member 연결 -->
+    <input name="Member" oninput="toggleInputs()" class="connect"><p class="connect-text">연결하고 싶은 가족의 닉네임입력</p>
+    
+    <!-- 체크박스 -->
+    <label>
+      <input name="NotFamily" type="checkbox" va
+  lue="yes" onclick="toggleInputs()" class="custom-checkbox" id="checkbox"> 
+      <span class="custom-checkbox-label"></span>
+    </label>
+
+  <button type="submit" class="next-btn">다음</button>
+</form>
+</div>
 <script>
   function toggleInputs() {
     const memberInput = document.querySelector('input[name="Member"]');
@@ -15,14 +46,7 @@
     }
   }
 </script>
-</head>
-<body>
-<form class="form-box" action="/addFamily" method="POST">
-  <!-- 기존 가족 추가 -->
-  <input name="Member" placeholder="들어가고싶은 가족의 닉네임을 입력하세요" oninput="toggleInputs()">
-  <!-- 새로운 가족 추가 -->
-  <input name="NotFamily" type="checkbox" value="yes" onclick="toggleInputs()"> 방을 개설하실겠습니까?<br>
-  <button type="submit">다음</button>
-</form>
 </body>
 </html>
+
+
