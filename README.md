@@ -29,15 +29,7 @@ Health-ttogi Family는 가족 구성원의 건강 상태를 실시간으로 반�
 
 3. **프로젝트 초기화 및 필수 패키지 설치**
     ```sh
-    npm init -y
-    npm install express
-    npm install mongodb@5
-    npm install connect-mongodb-session
-    npm install connect-mongo
-    npm install dotenv
-    npm install gsap
-    npm install express-session passport passport-local
-    npm install bcrypt
+   npm install
     ```
 
 
@@ -48,14 +40,21 @@ Health-ttogi Family는 가족 구성원의 건강 상태를 실시간으로 반�
 
     `.env`
     ```sh
-    MONGODB_URI=your_mongodb_connection_string
-    PORT=8080
+    // .env example
+
+    DBurl = mongodb+srv://DB접속아이디:DB접속비번@cluster0.jea.mongodb.net/?retryWrites=true&w=majority
+    PORT = 8080
     ```
  
 5. **서버 실행**
+    - 터미널에서 다음 명령을 실행하여 서버를 시작합니다:
+
     ```sh
-    node server.js
+    node server.js 또는 nodemon server.js
     ```
+
+    터미널에 출력되는 URL로 접속하여 웹을 실행합니다.
+   
 
 ## 의존성
 
@@ -63,7 +62,7 @@ Health-ttogi Family는 가족 구성원의 건강 상태를 실시간으로 반�
 
 **운영 체제 (OS)**
 
-Windows, macOS, 또는 Linux (Ubuntu 20.04 LTS 등)
+Windows, macOS, Linux
 
 **라이브러리**
 ├── bcrypt@5.1.1
@@ -83,21 +82,6 @@ Windows, macOS, 또는 Linux (Ubuntu 20.04 LTS 등)
 ├── socket.io@4.7.5
 ├── three@0.163.0
 └── vite@5.2.8
-
-
-## 사용 방법
-
-필요한 모든 패키지들이 설치되어 있는지 확인합니다.
-
-프로젝트 루트에 .env 파일을 설정합니다.
-
-터미널에서 다음 명령을 실행하여 서버를 시작합니다:
-
-```sh
-node server.js
-```
-
-브라우저에서 http://localhost:8080으로 접속하여 웹을 실행합니다.
 
 
 ## 라이선스
