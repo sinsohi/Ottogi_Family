@@ -732,15 +732,6 @@ app.post('/addUser', async (request, response) => {
     return response.status(400).send("한 번에 하나의 선택만 가능합니다. ")
   }
 
-  try {
-    // NewMember와 Member가 userinfo 컬렉션에 존재하는지 확인
-    const isMemberValid = Member ? await db.collection('userinfo').findOne({ userNickname: Member }) : true;
-    const isNewMemberValid = NewMember ? await db.collection('userinfo').findOne({ userNickname: NewMember }) : true;
-
-    if (!isMemberValid || !isNewMemberValid) {
-      return response.status(400).send('일치하는 닉네임이 없습니다.');
-    }
-
   //console.log(userNickname)
   // 기존 가족과 연결
   if (Member) {
